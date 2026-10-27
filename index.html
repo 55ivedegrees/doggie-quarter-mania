@@ -2941,6 +2941,16 @@ function addLights(scene, k = 1) {
 // Each dog is built from soft, rounded forms with a painted coat (vertex colours from a pattern per breed), glossy eyes
 // and nose, and a rig of nested joints (legs with knees, neck, head, jaw, ears, a jointed tail) that the animator drives.
 // Units: about 1 = a Labrador's height; +z is the way the dog faces, +y up, the ground at y = 0.
+// fur shells: specks of fur on two slightly bigger copies of the main forms, so the outline reads soft and furry
+const shellTex = density => {
+  const t = canvasTex(256, 256, (g, w) => {
+    g.fillStyle = '#000'; g.fillRect(0, 0, w, w); g.fillStyle = '#fff';
+    for (let i = 0; i < 9000 * density; i++) { const x = Math.random() * w, y = Math.random() * w; g.fillRect(x, y, 1 + Math.random() * 1.6, 1.5 + Math.random() * 2.5); }
+  }, false);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(10, 6);
+  return t;
+};
+const SHELLS = [[1.035, shellTex(1)], [1.07, shellTex(.45)]].map(([k, alphaMap]) => [k, new THREE.MeshPhysicalMaterial({ vertexColors: true, alphaMap, alphaTest: .5, roughness: .9, sheen: .7, sheenRoughness: .5, sheenColor: new THREE.Color('#ffffff').multiplyScalar(.25) })]);
 const IRIS = {};
 function irisMat(color) {
   if (IRIS[color]) return IRIS[color];
@@ -3060,7 +3070,7 @@ const DOG_BY_SYM = Object.fromEntries(DOG_ORDER.map(k => [DOGS[k].sym, k]));
 
 function ellipsoid(rx, ry, rz, seg = 20) { const g = new THREE.SphereGeometry(1, seg, Math.round(seg * .7)); g.scale(rx, ry, rz); return g; }
 const placeAt = (o, x, y, z) => { o.position.set(x, y, z); return o; };
-function furMesh(geo, region) { const m = new THREE.Mesh(geo, MAT.fur); m.userData.region = region; return m; }
+function furMesh(geo, region, shell = false) { const m = new THREE.Mesh(geo, MAT.fur); m.userData.region = region; m.userData.shell = shell; return m; }
 
 // the head alone (dog houses and the mansion show a dog looking out of the door) or the whole dog
 function buildDog(key, { headOnly = false } = {}) {
@@ -3070,7 +3080,7 @@ function buildDog(key, { headOnly = false } = {}) {
 
   // ---- head (skull at the head group's origin) ----
   const head = new THREE.Group(); dog.head = head;
-  head.add(furMesh(ellipsoid(R * H.sx, R * H.sy, R * H.sz, 44), 'head'));
+  head.add(furMesh(ellipsoid(R * H.sx, R * H.sy, R * H.sz, 44), 'head', true));
   // muzzle, nose, jaw with tongue and teeth, the dark of the mouth behind
   head.add(placeAt(furMesh(ellipsoid(M.r * M.sx, M.r * M.sy, M.len, 32), 'head'), 0, M.y, M.z));
   // whisker pads: the soft round cheeks either side of the nose, dotted with whisker roots
@@ -3140,9 +3150,9 @@ function buildDog(key, { headOnly = false } = {}) {
     const rig = new THREE.Group(); rig.position.set(0, L.len, L.zr); dog.root.add(rig); dog.rig = rig;
     const torso = new THREE.Group(); torso.position.set(0, 0, -L.zr); rig.add(torso); dog.torso = torso;
     const cap = new THREE.CapsuleGeometry(1, BD.len / BD.ry, 10, 28); cap.rotateX(Math.PI / 2); cap.scale(BD.rx, BD.ry, BD.ry);
-    torso.add(placeAt(furMesh(cap, 'body'), 0, by, bz));
-    torso.add(placeAt(furMesh(ellipsoid(BD.chest * .92, BD.chest, BD.chest * .95, 22), 'body'), 0, by + .01, L.zf - .01));
-    torso.add(placeAt(furMesh(ellipsoid(BD.rump * .98, BD.rump, BD.rump, 24), 'body'), 0, by + .005, L.zr + .03));
+    torso.add(placeAt(furMesh(cap, 'body', true), 0, by, bz));
+    torso.add(placeAt(furMesh(ellipsoid(BD.chest * .92, BD.chest, BD.chest * .95, 22), 'body', true), 0, by + .01, L.zf - .01));
+    torso.add(placeAt(furMesh(ellipsoid(BD.rump * .98, BD.rump, BD.rump, 24), 'body', true), 0, by + .005, L.zr + .03));
     // shoulders, and a ruff of fur on the chest for the double-coated dogs
     for (const s of [1, -1]) torso.add(placeAt(furMesh(ellipsoid(L.r * 1.55, BD.ry * .62, L.r * 2.1, 16), 'body'), s * L.x * .95, by - BD.ry * .05, L.zf + .01));
     if (key === 'husky' || key === 'gsd' || key === 'corso') for (let i = 0; i < 5; i++) {
@@ -3152,7 +3162,7 @@ function buildDog(key, { headOnly = false } = {}) {
     // neck carries the head; the head pivot undoes the neck's lean so the head looks straight ahead
     const neck = new THREE.Group(); neck.position.set(0, by + BD.chest * .5, L.zf + BD.chest * .3); neck.rotation.x = B.neck.angle; torso.add(neck);
     const ng = new THREE.CapsuleGeometry(B.neck.r, B.neck.len, 6, 16); ng.translate(0, B.neck.len / 2, 0);
-    neck.add(furMesh(ng, 'body'));
+    neck.add(furMesh(ng, 'body', true));
     const headPivot = new THREE.Group(); headPivot.position.set(0, B.neck.len, 0); headPivot.rotation.x = -B.neck.angle; neck.add(headPivot); dog.headPivot = headPivot;
     head.position.set(0, R * .55, R * .2); headPivot.add(head);
     dog.neck = neck;
@@ -3186,12 +3196,16 @@ function buildDog(key, { headOnly = false } = {}) {
       const len = shoulderY + L.len - L.r * .7, l1 = len * .5, l2 = len * .5;
       const ug = new THREE.CapsuleGeometry(L.r * (rear ? 1.25 : 1.05), l1, 6, 12); ug.translate(0, -l1 / 2, 0);
       const upper = furMesh(ug, 'body'); top.add(upper);
-      if (rear) { const thigh = furMesh(ellipsoid(L.r * 1.7, l1 * .6, L.r * 2.1, 14), 'body'); thigh.position.set(0, -l1 * .25, -L.r * .2); top.add(thigh); }
+      if (rear) { const thigh = furMesh(ellipsoid(L.r * 1.7, l1 * .6, L.r * 2.1, 14), 'body', true); thigh.position.set(0, -l1 * .25, -L.r * .2); top.add(thigh); }
       const knee = new THREE.Group(); knee.position.set(0, -l1, 0); top.add(knee);
       const lg = new THREE.CapsuleGeometry(L.r * .9, l2, 6, 12); lg.translate(0, -l2 / 2, 0);
       knee.add(furMesh(lg, 'body'));
       const paw = furMesh(ellipsoid(L.r * 1.25, L.r * .78, L.r * 1.55, 18), 'body'); paw.position.set(0, -l2 - L.r * .05, L.r * .55); knee.add(paw);
-      for (const tx of [-1, 0, 1]) { const toe = furMesh(ellipsoid(L.r * .42, L.r * .36, L.r * .48, 10), 'body'); toe.position.set(tx * L.r * .62, -l2 - L.r * .2, L.r * 1.45 - Math.abs(tx) * L.r * .12); knee.add(toe); }
+      for (const tx of [-1, 0, 1]) {
+        const toe = furMesh(ellipsoid(L.r * .42, L.r * .36, L.r * .48, 10), 'body'); toe.position.set(tx * L.r * .62, -l2 - L.r * .2, L.r * 1.45 - Math.abs(tx) * L.r * .12); knee.add(toe);
+        const claw = new THREE.Mesh(new THREE.ConeGeometry(L.r * .1, L.r * .3, 6), MAT.nose); claw.rotation.x = Math.PI / 2 + .5; claw.position.set(tx * L.r * .62, -l2 - L.r * .32, L.r * 1.85 - Math.abs(tx) * L.r * .12); knee.add(claw);
+      }
+      const pad = new THREE.Mesh(ellipsoid(L.r * .75, L.r * .2, L.r * .8, 10), matte('#4a2a2a', { roughness: .6 })); pad.position.set(0, -l2 - L.r * .72, L.r * .6); knee.add(pad);
       return { top, knee };
     };
     dog.legs = { fl: makeLeg(L.x, L.zf, false), fr: makeLeg(-L.x, L.zf, false), rl: makeLeg(L.x * 1.08, L.zr, true), rr: makeLeg(-L.x * 1.08, L.zr, true) };
@@ -3222,6 +3236,9 @@ function buildDog(key, { headOnly = false } = {}) {
       else B.pattern(region === 'head' ? 'head' : 'body', p, n, c);
     });
   });
+  const shellOf = [];
+  dog.root.traverse(o => { if (o.isMesh && o.userData.shell) shellOf.push(o); });
+  for (const o of shellOf) for (const [k, mat] of SHELLS) { const sh = new THREE.Mesh(o.geometry, mat); sh.scale.setScalar(k); o.add(sh); }
   head.scale.setScalar(B.hs || 1.2);
   if (!headOnly) dog.root.scale.setScalar(B.size);
   initPose(dog);
@@ -3234,7 +3251,7 @@ function buildDog(key, { headOnly = false } = {}) {
 // squash and stretch (a spring the moves kick), springy ears that react to jumps, banking into turns, a gallop when
 // running fast, flips about the body's centre, head tracking (dog.look), little idle glances, blinks and breathing.
 const POSE = { walk: 0, sit: 0, lie: 0, beg: 0, air: 0, crouch: 0, gallop: 0, paw: 0, headYaw: 0, headPitch: 0, headRoll: 0, jaw: 0, tongue: 0,
-  perk: 1, wag: .25, wagRate: 7, tailUp: 0, shiver: 0, lean: 0, brow: 0, squash: 0, talk: 0, dig: 0, lid: 0 };
+  perk: 1, wag: .25, wagRate: 7, tailUp: 0, shiver: 0, lean: 0, brow: 0, squash: 0, talk: 0, dig: 0, lid: 0, bow: 0, shake: 0, scratch: 0, roll: 0, sniff: 0 };
 function initPose(dog) {
   dog.p = { ...POSE, tongue: dog.B.tongueOut ? 1 : 0 };
   dog.want = { ...dog.p };
@@ -3312,10 +3329,11 @@ function updateDog(dog, dt) {
   const sitA = .55 * p.sit + 1.05 * p.beg, span = L.zf - L.zr;
   const hv = turn / Math.max(dt, 1e-3);
   dog.bank += (clamp(-hv * .05, -.35, .35) * wk - dog.bank) * (1 - Math.exp(-6 * dt));
-  dog.rig.rotation.x = -sitA + Math.sin(ph) * .12 * gal * wk + p.crouch * .12 - p.lean * .15;
+  dog.rig.rotation.x = -sitA + Math.sin(ph) * .12 * gal * wk + p.crouch * .12 - p.lean * .15 + p.bow * .45;
   dog.rig.position.y = L.len - span * Math.sin(.55 * p.sit) - p.lie * L.len * .62 - p.beg * L.len * .25 - p.crouch * L.len * .3
-    + Math.abs(Math.sin(ph)) * (.014 + .04 * gal) * wk;
-  dog.rig.rotation.z = Math.sin(ph) * .03 * wk * (1 - gal) + dog.bank;
+    + Math.abs(Math.sin(ph)) * (.014 + .04 * gal) * wk - p.bow * L.len * .12 - p.roll * L.len * .25;
+  dog.rig.rotation.z = Math.sin(ph) * .03 * wk * (1 - gal) + dog.bank + Math.sin(t * 38) * .24 * p.shake + p.roll * 1.45;
+  if (p.shake > .05) dog.earV += Math.sin(t * 38) * 60 * p.shake * dt;
   const breath = 1 + Math.sin(t * (p.tongue > .5 ? 7 : 2.3)) * .012;
   dog.torso.scale.set(1, breath, 1 + Math.sin(ph) * .05 * gal * wk);
   // legs: a trot, blending into a gallop when running fast (front pair together, back pair together)
@@ -3334,8 +3352,15 @@ function updateDog(dog, dt) {
   };
   const g2 = gal * .35;
   front(fl, 0, false); front(fr, lerp(Math.PI, g2, gal), true); rear(rl, Math.PI, false); rear(rr, lerp(0, Math.PI + g2, gal));
+  // play bow: front legs stretched out low
+  if (p.bow > .01) for (const leg of [fl, fr]) { leg.top.rotation.x -= p.bow * 1.1; leg.knee.rotation.x -= p.bow * .2; }
+  // scratching an ear with a hind leg
+  if (p.scratch > .01) { rr.top.rotation.x = lerp(rr.top.rotation.x, -1.5 + Math.sin(t * 28) * .3, p.scratch); rr.knee.rotation.x = lerp(rr.knee.rotation.x, .8 + Math.sin(t * 28) * .5, p.scratch); }
+  // rolled on its back: legs paddle in the air
+  if (p.roll > .01) for (const [leg, o] of [[fl, 0], [fr, 1], [rl, 2], [rr, 3]]) leg.top.rotation.x += Math.sin(t * 9 + o * 1.7) * .45 * p.roll;
   // head: stays level when sitting, turns and tilts on cue (plus the idle glances), bobs with the walk
-  dog.headPivot.rotation.set(-B.neck.angle + sitA * .9 - p.headPitch - gl.p + Math.sin(ph * 2) * (.04 + .06 * gal) * wk + p.crouch * .1, p.headYaw + gl.y, p.headRoll);
+  dog.headPivot.rotation.set(-B.neck.angle + sitA * .9 - p.headPitch - gl.p + Math.sin(ph * 2) * (.04 + .06 * gal) * wk + p.crouch * .1 + p.sniff * (.6 + Math.sin(t * 22) * .06) - p.bow * .3,
+    p.headYaw + gl.y - p.scratch * .4, p.headRoll + Math.sin(t * 38 + 1) * .45 * p.shake + p.scratch * .45);
   // tail: wags, streams out behind when running
   const T = B.tail;
   dog.tailBase.rotation.set((T.up + p.tailUp) + Math.sin(ph) * .1 * wk - gal * wk * .5, Math.sin(t * p.wagRate) * p.wag, 0);
@@ -4090,9 +4115,37 @@ function holdProp(d, obj) {
 }
 function dropProp(d) { if (d.prop) { if (d.prop.parent) d.prop.parent.remove(d.prop); d.prop = null; } }
 
+// ---- little everyday moves ----
+function* yawn(d) { d.ease = 3; Object.assign(d.want, { jaw: 1.3, lid: .85, headPitch: .35, perk: .5 }); yield* wait(1.1); Object.assign(d.want, { jaw: 0, lid: 0, headPitch: 0, perk: 1 }); yield* wait(.3); d.ease = 7; }
+function* sneeze(d) {
+  d.want.headPitch = .35; d.want.lid = .6; yield* wait(.35);
+  d.want.headPitch = -.5; d.want.jaw = .7; kick(d, -.7); bark(900, 0, .12);
+  const p = V3(); d.head.getWorldPosition(p); p.y -= dogH(d) * .1;
+  for (let i = 0; i < 6; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: DUST_TEX, transparent: true, depthWrite: false, toneMapped: false })); s.position.copy(p); s.scale.setScalar(d.baseScale * .08); d.root.parent.add(s); PUFFS.push({ sp: s, v: V3(rand(-.5, .5), rand(-.1, .3), rand(.2, .6)).multiplyScalar(d.baseScale), t: 0, life: .5, s: d.baseScale * .6 }); }
+  yield* wait(.25); d.want.headPitch = 0; d.want.jaw = 0; d.want.lid = 0; yield* wait(.3);
+}
+function* shakeOff(d) {
+  d.ease = 14; d.want.shake = 1; d.want.lid = .7;
+  for (let i = 0; i < 10; i++) { const s = glintSprite(d.baseScale * .07, '#bfe8ff'), a = Math.random() * 6.3, p = V3(); d.torso.getWorldPosition(p); s.position.copy(p); d.root.parent.add(s); PUFFS.push({ sp: s, v: V3(Math.cos(a), rand(.2, .8), Math.sin(a)).multiplyScalar(d.baseScale * 1.2), t: 0, life: .5, s: d.baseScale * .25 }); }
+  yield* wait(.9); d.want.shake = 0; d.want.lid = 0; yield* wait(.2); d.ease = 7; kick(d, -.5);
+}
+function* scratchEar(d) { d.want.sit = 1; yield* wait(.35); d.want.scratch = 1; d.want.lid = .6; yield* wait(1.2); d.want.scratch = 0; d.want.lid = 0; yield* wait(.3); d.want.sit = 0; }
+function* playBow(d) { d.want.bow = 1; d.want.wag = 1; d.want.wagRate = 18; d.want.brow = .5; kick(d, -.5); bk(d, 0, .3); yield* wait(.8); d.want.bow = 0; yield* spring(d, .45, .45); }
+function* sniffAlong(d, x) { d.want.sniff = 1; yield* walkTo(d, x, .55); d.want.sniff = 0; d.want.headPitch = .2; d.want.perk = 1; kick(d, .4); yield* wait(.3); d.want.headPitch = 0; }
+function* rollOver(d) { d.want.lie = 1; yield* wait(.3); d.want.roll = 1; d.want.tongue = 1; d.want.wag = 1; kick(d, -.6); dust(d, 6); yield* wait(1.4); d.want.roll = 0; yield* wait(.35); d.want.lie = 0; yield* spring(d, .35, .4); }
+const FIDGETS = [yawn, sneeze, shakeOff, scratchEar];
+
 // ---- personalities: what each dog does when it wanders in (two routines each, picked at random) ----
 const ROUTINES = {
   corso: [
+    function* (d) { // the bored king: pops up, a giant yawn, a lazy scratch, wanders off
+      const x = midX(rand(-.3, .3));
+      yield* show(d, x, yDuck(d), faceIn(x)); yield* popUp(d);
+      d.want.brow = -.3; yield* yawn(d);
+      yield* talk(d, pick(['Wake me when it\'s a JACKPOT.', 'Another day, another mansion.', 'Yawn. Spin bigger.']), 2.4);
+      yield* scratchEar(d);
+      yield* leave(d, x > midX() ? 1 : -1, .7);
+    },
     function* (d) { // the boss: strolls in, sits, stares you down, a low rumble, a slow nod
       const from = Math.random() < .5 ? -1 : 1;
       yield* show(d, from * (cast.W / 2 + cast.unit), yStand());
@@ -4102,6 +4155,7 @@ const ROUTINES = {
       growl(.5, 0, .1, 85);
       yield* talk(d, pick(d.B.lines), 2.8);
       yield* nod(d, 2);
+      if (Math.random() < .4) yield* pick(FIDGETS)(d);
       d.want.sit = 0; d.want.brow = 0; kick(d, .4); yield* wait(.3);
       yield* leave(d, -from, .7);
     },
@@ -4117,6 +4171,16 @@ const ROUTINES = {
     },
   ],
   husky: [
+    function* (d) { // the wet dog: trots in, shakes off a shower of drops, sneezes, looks very proud of itself
+      yield* show(d, cast.W / 2 + cast.unit, yStand());
+      yield* walkTo(d, midX(-.05), 1.4);
+      yield* face(d, -.4, .2);
+      yield* shakeOff(d);
+      yield* sneeze(d);
+      yield* talk(d, pick(['Fresh as SNOW. Awoo!', 'Nobody saw that sneeze.', 'Shake it off! Spin it on!']), 2.3);
+      yield* playBow(d);
+      yield* leave(d, -1, 2);
+    },
     function* (d) { // the drama queen: trots in, throws the head back and "talks", a spinning jump, prances off
       yield* show(d, -cast.W / 2 - cast.unit, yStand());
       yield* walkTo(d, midX(.1), 1.5);
@@ -4142,6 +4206,14 @@ const ROUTINES = {
     },
   ],
   gsd: [
+    function* (d) { // the detective: nose to the ground across the reels, stops dead, points
+      yield* show(d, -cast.W / 2 - cast.unit, yStand(), Math.PI / 2);
+      yield* sniffAlong(d, midX(.25));
+      yield* face(d, .3, .2); d.want.paw = 1; d.want.perk = 1; d.want.brow = -.6; bk(d, 0, .45); yield* wait(.5);
+      yield* talk(d, pick(['I smell... a BIG WIN.', 'The trail leads to the reels.', 'Case closed. Spin it.']), 2.4);
+      d.want.paw = 0; d.want.brow = 0; yield* sneeze(d);
+      yield* leave(d, 1, 1.2);
+    },
     function* (d) { // on patrol: marches in, scans left and right, sits to attention, one sharp bark
       yield* show(d, cast.W / 2 + cast.unit, yStand());
       yield* walkTo(d, midX(.3), 1);
@@ -4152,6 +4224,7 @@ const ROUTINES = {
       bk(d, 0, .45);
       yield* talk(d, pick(d.B.lines), 2.6);
       d.want.sit = 0; d.want.brow = 0; yield* wait(.3);
+      if (Math.random() < .4) yield* pick(FIDGETS)(d);
       yield* leave(d, -1, 1.1);
     },
     function* (d) { // the salute: pops up, salutes with a paw, all clear, dives out
@@ -4166,6 +4239,16 @@ const ROUTINES = {
     },
   ],
   lab: [
+    function* (d) { // belly rubs: bounds in, play bows, flops on his back with his legs in the air
+      yield* show(d, cast.W / 2 + cast.unit, yStand());
+      yield* walkTo(d, midX(.1), 2.2);
+      yield* face(d, -.35, .15);
+      yield* playBow(d);
+      yield* rollOver(d);
+      yield* talk(d, pick(['Belly rubs? BELLY RUBS?!', 'I\'m the goodest boy here.', 'Scratch right there! Yes!']), 2.4);
+      yield* shakeOff(d);
+      yield* leave(d, -1, 2.2);
+    },
     function* (d) { // the goofball: bounds in, chases his tail, flops down, tongue out, bounces off
       yield* show(d, -cast.W / 2 - cast.unit, yStand());
       yield* walkTo(d, midX(-.15), 2);
@@ -4176,6 +4259,7 @@ const ROUTINES = {
       d.headingWant = .35; d.want.lie = 1; d.want.headRoll = .35; kick(d, -1); dust(d, 6); yield* wait(.5);
       yield* talk(d, pick(d.B.lines), 2.6);
       d.want.lie = 0; d.want.headRoll = 0; yield* wait(.3);
+      if (Math.random() < .5) yield* shakeOff(d);
       yield* spring(d, .35, .45);
       yield* leave(d, 1, 2.2);
     },
@@ -4210,6 +4294,15 @@ const ROUTINES = {
     },
   ],
   pup: [
+    function* (d) { // the itch: pops up, scratches furiously, sneezes himself backwards, zooms off
+      const x = midX(rand(-.3, .3));
+      yield* show(d, x, yDuck(d), faceIn(x)); yield* popUp(d);
+      yield* scratchEar(d); yield* scratchEar(d);
+      yield* sneeze(d); d.want.lean = 1; kick(d, -1); yield* wait(.2); d.want.lean = 0;
+      yield* talk(d, pick(['Achoo! ...Yip!', 'Bless me! BLESS ME!', 'Allergic to losing!']), 2.2);
+      yield* playBow(d);
+      yield* walkTo(d, x > midX() ? -cast.W / 2 - cast.unit : cast.W / 2 + cast.unit, 3.2); gone(d);
+    },
     function* (d) { // tiny and wired: zooms in, shivers, yips with every hop, a spinning jump, zooms out
       const from = Math.random() < .5 ? -1 : 1;
       yield* show(d, from * (cast.W / 2 + cast.unit), yStand());
@@ -4392,7 +4485,7 @@ function* peek(d, side) {
   kick(d, .6);
   yield* tween(.35, u => { d.pos.y = lerp(from, to, u); }, backOut);
   d.look = cast.reelsAt.clone();
-  for (;;) { yield* wait(rand(.7, 1.4)); kick(d, .2); }
+  for (;;) { yield* wait(rand(.7, 1.4)); kick(d, .2); if (Math.random() < .12) { d.look = null; yield* sneeze(d); d.look = cast.reelsAt.clone(); } }
 }
 function* peekTease(d) { d.want.shiver = 1; d.want.brow = .9; d.want.perk = 1; d.want.wag = 1; d.want.wagRate = 22; kick(d, .4); if (Math.random() < .6) whine(0, .7, .07, d.B.small ? 820 : 620); for (;;) yield* wait(1); }
 function* sigh(d) {
