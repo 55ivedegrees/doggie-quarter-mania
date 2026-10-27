@@ -335,9 +335,9 @@
   .sx { position: relative; display: block; width: 8.7em; height: 8.7em; filter: drop-shadow(0 .35em .3em #0009); }
   .dq.flipsym .sx { filter: drop-shadow(0 .35em .3em #0009) drop-shadow(0 0 .6em #c98bff); }
   .dq.picksym .sx { filter: drop-shadow(0 .35em .3em #0009) drop-shadow(0 0 .6em #5fe0c0); }
-  .dq.flingsym { --p1: #ff8a2a; --p2: #8a2a00; }
-  .dq.flingsym::before { background: repeating-conic-gradient(#ffb02e 0 12deg, #0000 12deg 24deg); }
-  .dq.flingsym .sx { filter: drop-shadow(0 .35em .3em #0009) drop-shadow(0 0 .6em #ff8a2a); }
+  .dq.flingsym { --p1: #ff4a5a; --p2: #8a0a1a; }
+  .dq.flingsym::before { background: repeating-conic-gradient(#ff6a7a 0 12deg, #0000 12deg 24deg); }
+  .dq.flingsym .sx { filter: drop-shadow(0 .35em .3em #0009) drop-shadow(0 0 .6em #ff4a5a); }
   .cell.win .sx { animation: coinspin .9s linear infinite; }
   .dq strong, .house strong, .bone strong, .mansion strong { position: absolute; z-index: 2; bottom: 0; left: 50%; transform: translateX(-50%); white-space: nowrap;
     font: 400 1.6em/1 var(--display); letter-spacing: .08em; color: #fff; background: linear-gradient(var(--p1, #ff3d3d), var(--p2, #a00a18));
@@ -585,38 +585,34 @@
   .flipbtn:disabled { filter: brightness(.5); }
   .bonus .fine { margin: 10px 0 0; }
 
-  /* ---------- Frisbee fling bonus ---------- */
+  /* ---------- Mailman chase bonus ---------- */
   .fl-top { display: flex; align-items: center; justify-content: space-between; margin: 6px 4px 8px; }
   .fl-top .dug { margin: 0; }
-  .fl-discs { display: flex; gap: 6px; }
-  .fl-discs i { width: 24px; height: 11px; border-radius: 50%; background: radial-gradient(#fff6 0 30%, #0000 32%), radial-gradient(#ff8a2a, #b33a00);
-    box-shadow: 0 2px 0 #5a1a00, 0 0 8px #ff8a2a; transition: opacity .3s, filter .3s; }
-  .fl-discs i.gold { background: radial-gradient(#fff8 0 30%, #0000 32%), radial-gradient(#ffe27a, #b8860b); box-shadow: 0 2px 0 #6b4300, 0 0 10px #ffd24a; }
-  .fl-discs i.used { opacity: .25; filter: grayscale(1); box-shadow: none; }
-  .park { position: relative; height: 300px; border-radius: 12px; overflow: hidden; cursor: pointer;
-    background: linear-gradient(#8fd3ff, #d8f2ff 9%, #0000 9%),
-      repeating-linear-gradient(180deg, #46a854 0 22px, #3d984a 22px 44px);
+  .ml-route { display: flex; gap: 5px; }
+  .ml-route i { font: 400 21px/1 "Segoe UI Emoji", sans-serif; font-style: normal; filter: drop-shadow(0 0 5px #7fd0ff); transition: opacity .3s, filter .3s; }
+  .ml-route i.gold { filter: drop-shadow(0 0 7px #ffd24a) sepia(1) saturate(4); }
+  .ml-route i.used { opacity: .25; filter: grayscale(1); }
+  .street { position: relative; height: 300px; border-radius: 12px; overflow: hidden; cursor: pointer;
+    background: linear-gradient(#8fd3ff, #d8f2ff 26%, #4cab48 26% 59%, #d9d3c6 59% 69%, #3f9a3e 69%);
     box-shadow: inset 0 0 0 2px #ffffff22, inset 0 -10px 18px #0005; }
-  .park::before { content: "\1F333\1F333\1F332\1F333"; position: absolute; top: 2px; left: 0; right: 0; text-align: center; letter-spacing: 46px;
-    font: 400 22px/1 "Segoe UI Emoji", sans-serif; }
-  .fl-bands > div { position: absolute; left: 0; right: 0; height: 0; border-top: 2px dashed #ffffff66; }
-  .fl-bands span { position: absolute; top: -11px; padding: 2px 7px; border-radius: 8px; background: #000a; font: 800 14px/1 var(--ui); color: var(--c, #fff); }
-  .fl-bands span.l { left: 6px; } .fl-bands span.r { right: 6px; }
-  .fl-dog, .fl-disc, .fl-pop { position: absolute; left: 0; top: 0; pointer-events: none; }
-  .fl-dog i { display: block; font: 400 44px/1 "Segoe UI Emoji", sans-serif; font-style: normal; transform: scaleX(-1); }
-  .fl-dog.up i { transform: scaleX(-1) rotate(-20deg); }
-  .fl-dog b { position: absolute; left: 50%; top: 2px; margin-left: -13px; width: 26px; height: 11px; border-radius: 50%; display: none;
-    background: radial-gradient(#fff6 0 30%, #0000 32%), radial-gradient(#ff8a2a, #b33a00); }
-  .fl-dog.has b { display: block; }
-  .fl-dog.gold b, .fl-disc.gold b > i { background: radial-gradient(#fff8 0 30%, #0000 32%), conic-gradient(#ffe27a, #b8860b, #fff3b0, #b8860b, #ffe27a); }
-  .fl-disc b { display: block; transform: scaleY(.42); }
-  .fl-disc b > i { display: block; width: 40px; height: 40px; border-radius: 50%; animation: turn .25s linear infinite;
-    background: radial-gradient(#fff5 0 26%, #0000 28%), conic-gradient(#ff8a2a, #b33a00, #ffb36a, #b33a00, #ff8a2a);
-    box-shadow: 0 0 0 3px #8a2a00, 0 6px 6px #0006; }
-  .fl-pop { font: 400 34px/1 var(--display); color: #fff; text-shadow: 0 3px 0 #000, 0 0 12px var(--c, #ffd24a); white-space: nowrap; animation: flpop 1.1s ease-out forwards; }
-  @keyframes flpop { 0% { opacity: 0; scale: .4; } 20% { opacity: 1; scale: 1.25; } 70% { opacity: 1; scale: 1; } 100% { opacity: 0; translate: 0 -40px; } }
-  .m .park { height: 270px; }
-  .m .fl-bands span { font-size: 13px; }
+  .ml-house { position: absolute; bottom: 50%; height: 44%; width: 19%; transform: translateX(-50%); pointer-events: none; text-align: center; }
+  .ml-house i { position: absolute; left: 0; right: 0; bottom: 0; font: 400 48px/1 "Segoe UI Emoji", sans-serif; font-style: normal; }
+  .ml-house b { position: absolute; left: 66%; top: 128%; font: 400 20px/1 "Segoe UI Emoji", sans-serif; }
+  .ml-house span { position: relative; top: -2px; display: inline-block; padding: 3px 7px; border-radius: 8px; background: #000b; font: 800 13px/1 var(--ui); color: #fff;
+    white-space: nowrap; transition: background .3s, transform .3s; }
+  .ml-house.gold span { color: #ffd24a; box-shadow: 0 0 0 1.5px #ffd24a, 0 0 10px #ffb300; }
+  .ml-house.bit span { background: #1a8a3a; color: #fff; transform: scale(1.15); }
+  .ml-house.away span { background: #c0182a; color: #fff; }
+  .ml-man, .ml-dog, .ml-catcher, .ml-pop { position: absolute; left: 0; top: 0; pointer-events: none; }
+  .ml-man svg { display: block; width: 36px; }
+  .ml-dog i { display: block; font: 400 44px/1 "Segoe UI Emoji", sans-serif; font-style: normal; transform: scaleX(-1); }
+  .ml-catcher { opacity: 0; } .ml-catcher.on { opacity: 1; }
+  .ml-catcher svg { display: block; width: 70px; filter: drop-shadow(0 4px 6px #000a); }
+  .ml-pop { font: 400 30px/1 var(--display); color: #fff; text-shadow: 0 3px 0 #000, 0 0 12px var(--c, #ffd24a); white-space: nowrap; animation: mlpop 1.3s ease-out forwards; }
+  @keyframes mlpop { 0% { opacity: 0; scale: .4; } 18% { opacity: 1; scale: 1.25; } 70% { opacity: 1; scale: 1; } 100% { opacity: 0; translate: 0 -40px; } }
+  .m .street { height: 270px; }
+  .m .ml-house i { font-size: 40px; }
+  .m .ml-house span { font-size: 12px; padding: 3px 5px; }
 
   /* ---------- Dog house pick bonus ---------- */
   .bonus.picker { width: 560px; }
@@ -802,7 +798,7 @@
   @keyframes bob3d { 50% { transform: translateY(-4px); } }
   .pays .sym img { width: 10em; height: 10em; object-fit: contain; display: block; }
   #bonus3d { position: absolute; left: 0; top: 0; z-index: 0; border-radius: 12px; pointer-events: none; }
-  .g3 .yard, .g3 .park, .g3 .kennels { position: relative; }
+  .g3 .yard, .g3 .street, .g3 .kennels { position: relative; }
   .g3 .yard { background: #2f7a34; }
   .g3 .mound, .g3 .kennel { z-index: 1; }
   .g3 .mound::before, .g3 .mound > b, .g3 .mound > .sym, .g3 .mound > .catcher { opacity: 0; }
@@ -813,11 +809,10 @@
   .g3 .catch-scene { background: radial-gradient(circle at 50% 70%, #ff3b3b22, #2a000455 75%); }
   .g3 .cs-dog, .g3 .cs-net { display: none; }
   .g3 .cs-catcher { opacity: 0; }
-  .g3 .park { background: #4fb0f5; }
-  .g3 .park::before, .g3 .fl-dog, .g3 .fl-disc { opacity: 0; }
-  .g3 .fl-bands > div { border-top-color: transparent; }
-  .g3 .fl-bands { position: absolute; inset: 0; z-index: 1; }
-  .g3 .fl-pop { z-index: 2; }
+  .g3 .street { background: #5cb4f0; }
+  .g3 .ml-house i, .g3 .ml-house b, .g3 .ml-man, .g3 .ml-dog, .g3 .ml-catcher { opacity: 0; }
+  .g3 .ml-house { z-index: 1; }
+  .g3 .ml-pop { z-index: 2; }
   .g3 .kennel .sym { opacity: 0; }
   .g3 .kennels { min-height: 200px; border-radius: 12px; overflow: hidden; }
 
@@ -971,7 +966,7 @@
         </table>
         <p class="stats" id="stats"></p>
         <p class="fine">Five reels, ten lines. One coin per line; each coin bet lights one more line (middle, top, bottom, the two V's, then the rest).
-          Line wins pay left to right from the first reel, and all line wins are added together. Three or more PAW coins anywhere on screen start the bone dig; three or more BONE coins anywhere start the dog house pick bonus; three or more FRISBEE coins anywhere start the frisbee fling. Every bonus pays a multiple of your total bet. Demo game for entertainment only — no real money is wagered or paid.<br>Dog sounds from Wikimedia Commons: Amada44 (CC BY-SA 3.0), MichaeltheFox8621 (CC BY-SA 4.0), Kriplozoik (CC BY-SA 3.0), Faragó, Pongrácz, Miklósi, Huber, Virányi &amp; Range (CC BY 2.5), amethysta (public domain), Frey, Volodin, Fritsch &amp; Volodina (CC BY 4.0), Knites (CC0); trimmed and level-matched.</p>
+          Line wins pay left to right from the first reel, and all line wins are added together. Three or more PAW coins anywhere on screen start the bone dig; three or more BONE coins anywhere start the dog house pick bonus; three or more MAIL coins anywhere start the mailman chase. Every bonus pays a multiple of your total bet. Demo game for entertainment only — no real money is wagered or paid.<br>Dog sounds from Wikimedia Commons: Amada44 (CC BY-SA 3.0), MichaeltheFox8621 (CC BY-SA 4.0), Kriplozoik (CC BY-SA 3.0), Faragó, Pongrácz, Miklósi, Huber, Virányi &amp; Range (CC BY 2.5), amethysta (public domain), Frey, Volodin, Fritsch &amp; Volodina (CC BY 4.0), Knites (CC0); trimmed and level-matched.</p>
         <button class="close" id="paysClose">RETURN TO GAME</button>
       </div>
     </div>
@@ -987,18 +982,19 @@
       </div>
     </div>
 
-    <div class="overlay" id="flingDlg">
-      <div class="screen bonus fling">
-        <h2>FRISBEE FLING</h2>
-        <p class="bonus-sub" id="flingSub"></p>
-        <div class="fl-top"><div class="fl-discs" id="flDiscs"></div><div class="dug" id="flTotal"></div></div>
-        <div class="park" id="park">
-          <div class="fl-bands" id="flBands"></div>
-          <div class="fl-dog" id="flDog"><i>🐕</i><b></b></div>
-          <div class="fl-disc" id="flDisc"><b><i></i></b></div>
+    <div class="overlay" id="mailDlg">
+      <div class="screen bonus mail">
+        <h2>MAILMAN CHASE</h2>
+        <p class="bonus-sub" id="mailSub"></p>
+        <div class="fl-top"><div class="ml-route" id="mlRoute"></div><div class="dug" id="mlTotal"></div></div>
+        <div class="street" id="street">
+          <div id="mlHouses"></div>
+          <div class="ml-man" id="mlMan"></div>
+          <div class="ml-dog" id="mlDog"><i>🐕</i></div>
+          <div class="ml-catcher" id="mlCatcher"></div>
         </div>
-        <button class="close flipbtn" id="flingBtn">THROW!</button>
-        <p class="fine" id="flingFine"></p>
+        <button class="close flipbtn" id="mailBtn">SIC 'EM!</button>
+        <p class="fine" id="mailFine"></p>
       </div>
     </div>
 
@@ -1056,7 +1052,7 @@ addEventListener('error', e => {
 });
 // D = Doggie Mansion (top symbol), dog bones by rarity: Q = Legendary, B = Epic, T = Rare, P = Uncommon, L = Common
 // X / W / Y / V / Z = dog houses: Duke (Top Dog), Koda (Husky), Rex (Guard Dog), Biscuit (Lab), Peanut (Pup)
-// S = PAW coin, K = BONE coin, F = FRISBEE coin (scatters). Two or three of each per reel; the same coin is always at least
+// S = PAW coin, K = BONE coin, F = MAIL coin (scatters). Two or three of each per reel; the same coin is always at least
 // eight stops apart (a reel never shows two), and different coins are never within two stops (a reel shows one coin at most).
 const STRIPS = [
   'YPLPBSTZTVTLFQDVQPTBWLKTZLSYLZDXLQBVLTSPLKLYWXBZF',
@@ -1073,21 +1069,23 @@ const DIG_BONES = [
   { rarity: 'epic', mult: 5, count: 2 }, { rarity: 'legendary', mult: 10, count: 1 },
 ];
 const DIG_CATCHERS = 3, DIG_MIN = 2;
-// Frisbee fling bonus: FRISBEE_THROWS throws. Each lands in one zone, drawn fairly by weight; the dog catches it there and
-// that multiplier is added (a MISS adds nothing). The last throw is a golden frisbee that counts double. A fling that
-// catches nothing at all still pays FRISBEE_MIN. The prize is the total x total bet.
-const FRISBEE_THROWS = 5, FRISBEE_MIN = 2;
-const FRISBEE_ZONES = [ // nearest to farthest, then the miss
-  { mult: 1, weight: 30, y: 78 }, { mult: 2, weight: 24, y: 63 }, { mult: 3, weight: 18, y: 49 },
-  { mult: 5, weight: 12, y: 35 }, { mult: 10, weight: 6, y: 20 }, { mult: 0, weight: 10 },
+// Mailman chase bonus: the mailman works his way along MAIL_HOUSES houses. At each one your dog gives chase, and a fair
+// weighted draw decides it: the dog catches him and bites a piece off his trousers (that piece's multiplier is added),
+// or he gets the mail in and gets away, and the dog catcher turns up and ends the chase. The last house has a golden
+// mailbox: a bite there counts double. A chase that bites nothing at all still pays MAIL_MIN. The prize is the total x total bet.
+const MAIL_HOUSES = 5, MAIL_MIN = 2;
+const MAIL_PIECES = [ // what the dog comes away with, smallest to biggest, then the mailman getting away
+  { name: 'PATCH', mult: 2, weight: 28 }, { name: 'POCKET', mult: 3, weight: 22 }, { name: 'CUFF', mult: 5, weight: 16 },
+  { name: 'PANT LEG', mult: 10, weight: 9 }, { name: 'SEAT OF HIS PANTS', mult: 25, weight: 5 }, { name: null, mult: 0, weight: 20 },
 ];
-// exact fling odds: each throw is independent, so the mean is the sum of the throws' means (the golden one twice),
-// plus the floor paid when every throw misses
-function flingOdds() {
-  const total = FRISBEE_ZONES.reduce((s, z) => s + z.weight, 0);
-  const each = FRISBEE_ZONES.reduce((s, z) => s + z.mult * z.weight, 0) / total, miss = FRISBEE_ZONES.at(-1).weight / total;
-  const top = Math.max(...FRISBEE_ZONES.map(z => z.mult));
-  return { mean: each * (FRISBEE_THROWS + 1) + FRISBEE_MIN * miss ** FRISBEE_THROWS, max: top * (FRISBEE_THROWS + 1) };
+// exact chase odds: house i is reached only if every chase before it was a bite, so its mean counts with that chance
+// (the golden house twice); a chase that ends at the first house pays the floor
+function mailOdds() {
+  const total = MAIL_PIECES.reduce((s, p) => s + p.weight, 0), away = MAIL_PIECES.at(-1).weight / total;
+  const each = MAIL_PIECES.reduce((s, p) => s + p.mult * p.weight, 0) / total;
+  let mean = 0, reach = 1;
+  for (let i = 0; i < MAIL_HOUSES; i++) { mean += reach * each * (i === MAIL_HOUSES - 1 ? 2 : 1); reach *= 1 - away; }
+  return { mean: mean + MAIL_MIN * away, max: Math.max(...MAIL_PIECES.map(p => p.mult)) * (MAIL_HOUSES + 1) };
 }
 
 // Dog house pick bonus: the houses hide `count` of each dog; the first dog found PICK_MATCH times wins its jackpot (x total bet).
@@ -1191,7 +1189,7 @@ function cycleStats() {
   const cycle = N ** REELS;
   // a bonus needs its scatter showing on every reel; it pays x total bet, so it adds trigger chance x mean prize
   const trigger = scatterChance('S'), pickTrigger = scatterChance('K'), flingTrigger = scatterChance('F');
-  const odds = digOdds(), pick = pickOdds(), fling = flingOdds(), base = paid;
+  const odds = digOdds(), pick = pickOdds(), fling = mailOdds(), base = paid;
   const bonusRtp = trigger * odds.mean, pickRtp = pickTrigger * pick.mean, flingRtp = flingTrigger * fling.mean;
   return { rtp: base + bonusRtp + pickRtp + flingRtp, base, bonusRtp, bonusHit: 1 / trigger, bonusMean: odds.mean, topHit: 1 / topChance,
     flingRtp, flingHit: 1 / flingTrigger, flingMean: fling.mean,
@@ -1250,7 +1248,7 @@ const ART_DEFS = '<svg class="art-defs" aria-hidden="true"><defs>' +
   grad('wood', ['#8a5a2a', '#3d230e']) +
   '<radialGradient id="lamp" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#fffbe0"/><stop offset=".5" stop-color="#ffc94a"/><stop offset="1" stop-color="#c46a00"/></radialGradient>' +
   '<radialGradient id="enamel-paw" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#e9c8ff"/><stop offset=".55" stop-color="#9a45f0"/><stop offset="1" stop-color="#3d0f70"/></radialGradient>' +
-  '<radialGradient id="enamel-frisbee" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffe0b0"/><stop offset=".55" stop-color="#ff6a1a"/><stop offset="1" stop-color="#7a1e00"/></radialGradient>' +
+  '<radialGradient id="enamel-frisbee" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffc8cc"/><stop offset=".55" stop-color="#e0283a"/><stop offset="1" stop-color="#6a0010"/></radialGradient>' +
   '<radialGradient id="enamel-bone" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#bafff0"/><stop offset=".55" stop-color="#1fb894"/><stop offset="1" stop-color="#064a3c"/></radialGradient>' +
   '<radialGradient id="ruby" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0d6"/><stop offset=".45" stop-color="#ff2a4a"/><stop offset="1" stop-color="#6a0012"/></radialGradient>' +
   '<radialGradient id="amethyst" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e6b3ff"/><stop offset="1" stop-color="#5a1499"/></radialGradient>' +
@@ -1464,7 +1462,7 @@ const coinArt = (enamel, emblem) => `<svg class="sx" viewBox="-50 -50 100 100">`
   `<g transform="rotate(${enamel === 'bone' ? -20 : 0})"><g fill="#2a1500" stroke="#2a1500" stroke-width="4" transform="translate(0 2)" opacity=".5">${emblem}</g>` +
   `<g fill="#3a2200" stroke="#3a2200" stroke-width="3.5">${emblem}</g><g fill="url(#gold)">${emblem}</g></g>` +
   `<path d="M-35 -12A37 37 0 0 1 10 -36" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="5" stroke-linecap="round"/></svg>`;
-const COIN_FRISBEE = '<g transform="rotate(-14)"><ellipse cx="0" cy="3" rx="29" ry="13"/><ellipse cx="0" cy="-2" rx="22" ry="8.5"/></g>';
+const COIN_FRISBEE = '<g transform="rotate(-8)"><path fill-rule="evenodd" d="M-27-17H27V17H-27ZM-21-9L0 6 21-9V12H-21Z"/></g>'; // an envelope
 const PAW_COIN = coinArt('paw', PAW), BONE_COIN = coinArt('bone', COIN_BONE), FRISBEE_COIN = coinArt('frisbee', COIN_FRISBEE);
 
 function symbolHTML(s) {
@@ -1472,7 +1470,7 @@ function symbolHTML(s) {
     D: `<span class="dq">${MANSION}<strong>DOGGIE MANSION</strong></span>`,
     K: `<span class="dq picksym">${BONE_COIN}<strong>DOG HOUSE</strong></span>`,
     S: `<span class="dq flipsym">${PAW_COIN}<strong>BONE DIG</strong></span>`,
-    F: `<span class="dq flingsym">${FRISBEE_COIN}<strong>FRISBEE</strong></span>`,
+    F: `<span class="dq flingsym">${FRISBEE_COIN}<strong>MAIL</strong></span>`,
     X: houseHTML('h3', DOG_ART.corso, 'DUKE', '<em>👑</em>'),
     W: houseHTML('h5', DOG_ART.husky, 'KODA'),
     Y: houseHTML('h2', DOG_ART.gsd, 'REX'),
@@ -1888,7 +1886,7 @@ function buildPayTable() {
     one(symbolHTML('P').repeat(2) + '<i>first two reels</i>', NICKEL_TWO) + one(symbolHTML('P') + '<i>first reel</i>', NICKEL_ONE) +
     one(`${three('S')}<i>3+ anywhere — Bone Dig</i>`, `×${DIG_MIN} – ×${digOdds().max} TOTAL BET`) +
     one(`${three('K')}<i>3+ anywhere — Dog House Pick</i>`, `×${JACKPOTS.at(-1).mult} – ×${JACKPOTS[0].mult} TOTAL BET`) +
-    one(`${three('F')}<i>3+ anywhere — Frisbee Fling</i>`, `×${FRISBEE_MIN} – ×${flingOdds().max} TOTAL BET`);
+    one(`${three('F')}<i>3+ anywhere — Mailman Chase</i>`, `×${MAIL_MIN} – ×${mailOdds().max} TOTAL BET`);
   stats = cycleStats();
   $('stats').innerHTML =
     `Theoretical payback: <b>${(stats.rtp * 100).toFixed(2)}%</b> (same at every denomination and bet)<br>` +
@@ -1900,10 +1898,10 @@ function buildPayTable() {
     `Dog house pick: 1 in ${stats.pickHit.toFixed(1)} spins · match ${PICK_MATCH} dogs · ` +
     JACKPOTS.map((j, i) => `${j.name} ×${j.mult} <small>(${(stats.pickChance[i] * 100).toFixed(1)}%)</small>`).join(', ') +
     ` · average ×${stats.pickMean.toFixed(2)} total bet<br>` +
-    `Frisbee fling: 1 in ${stats.flingHit.toFixed(1)} spins · ${FRISBEE_THROWS} throws, the last one golden (counts double) · catch zones ` +
-    FRISBEE_ZONES.map(z => `${z.mult ? '×' + z.mult : 'miss'} <small>(${(z.weight / FRISBEE_ZONES.reduce((a, q) => a + q.weight, 0) * 100).toFixed(0)}%)</small>`).join(', ') +
+    `Mailman chase: 1 in ${stats.flingHit.toFixed(1)} spins · up to ${MAIL_HOUSES} houses, the last mailbox golden (a bite counts double) · each chase ` +
+    MAIL_PIECES.map(p => `${p.mult ? p.name.toLowerCase() + ' ×' + p.mult : 'he gets away and the dog catcher comes'} <small>(${(p.weight / MAIL_PIECES.reduce((a, q) => a + q.weight, 0) * 100).toFixed(0)}%)</small>`).join(', ') +
     ` · average ×${stats.flingMean.toFixed(2)} total bet<br>` +
-    `Payback split: ${(stats.base * 100).toFixed(2)}% line pays + ${(stats.bonusRtp * 100).toFixed(2)}% bone dig + ${(stats.pickRtp * 100).toFixed(2)}% dog house pick + ${(stats.flingRtp * 100).toFixed(2)}% frisbee fling`;
+    `Payback split: ${(stats.base * 100).toFixed(2)}% line pays + ${(stats.bonusRtp * 100).toFixed(2)}% bone dig + ${(stats.pickRtp * 100).toFixed(2)}% dog house pick + ${(stats.flingRtp * 100).toFixed(2)}% mailman chase`;
   $('plate').textContent = `DOGGIE QUARTERS · HOME OF THE LUCKY DOG · PAYBACK ${(stats.rtp * 100).toFixed(2)}% · DEMO — NOT FOR WAGERING`;
 }
 
@@ -1917,7 +1915,7 @@ function say(text, cls = 'pop') {
   m.firstElementChild.textContent = text;
   if (cls !== 'attract') lastSaid = Date.now();
 }
-const ATTRACT = ['Insert coins to play', 'Five Doggie Mansions pay 500 per line', 'Every dog has its payday', 'Meet Duke, Koda, Rex, Biscuit and Peanut', 'Line up the dog houses', 'Three paw coins start the bone dig', 'Dig up a legendary bone', 'Three bone coins open the dog houses', 'Three frisbee coins start the frisbee fling', 'Play 10 lines — hit Max Bet', 'Touch the coin to change denomination', 'Rarer bones pay bigger'];
+const ATTRACT = ['Insert coins to play', 'Five Doggie Mansions pay 500 per line', 'Every dog has its payday', 'Meet Duke, Koda, Rex, Biscuit and Peanut', 'Line up the dog houses', 'Three paw coins start the bone dig', 'Dig up a legendary bone', 'Three bone coins open the dog houses', 'Three mail coins start the mailman chase', 'Bite the mailman, dodge the dog catcher', 'Play 10 lines — hit Max Bet', 'Touch the coin to change denomination', 'Rarer bones pay bigger'];
 let attractAt = 0;
 setInterval(() => {
   if (spinning || pending || overlayOpen() || Date.now() - lastSaid < 7000) return;
@@ -1948,7 +1946,7 @@ function render() {
   const sp = $('spin');
   sp.classList.toggle('stop', spinning);
   sp.classList.toggle('ready', !spinning && balance >= bet * denom);
-  sp.firstElementChild.textContent = bonus ? (bonus.pick ? 'Pick' : bonus.fling ? 'Throw' : 'Dig') : spinning ? 'Stop' : 'Spin';
+  sp.firstElementChild.textContent = bonus ? (bonus.pick ? 'Pick' : bonus.mail ? 'Chase' : 'Dig') : spinning ? 'Stop' : 'Spin';
 }
 
 let cycleTimer;
@@ -2379,7 +2377,7 @@ function settle() {
   }
   const total = wins.reduce((s, w) => s + w.pay, 0);
   // three or more of a bonus coin anywhere start its bonus; line wins are paid together with it afterwards
-  for (const [sym, start] of [['S', startDig], ['K', startPick], ['F', startFling]]) {
+  for (const [sym, start] of [['S', startDig], ['K', startPick], ['F', startMail]]) {
     const rows = stops.map((st, r) => scatterRow(r, st, sym));
     if (rows.filter(row => row >= 0).length >= BONUS_COINS) {
       start(wins, total, rows.map((row, r) => row >= 0 && reels[r].cells[topIndex(stops[r]) + row]).filter(Boolean));
@@ -2588,124 +2586,130 @@ function collectBonus() {
   spinning = false;
   $('bonusDlg').classList.remove('open');
   $('pickDlg').classList.remove('open');
-  $('flingDlg').classList.remove('open');
+  $('mailDlg').classList.remove('open');
   $('cabinet').classList.remove('party');
   window.G3?.bonusClose();
   award(b.wins, b.lineTotal + coinsWon, b.cells, coinsWon);
 }
 // SPIN button / space bar while a bonus is up
-const bonusKey = () => bonus.pick ? pickHouse() : bonus.fling ? throwFrisbee() : digMound();
+const bonusKey = () => bonus.pick ? pickHouse() : bonus.mail ? chaseMailman() : digMound();
 
-// ---------- Frisbee fling bonus ----------
-const FLING_START = { x: 50, y: 93 };
-const parkScale = y => 0.42 + 0.58 * (y / 93); // things look smaller the farther away they are
-// place an element at x%, y% of the park (its centre), sized for the distance
-const parkAt = (el, x, y, extra = '') => {
-  const park = $('park');
-  return `translate(${x * park.clientWidth / 100}px, ${y * park.clientHeight / 100}px) translate(-50%, -50%) scale(${parkScale(y)})${extra}`;
+// ---------- Mailman chase bonus ----------
+// the street, in % of its box: the houses stand on MAIL_GROUND, the mailman stops on the sidewalk at MAIL_Y, the dog waits at MAIL_DOG
+const MAIL_X = [10, 30, 50, 70, 90], MAIL_GROUND = 50, MAIL_Y = 64, MAIL_DOG = { x: 50, y: 84 };
+// place an element with its feet at x%, y% of the street
+const streetAt = (x, y, extra = '') => {
+  const st = $('street');
+  return `translate(${x * st.clientWidth / 100}px, ${y * st.clientHeight / 100}px) translate(-50%, -100%)${extra}`;
 };
-const ZONE_COLORS = { 1: '#b8f0ff', 2: '#8affb0', 3: '#ffe27a', 5: '#ffb36a', 10: '#ff7ad8' };
+const manX = i => MAIL_X[i] - 4;
+const PIECE_COLORS = { 2: '#b8f0ff', 3: '#8affb0', 5: '#ffe27a', 10: '#ffb36a', 25: '#ff7ad8' };
+const MAILMAN_SVG = '<svg viewBox="0 0 40 72">' +
+  '<path d="M13 44h6l-1 23h-6zM21 44h6l1 23h-6z" fill="#2a3a62"/><path d="M10 66h9v4H9zM21 66h9l1 4H21z" fill="#1a1614"/>' +
+  '<path d="M10 26q10-5 20 0l2 20H8z" fill="#a9c8ec" stroke="#5a7aa0" stroke-width="1"/><path d="M19 27l1 11 1-11z" fill="#1f2f5a"/>' +
+  '<path d="M29 26L9 40" stroke="#6a3c1a" stroke-width="2.4"/><rect x="2" y="37" width="12" height="10" rx="2" fill="#7a4a24"/><path d="M4 37h8v-3H4z" fill="#fbf8ef"/>' +
+  '<circle cx="20" cy="17" r="8" fill="#c98c5c"/><path d="M10 14q10-13 20 0z" fill="#ece4cc"/><path d="M6 14h28" stroke="#d8ceb0" stroke-width="2.6" stroke-linecap="round"/>' +
+  '<circle cx="17" cy="18" r="2.5" fill="none" stroke="#222" stroke-width="1"/><circle cx="23" cy="18" r="2.5" fill="none" stroke="#222" stroke-width="1"/>' +
+  '<path d="M17 22.5q3 1.5 6 0" stroke="#5a3010" stroke-width="1.2" fill="none"/><rect x="31" y="35" width="8" height="5.5" fill="#fbf8ef" stroke="#888" stroke-width=".6"/></svg>';
 
-function startFling(wins, lineTotal, cells) {
-  bonus = { fling: true, wins, lineTotal, cells, thrown: 0, total: 0, busy: true, done: false, mult: 0 };
+function startMail(wins, lineTotal, cells) {
+  bonus = { mail: true, wins, lineTotal, cells, house: 0, total: 0, busy: true, done: false, mult: 0 };
   $('reels').classList.add('has-win');
   cells.forEach(c => c.classList.add('win'));
   popOut(); quake();
   $('cabinet').classList.add('party');
-  say('Frisbee fling — throw it, your dog will catch it!');
-  barkTune([420, 500, 560, 600]); yip(0.9, 0.4); yip(1.05, 0.4);
-  $('flBands').innerHTML = FRISBEE_ZONES.filter(z => z.mult).map(z =>
-    `<div style="top:${z.y}%;--c:${ZONE_COLORS[z.mult]}"><span class="l">×${z.mult}</span><span class="r">×${z.mult}</span></div>`).join('');
-  $('flDiscs').innerHTML = Array.from({ length: FRISBEE_THROWS }, (_, i) => `<i class="${i === FRISBEE_THROWS - 1 ? 'gold' : ''}"></i>`).join('');
-  $('flingFine').textContent = `Tap THROW or the park. Each of the ${FRISBEE_THROWS} throws is caught at ×1 to ×10 (or sails over the fence); ` +
-    `the last frisbee is golden and counts double. Every throw is a fair random draw.`;
-  $('flingBtn').textContent = 'THROW!';
-  $('flDog').className = 'fl-dog'; $('flDisc').className = 'fl-disc';
-  $('flDisc').style.opacity = 0;
-  paintFling();
+  say("Mailman chase — sic 'em!");
+  barkTune([420, 500, 560, 600]); bark(300, 0.5, 0.6); bark(300, 0.75, 0.6);
+  $('mlHouses').innerHTML = MAIL_X.map((x, i) => `<div class="ml-house${i === MAIL_HOUSES - 1 ? ' gold' : ''}" style="left:${x}%">` +
+    `<span>${i === MAIL_HOUSES - 1 ? '★ ×2' : 'No. ' + (i + 1)}</span><i>🏠</i><b>📫</b></div>`).join('');
+  $('mlRoute').innerHTML = MAIL_X.map((_, i) => `<i class="${i === MAIL_HOUSES - 1 ? 'gold' : ''}">✉️</i>`).join('');
+  $('mailFine').textContent = `Tap SIC 'EM or the street. At each of the ${MAIL_HOUSES} houses your dog chases the mailman: catch him and bite a piece off ` +
+    `his pants for ×2 to ×25 — but if he gets the mail in, the dog catcher comes and the chase is over. The last mailbox is golden: a bite there counts double. ` +
+    `Every chase is a fair random draw.`;
+  $('mailBtn').textContent = "SIC 'EM!";
+  $('mlMan').innerHTML = MAILMAN_SVG; $('mlCatcher').innerHTML = CATCHER_SVG; $('mlCatcher').className = 'ml-catcher';
+  paintMail();
   render();
-  window.G3?.bonus('fling');
+  window.G3?.bonus('mail');
   setTimeout(() => {
-    $('flingDlg').classList.add('open');
-    $('flDog').style.transform = parkAt($('flDog'), FLING_START.x, FLING_START.y);
-    bonus.busy = false; paintFling();
-    window.G3?.bonusOpen('fling');
+    $('mailDlg').classList.add('open');
+    $('mlDog').style.transform = streetAt(MAIL_DOG.x, MAIL_DOG.y);
+    $('mlMan').animate([{ transform: streetAt(-10, MAIL_Y) }, { transform: streetAt(manX(0), MAIL_Y) }], { duration: 900, easing: 'ease-out', fill: 'forwards' });
+    window.G3?.bonusOpen('mail');
+    setTimeout(() => { bonus.busy = false; paintMail(); }, 1000);
   }, 1900);
 }
 
-function paintFling() {
-  const { thrown, total, done, busy, mult } = bonus, left = FRISBEE_THROWS - thrown, shown = done ? mult : total;
-  [...$('flDiscs').children].forEach((d, i) => d.classList.toggle('used', i < thrown));
-  $('flTotal').textContent = `×${shown} · ${(shown * bet).toLocaleString()} CR`;
-  $('flingBtn').disabled = busy;
+function paintMail() {
+  const { house, total, done, busy, mult } = bonus, shown = done ? mult : total;
+  [...$('mlRoute').children].forEach((d, i) => d.classList.toggle('used', i < house));
+  $('mlTotal').textContent = `×${shown} · ${(shown * bet).toLocaleString()} CR`;
+  $('mailBtn').disabled = busy;
   if (done) return;
-  $('flingSub').textContent = left === 1 ? 'Golden frisbee — this catch counts double!' : `${left} throws left — far catches pay the most`;
+  $('mailSub').textContent = house === MAIL_HOUSES - 1 ? 'Golden mailbox — this bite counts double!' : `House ${house + 1} of ${MAIL_HOUSES} — get him before the mail goes in!`;
 }
 
-function throwFrisbee() {
-  if (!bonus || !bonus.fling || bonus.busy) return;
+function chaseMailman() {
+  if (!bonus || !bonus.mail || bonus.busy) return;
   if (bonus.done) { collectBonus(); return; }
   bonus.busy = true;
-  paintFling();
-  // where this throw is caught is decided here, by a fair weighted draw; the animation only shows it
-  const weights = FRISBEE_ZONES.reduce((a, z) => a + z.weight, 0);
-  let roll = randomInt(weights), zone = FRISBEE_ZONES[0];
-  for (const z of FRISBEE_ZONES) { if (roll < z.weight) { zone = z; break; } roll -= z.weight; }
-  const golden = bonus.thrown === FRISBEE_THROWS - 1, caught = zone.mult > 0;
-  const tx = caught ? 18 + randomInt(65) : (randomInt(2) ? 112 : -12), ty = caught ? zone.y : 14;
-  const dx = caught ? tx : 50 + (tx > 50 ? 30 : -30), dy = caught ? ty : 34; // a miss: the dog stops short
-  const disc = $('flDisc'), dog = $('flDog'), T = 950;
-  window.G3?.fling({ tx, ty, dx, dy, caught, golden, T });
-  disc.className = 'fl-disc' + (golden ? ' gold' : ''); disc.style.opacity = 1;
-  dog.className = 'fl-dog' + (golden ? ' gold' : '');
-  const midX = (FLING_START.x + tx) / 2 + (tx > 50 ? -14 : 14), midY = (FLING_START.y + ty) / 2 - 14;
-  disc.animate([
-    { transform: parkAt(disc, FLING_START.x, FLING_START.y - 6) },
-    { transform: parkAt(disc, midX, midY) },
-    { transform: parkAt(disc, tx, ty) },
-  ], { duration: T, easing: 'cubic-bezier(.3, .2, .4, 1)', fill: 'forwards' });
+  paintMail();
+  // whether the dog gets him, and what it tears off, is decided here by a fair weighted draw; the animation only shows it
+  const weights = MAIL_PIECES.reduce((a, p) => a + p.weight, 0);
+  let roll = randomInt(weights), piece = MAIL_PIECES[0];
+  for (const p of MAIL_PIECES) { if (roll < p.weight) { piece = p; break; } roll -= p.weight; }
+  const i = bonus.house, golden = i === MAIL_HOUSES - 1, bit = piece.mult > 0, gain = piece.mult * (golden ? 2 : 1), T = 1600;
+  window.G3?.mail({ house: i, bit, gain, golden, T });
+  const man = $('mlMan'), dog = $('mlDog'), mx = manX(i), at = streetAt(mx - 5, MAIL_Y + 3);
   dog.animate([
-    { transform: parkAt(dog, FLING_START.x, FLING_START.y), offset: 0 },
-    { transform: parkAt(dog, dx, dy), offset: .82 },
-    { transform: parkAt(dog, dx, dy, ' translateY(-34px)'), offset: .92 },
-    { transform: parkAt(dog, dx, dy), offset: 1 },
-  ], { duration: T + 250, delay: 120, easing: 'ease-out', fill: 'forwards' });
-  yip(0, 0.35); bark(540, 0.25, 0.35);
-  setTimeout(() => dog.classList.add('up'), 120 + (T + 250) * .82);
+    { transform: streetAt(MAIL_DOG.x, MAIL_DOG.y) }, { transform: at, offset: .4 },
+    { transform: streetAt(mx - 5, MAIL_Y + 3, ' rotate(-14deg)'), offset: .6 }, { transform: streetAt(mx - 5, MAIL_Y + 3, ' rotate(14deg)'), offset: .8 }, { transform: at },
+  ], { duration: T, easing: 'ease-out', fill: 'forwards' });
+  if (!bit) man.animate([{ transform: streetAt(mx, MAIL_Y) }, { transform: streetAt(mx + 4, MAIL_Y, ' translateY(-30px)'), offset: .3 }, { transform: streetAt(mx + 8, MAIL_Y) }],
+    { duration: 700, delay: 250, easing: 'ease-out', fill: 'forwards' });
+  bark(300, 0, 0.6); growl(0.35, 0.3, 0.5, 90);
   setTimeout(() => {
-    dog.classList.remove('up');
-    bonus.thrown++;
-    const gain = zone.mult * (golden ? 2 : 1);
+    bonus.house++;
     bonus.total += gain;
     const pop = document.createElement('div');
-    pop.className = 'fl-pop';
-    pop.style.setProperty('--c', caught ? ZONE_COLORS[zone.mult] : '#ff3b3b');
-    pop.textContent = caught ? `CATCH! +×${gain}` : 'OVER THE FENCE!';
-    pop.style.transform = parkAt(pop, caught ? tx : 50, Math.max(ty - 8, 12));
-    $('park').appendChild(pop);
-    setTimeout(() => pop.remove(), 1100);
-    if (caught) {
-      disc.style.opacity = 0; dog.classList.add('has');
-      if (gain >= 10) { barkTune([420, 500, 560, 640], 0, 0.6); howl(0.7); } else if (gain >= 5) barkTune([420, 500, 560], 0, 0.55); else bark(450, 0, 0.5);
-    } else { disc.style.opacity = 0; whine(0.1, 0.7, 0.14, 700); }
-    paintFling();
-    // trot back for the next throw
-    dog.animate([{ transform: parkAt(dog, dx, dy) }, { transform: parkAt(dog, FLING_START.x, FLING_START.y) }],
-      { duration: 650, delay: 350, easing: 'ease-in-out', fill: 'forwards' });
-    setTimeout(() => {
-      dog.classList.remove('has');
-      bonus.busy = false;
-      if (bonus.thrown === FRISBEE_THROWS) {
-        bonus.done = true;
-        bonus.mult = Math.max(bonus.total, FRISBEE_MIN);
-        const coinsWon = bonus.mult * bet;
-        $('flingSub').textContent = `What a good dog — ×${bonus.mult} pays ${coinsWon.toLocaleString()} credits`;
-        $('flingBtn').textContent = 'COLLECT ' + money(coinsWon * denom);
-        barkTune([360, 420, 500, 600, 700], 0, 0.55);
-      }
-      paintFling();
-    }, 1050);
-  }, 120 + T + 250);
+    pop.className = 'ml-pop';
+    pop.style.setProperty('--c', bit ? PIECE_COLORS[piece.mult] : '#ff3b3b');
+    pop.textContent = bit ? `${piece.name}! +×${gain}` : 'HE GOT AWAY!';
+    pop.style.transform = streetAt(Math.min(Math.max(mx, 24), 76), 40);
+    $('street').appendChild(pop);
+    setTimeout(() => pop.remove(), 1300);
+    const tag = $('mlHouses').children[i];
+    tag.classList.add(bit ? 'bit' : 'away');
+    tag.querySelector('span').textContent = bit ? `+×${gain}` : '✉ IN';
+    if (bit) { if (gain >= 10) { barkTune([420, 500, 560, 640], 0, 0.6); howl(0.7); } else barkTune([420, 500], 0, 0.55); }
+    else { whine(0.1, 0.7, 0.14, 700); }
+    paintMail();
+    if (bit && !golden) { // the mailman hurries on to the next house; the dog trots home
+      man.animate([{ transform: streetAt(mx, MAIL_Y) }, { transform: streetAt(manX(i + 1), MAIL_Y) }], { duration: 1100, delay: 200, easing: 'ease-in-out', fill: 'forwards' });
+      dog.animate([{ transform: at }, { transform: streetAt(MAIL_DOG.x, MAIL_DOG.y) }], { duration: 800, delay: 300, easing: 'ease-in-out', fill: 'forwards' });
+      setTimeout(() => { bonus.busy = false; paintMail(); }, 1400);
+      return;
+    }
+    if (bit) man.animate([{ transform: streetAt(mx, MAIL_Y) }, { transform: streetAt(115, MAIL_Y) }], { duration: 900, delay: 200, easing: 'ease-in', fill: 'forwards' });
+    else { // the dog catcher comes for the dog
+      const c = $('mlCatcher'); c.classList.add('on');
+      c.animate([{ transform: streetAt(115, MAIL_Y + 22) }, { transform: streetAt(mx + 6, MAIL_Y + 14) }], { duration: 800, delay: 500, easing: 'ease-out', fill: 'both' });
+      growl(0.9, 0, 0.45, 85); whine(1.6, 0.7, 0.14, 700);
+    }
+    setTimeout(finishMail, bit ? 1200 : 2200);
+  }, T);
+}
+
+function finishMail() {
+  bonus.busy = false;
+  bonus.done = true;
+  bonus.mult = Math.max(bonus.total, MAIL_MIN);
+  const coinsWon = bonus.mult * bet;
+  $('mailSub').textContent = (bonus.house === MAIL_HOUSES && bonus.total ? 'The whole street — what a good dog! ' : bonus.total ? 'The dog catcher ended the chase — ' : 'Caught by the dog catcher — ') +
+    `×${bonus.mult} pays ${coinsWon.toLocaleString()} credits`;
+  $('mailBtn').textContent = 'COLLECT ' + money(coinsWon * denom);
+  barkTune([360, 420, 500, 600, 700], 0, 0.55);
+  paintMail();
 }
 
 // ---------- Dog house pick bonus ----------
@@ -2826,8 +2830,8 @@ $('tClose').onclick = () => $('ticketDlg').classList.remove('open');
 $('digBtn').onclick = () => digMound();
 $('yard').onclick = e => { const b = e.target.closest('.mound'); if (b) digMound(+b.dataset.i); };
 $('pickBtn').onclick = () => pickHouse();
-$('flingBtn').onclick = () => throwFrisbee();
-$('park').onclick = () => throwFrisbee(); // tap the park to throw
+$('mailBtn').onclick = () => chaseMailman();
+$('street').onclick = () => chaseMailman(); // tap the street to sic 'em
 $('kennels').onclick = e => { const b = e.target.closest('.kennel'); if (b) pickHouse(+b.dataset.i); };
 $('zoomIn').onclick = () => setZoom(1);
 $('zoomOut').onclick = () => setZoom(-1);
@@ -3507,8 +3511,298 @@ function updatePuffs(dt) {
   }
 }
 
+// ---------- people: the dog catcher and the mailman ----------
+// Built like the dogs: a jointed rig (hips, knees, ankles, shoulders, elbows, neck), sewn-cloth materials with a woven
+// bump, and a face with whites, irises, brows, blinks and a mouth that can change, so they act like characters.
+const WEAVE = canvasTex(128, 128, (g, w) => {
+  g.fillStyle = '#808080'; g.fillRect(0, 0, w, w);
+  for (let y = 0; y < w; y += 4) for (let x = 0; x < w; x += 4) {
+    const on = ((x + y) / 4) % 2;
+    g.fillStyle = on ? '#9c9c9c' : '#666'; g.fillRect(x, y, 4, 2);
+    g.fillStyle = on ? '#6c6c6c' : '#a2a2a2'; g.fillRect(x, y + 2, 4, 2);
+  }
+}, false);
+WEAVE.wrapS = WEAVE.wrapT = THREE.RepeatWrapping; WEAVE.repeat.set(6, 6);
+const cloth = (color, o = {}) => new THREE.MeshPhysicalMaterial({ color, roughness: .82, sheen: .6, sheenRoughness: .55,
+  sheenColor: new THREE.Color(color).lerp(new THREE.Color('#ffffff'), .55), bumpMap: WEAVE, bumpScale: .45, ...o });
+const skinMat = (tone = '#e9b48a') => new THREE.MeshPhysicalMaterial({ color: tone, roughness: .5, sheen: .5, sheenRoughness: .45, sheenColor: new THREE.Color('#ff8f72') });
+// boxer shorts: red with white hearts (what's under the mailman's trousers)
+const HEARTS = canvasTex(128, 128, (g, w) => {
+  g.fillStyle = '#e8283c'; g.fillRect(0, 0, w, w); g.fillStyle = '#fff4f4';
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
+    const x = i * 32 + (j % 2) * 16 + 8, y = j * 32 + 10;
+    g.beginPath(); g.moveTo(x, y + 8); g.bezierCurveTo(x - 10, y, x - 6, y - 7, x, y - 2); g.bezierCurveTo(x + 6, y - 7, x + 10, y, x, y + 8); g.fill();
+  }
+});
+HEARTS.wrapS = HEARTS.wrapT = THREE.RepeatWrapping; HEARTS.repeat.set(2, 2);
+
+// a tapered capsule hanging down from its joint: top at 0, bottom at -len
+function limb(rTop, rBot, len, mat) {
+  const g = new THREE.CapsuleGeometry(1, len, 6, 16), p = g.attributes.position, h = len / 2;
+  for (let i = 0; i < p.count; i++) {
+    const y = p.getY(i), u = clamp((y + h) / len, 0, 1), r = rBot + (rTop - rBot) * u;
+    p.setX(i, p.getX(i) * r); p.setZ(i, p.getZ(i) * r);
+    p.setY(i, y > h ? h + (y - h) * rTop : y < -h ? -h + (y + h) * rBot : y);
+  }
+  g.translate(0, -h, 0); g.computeVertexNormals();
+  const m = new THREE.Mesh(g, mat); m.castShadow = true;
+  return m;
+}
+// a body section turned on a lathe from (radius, height) pairs, flattened front to back
+function lathe(pts, mat, depth = .72) {
+  const g = new THREE.LatheGeometry(pts.map(([r, y]) => new THREE.Vector2(r, y)), 36); g.scale(1, 1, depth);
+  const m = new THREE.Mesh(g, mat); m.castShadow = true;
+  return m;
+}
+const part = (geo, mat, x = 0, y = 0, z = 0, parent) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; if (parent) parent.add(m); return m; };
+
+// The rig, facing +z with the feet on y = 0, about 2.15 tall. Options pick the outfit; the result's userData has the
+// joints (body, hips, legs, knees, armL/armR, elbows, head, neck), the face (eyes, brows, mouth, yell) and outfit parts.
+function buildPerson(o) {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const shirt = cloth(o.shirt), pants = cloth(o.pants), skin = skinMat(o.skin), shoe = glossy('#1a1614', { roughness: .4, clearcoat: .6 });
+  const ud = { body, legs: [], knees: [], ankles: [], elbows: [], hands: [], shins: [], thighs: [], cuffs: [], pants, skin, seed: Math.random() * 9 };
+  // hips and trousers
+  const pelvis = lathe([[0, -.2], [.16, -.2], [.25, -.13], [.29, -.04], [.295, .04], [.29, .1], [0, .1]], pants); pelvis.position.y = .98; body.add(pelvis); ud.pelvis = pelvis;
+  const belt = new THREE.Mesh(new THREE.CylinderGeometry(.3, .3, .075, 36, 1, true), glossy(o.belt || '#2a1a10', { roughness: .45 })); belt.scale.z = .74; belt.position.y = 1.06; body.add(belt);
+  part(new RoundedBoxGeometry(.1, .075, .03, 2, .012), MAT.gold, 0, 1.06, .222, body);
+  for (const s of [1, -1]) { // the belt loops
+    part(new THREE.BoxGeometry(.02, .1, .02), pants, s * .13, 1.06, .205, body);
+    part(new THREE.BoxGeometry(.02, .1, .02), pants, s * .26, 1.06, .08, body);
+  }
+  // legs: thigh, knee, shin, a cuffed hem, the shoe
+  for (const s of [1, -1]) {
+    const hip = new THREE.Group(); hip.position.set(s * .145, .9, 0); body.add(hip); ud.legs.push(hip);
+    const thigh = limb(.14, .115, .36, pants); hip.add(thigh); ud.thighs.push(thigh);
+    const knee = new THREE.Group(); knee.position.y = -.41; hip.add(knee); ud.knees.push(knee);
+    const shin = limb(.118, .1, .3, pants); knee.add(shin); ud.shins.push(shin);
+    const cuff = new THREE.Mesh(new THREE.CylinderGeometry(.112, .118, .07, 20, 1, true), pants); cuff.position.y = -.33; cuff.material.side = THREE.DoubleSide; knee.add(cuff); ud.cuffs.push(cuff);
+    // the crease down the front of the trouser leg
+    part(new THREE.BoxGeometry(.012, .62, .012), cloth(o.pants, { color: new THREE.Color(o.pants).multiplyScalar(.75) }), 0, -.36, .118, hip).rotation.x = .02;
+    if (o.stripe) part(new THREE.BoxGeometry(.014, .72, .03), matte(o.stripe), s * .128, -.36, 0, hip);
+    const ankle = new THREE.Group(); ankle.position.y = -.38; knee.add(ankle); ud.ankles.push(ankle);
+    const sock = part(new THREE.CylinderGeometry(.075, .08, .08, 14), matte(o.sock || '#f2f2f2'), 0, -.02, 0, ankle); sock.visible = false; ud[s > 0 ? 'sockL' : 'sockR'] = sock;
+    part(ellipsoid(.105, .075, .19, 20), shoe, 0, -.05, .06, ankle);
+    part(new RoundedBoxGeometry(.2, .035, .38, 2, .014), matte(o.sole || '#3a2a20'), 0, -.11, .06, ankle);
+    if (o.boots) part(new THREE.CylinderGeometry(.11, .1, .16, 16), shoe, 0, .02, 0, ankle);
+    else part(new THREE.TorusGeometry(.035, .008, 6, 12), matte('#d8d0c0'), 0, -.005, .2, ankle).rotation.x = -1;
+  }
+  // the shirt: chest and shoulders on a lathe, buttons down a placket, pockets with flaps, a collar
+  const torso = lathe([[0, -.02], [.275, -.02], [.285, .1], [.3, .26], [.335, .42], [.345, .5], [.32, .58], [.22, .645], [.1, .66], [0, .66]], shirt, .7);
+  torso.position.y = 1.04; body.add(torso); ud.torso = torso;
+  if (o.tuck !== false) part(new THREE.TorusGeometry(.282, .018, 8, 36), shirt, 0, 1.03, 0, body).scale.set(1, .72, 1), body.children.at(-1).rotation.x = Math.PI / 2;
+  part(new THREE.BoxGeometry(.05, .56, .02), cloth(o.shirt, { color: new THREE.Color(o.shirt).multiplyScalar(.88) }), 0, 1.34, .222, body).rotation.x = -.12;
+  for (let i = 0; i < 4; i++) part(new THREE.SphereGeometry(.014, 8, 6), glossy('#f4f0e6'), 0, 1.16 + i * .12, .232 - i * .012, body);
+  for (const s of [1, -1]) {
+    const pk = part(new RoundedBoxGeometry(.13, .14, .02, 2, .01), shirt, s * .14, 1.4, .218, body); pk.rotation.set(-.2, s * .3, 0);
+    const flap = part(new RoundedBoxGeometry(.14, .045, .03, 2, .01), cloth(o.shirt, { color: new THREE.Color(o.shirt).multiplyScalar(.85) }), s * .14, 1.47, .224, body); flap.rotation.set(-.25, s * .3, 0);
+    const col = part(new THREE.ConeGeometry(.075, .14, 3), shirt, s * .075, 1.66, .13, body); col.rotation.set(1.1, 0, s * -.6); col.scale.z = .35;
+    if (o.patch) { const pt = part(new THREE.CircleGeometry(.07, 20), glossy(o.patch, { roughness: .5 }), s * .345, 1.5, 0, body); pt.rotation.y = s * Math.PI / 2; }
+  }
+  if (o.necktie) {
+    const tie = part(new THREE.ConeGeometry(.045, .3, 4), glossy(o.necktie, { roughness: .45 }), 0, 1.5, .238, body); tie.rotation.set(Math.PI - .1, Math.PI / 4, 0); tie.scale.z = .4;
+    part(new THREE.SphereGeometry(.03, 8, 6), glossy(o.necktie), 0, 1.645, .2, body).scale.set(1.2, .9, .6);
+  }
+  // arms: a shoulder that can swing every way, an elbow, a hand with a thumb
+  for (const s of [1, -1]) {
+    const sh = new THREE.Group(); sh.position.set(s * .345, 1.56, 0); body.add(sh); ud[s > 0 ? 'armL' : 'armR'] = sh;
+    part(new THREE.SphereGeometry(.105, 16, 12), shirt, 0, 0, 0, sh).scale.set(1, .9, 1);
+    if (o.shortSleeves) { sh.add(limb(.1, .088, .2, shirt)); sh.add(limb(.075, .068, .3, skin)); }
+    else sh.add(limb(.095, .082, .3, shirt));
+    const el = new THREE.Group(); el.position.y = -.36; sh.add(el); ud.elbows.push(el);
+    el.add(limb(.075, .06, .25, o.shortSleeves ? skin : shirt));
+    if (!o.shortSleeves) { const cf = part(new THREE.CylinderGeometry(.068, .07, .06, 14), shirt, 0, -.28, 0, el); cf.material = cloth(o.shirt, { color: new THREE.Color(o.shirt).multiplyScalar(.85) }); }
+    const hand = new THREE.Group(); hand.position.y = -.35; el.add(hand); ud.hands.push(hand);
+    part(ellipsoid(.06, .075, .04, 14), o.gloves ? glossy(o.gloves, { roughness: .6 }) : skin, 0, -.02, 0, hand);
+    part(ellipsoid(.024, .045, .024, 10), o.gloves ? glossy(o.gloves, { roughness: .6 }) : skin, s * -.045, .005, .03, hand).rotation.z = s * .5;
+    for (let f = 0; f < 4; f++) part(new THREE.CapsuleGeometry(.014, .045, 3, 6), o.gloves ? glossy(o.gloves, { roughness: .6 }) : skin, (f - 1.5) * .026, -.095, .005, hand);
+  }
+  // neck and head
+  part(new THREE.CylinderGeometry(.085, .095, .16, 16), skin, 0, 1.72, 0, body);
+  const head = new THREE.Group(); head.position.y = 1.93; body.add(head); ud.head = head;
+  part(new THREE.SphereGeometry(.25, 32, 24), skin, 0, 0, 0, head).scale.set(.98, 1.04, .98);
+  part(ellipsoid(.2, .13, .17, 24), skin, 0, -.11, .05, head); // jaw and cheeks
+  part(new THREE.SphereGeometry(.058, 16, 12), skin, 0, -.02, .245, head).scale.set(1, .9, 1.15); // nose
+  for (const s of [1, -1]) {
+    part(ellipsoid(.045, .075, .03, 12), skin, s * .245, -.01, 0, head).rotation.y = s * .4;
+    part(new THREE.SphereGeometry(.055, 12, 8), skinMat(o.blush || '#f0a090'), s * .14, -.07, .19, head).scale.set(1, .7, .4); // cheeks
+  }
+  // the eyes: whites, a coloured iris, a pupil and a catch-light; eyes that blink and squint; heavy brows
+  ud.eyes = []; ud.brows = [];
+  for (const s of [1, -1]) {
+    const eye = new THREE.Group(); eye.position.set(s * .088, .045, .214); eye.rotation.y = s * .22; head.add(eye); ud.eyes.push(eye);
+    part(ellipsoid(.05, .058, .03, 16), glossy('#fbfaf6', { roughness: .15 }), 0, 0, 0, eye);
+    part(new THREE.SphereGeometry(.03, 14, 10), glossy(o.iris || '#4a2e18', { roughness: .1 }), 0, -.004, .018, eye).scale.z = .5;
+    part(new THREE.SphereGeometry(.016, 10, 8), MAT.nose, 0, -.004, .031, eye).scale.z = .5;
+    part(new THREE.SphereGeometry(.007, 6, 4), new THREE.MeshBasicMaterial({ color: '#ffffff' }), .01, .012, .036, eye);
+    const brow = part(new RoundedBoxGeometry(.1, .026, .03, 2, .01), matte(o.hair || '#3a2210'), s * .09, .12, .225, head); brow.rotation.z = s * (o.browTilt ?? -.25); ud.brows.push(brow);
+  }
+  // mouth: a line that smiles or frowns, and an open "yell" mouth for surprises
+  const mouth = part(new THREE.TorusGeometry(.055, .011, 6, 16, Math.PI), MAT.mouth, 0, -.125, .222, head); mouth.rotation.z = o.frown ? 0 : Math.PI; ud.mouth = mouth;
+  const yell = part(ellipsoid(.05, .045, .02, 14), MAT.mouth, 0, -.135, .225, head); yell.visible = false; ud.yell = yell;
+  part(ellipsoid(.035, .012, .015, 8), MAT.tongue, 0, -.165, .232, yell.parent).visible = false;
+  // hair round the back and sides (the hat covers the top)
+  const hair = part(new THREE.SphereGeometry(.262, 24, 16, Math.PI * 1.08, Math.PI * .84, .34 * Math.PI, .4 * Math.PI), matte(o.hair || '#3a2210', { side: THREE.DoubleSide }), 0, .02, -.01, head);
+  for (const s of [1, -1]) part(new RoundedBoxGeometry(.03, .1, .06, 2, .012), matte(o.hair || '#3a2210'), s * .238, -.0, .1, head);
+  if (o.mustache) for (const s of [1, -1]) {
+    part(ellipsoid(.075, .03, .035, 12), matte(o.hair || '#3a2210'), s * .055, -.085, .245, head).rotation.z = s * -.35;
+    part(ellipsoid(.03, .02, .02, 8), matte(o.hair || '#3a2210'), s * .118, -.11, .23, head).rotation.z = s * -.8;
+  }
+  if (o.stubble) part(ellipsoid(.19, .1, .15, 20), new THREE.MeshStandardMaterial({ color: '#3a2a20', transparent: true, opacity: .22, roughness: 1, depthWrite: false }), 0, -.15, .07, head);
+  if (o.glasses) for (const s of [1, -1]) {
+    const rim = part(new THREE.TorusGeometry(.06, .009, 6, 20), MAT.dark, s * .088, .045, .24, head); rim.rotation.y = s * .22;
+    if (s > 0) part(new THREE.CylinderGeometry(.006, .006, .06, 6), MAT.dark, 0, .05, .25, head).rotation.z = Math.PI / 2;
+  }
+  g.userData = ud;
+  g.traverse(m => { if (m.isMesh) m.castShadow = true; });
+  return g;
+}
+// the face: 'calm', 'angry', 'yell', 'smug', 'worried'
+function personFace(c, mood) {
+  const ud = c.userData;
+  ud.yell.visible = mood === 'yell';
+  ud.mouth.visible = mood !== 'yell';
+  ud.mouth.rotation.z = mood === 'angry' || mood === 'worried' ? 0 : Math.PI;
+  ud.mouth.scale.set(mood === 'smug' ? 1.3 : 1, mood === 'smug' ? .7 : 1, 1);
+  ud.brows.forEach((b, i) => { const s = i ? -1 : 1; b.rotation.z = s * (mood === 'angry' ? -.45 : mood === 'yell' || mood === 'worried' ? .35 : -.1); b.position.y = mood === 'yell' ? .145 : .12; });
+  ud.squint = mood === 'yell' ? 1.25 : mood === 'angry' || mood === 'smug' ? .62 : 1;
+  ud.eyes.forEach(e => { e.scale.y = ud.squint; });
+}
+// the stride: legs swing with the knees bending on the way through, arms swing the other way, the body bobs and twists.
+// amt 0..1; swingRight: also swing the right arm (the catcher's right hand holds the net). Also blinks.
+function walkPerson(c, ph, amt, swingRight = false) {
+  const ud = c.userData, s = Math.sin(ph);
+  ud.legs[0].rotation.x = s * .62 * amt; ud.legs[1].rotation.x = -s * .62 * amt;
+  ud.knees[0].rotation.x = Math.max(0, -Math.cos(ph)) * 1.0 * amt + .04; ud.knees[1].rotation.x = Math.max(0, Math.cos(ph)) * 1.0 * amt + .04;
+  ud.ankles[0].rotation.x = -ud.legs[0].rotation.x * .4; ud.ankles[1].rotation.x = -ud.legs[1].rotation.x * .4;
+  ud.armL.rotation.x = -s * .55 * amt; ud.elbows[0].rotation.x = -.25 - Math.max(0, s) * .5 * amt;
+  if (swingRight) { ud.armR.rotation.x = s * .55 * amt; ud.elbows[1].rotation.x = -.25 - Math.max(0, -s) * .5 * amt; }
+  ud.body.position.y = Math.abs(Math.cos(ph)) * .06 * amt - .03 * amt;
+  ud.body.rotation.y = s * .1 * amt;
+  ud.head.rotation.y = -s * .08 * amt;
+  blinkPerson(c);
+}
+function blinkPerson(c) {
+  const ud = c.userData, t = performance.now() / 1000 + ud.seed, shut = t % 3.7 < .13;
+  ud.eyes.forEach(e => { e.scale.y = shut ? .12 : ud.squint ?? 1; });
+}
+const walkCatcher = (c, ph, amt) => walkPerson(c, ph, amt);
+
+// the dog catcher: a peaked cap with a gold badge, a scowl and a bushy moustache, a uniform with shoulder patches,
+// a star on the chest, a radio on the belt, gloves, boots, and his net on a pole (a real knotted mesh)
+function buildCatcher() {
+  const g = buildPerson({ shirt: '#46618f', pants: '#232c40', belt: '#1a1410', skin: '#e2a679', hair: '#2e1c10', iris: '#3a5a2a', mustache: true, stubble: true,
+    frown: true, browTilt: -.42, patch: '#c8102e', gloves: '#5a3a1c', boots: true, sole: '#1a1a1a', blush: '#e08870' });
+  const ud = g.userData, head = ud.head, body = ud.body;
+  const capMat = cloth('#1f2a44'), visor = glossy('#0c0c10', { roughness: .2 });
+  const crown = part(new THREE.CylinderGeometry(.285, .25, .16, 32), capMat, 0, .19, -.01, head); crown.rotation.x = -.12;
+  const top = part(ellipsoid(.3, .05, .3, 28), capMat, 0, .275, -.02, head); top.rotation.x = -.12;
+  part(new THREE.CylinderGeometry(.256, .256, .05, 32, 1, true), visor, 0, .125, 0, head);
+  const vz = new THREE.Mesh(new THREE.CylinderGeometry(.22, .22, .022, 32, 1, false, -Math.PI / 2, Math.PI), visor);
+  vz.scale.set(1, 1, .75); vz.position.set(0, .115, .15); vz.rotation.x = .28; head.add(vz);
+  // the cap badge: a gold shield
+  const shield = new THREE.Shape(); shield.moveTo(0, .06); shield.lineTo(.05, .045); shield.lineTo(.045, -.01); shield.quadraticCurveTo(.03, -.05, 0, -.065); shield.quadraticCurveTo(-.03, -.05, -.045, -.01); shield.lineTo(-.05, .045); shield.closePath();
+  const sg = new THREE.ExtrudeGeometry(shield, { depth: .012, bevelEnabled: true, bevelThickness: .006, bevelSize: .006, bevelSegments: 2 });
+  part(sg, MAT.gold, 0, .2, .262, head).rotation.x = -.15;
+  // the chest star
+  const st = new THREE.Shape(); for (let i = 0; i < 10; i++) { const r = i % 2 ? .028 : .065, a = i / 10 * Math.PI * 2 + Math.PI / 2; st[i ? 'lineTo' : 'moveTo'](Math.cos(a) * r, Math.sin(a) * r); }
+  part(new THREE.ExtrudeGeometry(st, { depth: .01, bevelEnabled: true, bevelThickness: .006, bevelSize: .005, bevelSegments: 2 }), MAT.gold, .14, 1.47, .235, body).rotation.set(-.2, .3, 0);
+  // a radio on the belt
+  const radio = part(new RoundedBoxGeometry(.08, .13, .05, 2, .015), glossy('#1a1a1a'), -.25, 1.02, .14, body); radio.rotation.y = -.7;
+  part(new THREE.CylinderGeometry(.008, .008, .09, 6), MAT.dark, -.27, 1.13, .15, body);
+  // the net on its pole, held in the right hand
+  const net = new THREE.Group(); ud.hands[1].add(net);
+  const pole = part(new THREE.CylinderGeometry(.022, .026, 1.75, 10), glossy('#7a4a22', { roughness: .45 }), 0, .55, .12, net); pole.rotation.x = .28;
+  for (let i = 0; i < 3; i++) part(new THREE.CylinderGeometry(.03, .03, .05, 10), matte('#1a1a1a'), 0, -.1 + i * .07, .05 - i * .02, net).rotation.x = .28; // grip tape
+  const hoop = new THREE.Group(); hoop.position.set(0, 1.45, .4); net.add(hoop);
+  hoop.add(new THREE.Mesh(new THREE.TorusGeometry(.36, .022, 8, 40), MAT.chrome));
+  hoop.add(netBag(.36, .55));
+  hoop.rotation.x = -Math.PI / 2 + .28;
+  Object.assign(ud, { net, hoop });
+  personFace(g, 'angry');
+  return g;
+}
+// a knotted net bag hanging from a hoop of radius r, depth d (rings and ribs as lines, with a faint fill)
+function netBag(r, d) {
+  const pts = [], N = 18, R = 7, prof = j => { const u = j / R; return [r * (1 - u * u * .75), -d * Math.sin(u * Math.PI / 2)]; };
+  for (let j = 0; j <= R; j++) { const [rr, y] = prof(j); for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2, b = (i + 1) / N * Math.PI * 2; pts.push(Math.cos(a) * rr, y, Math.sin(a) * rr, Math.cos(b) * rr, y, Math.sin(b) * rr); } }
+  for (let i = 0; i < N; i++) for (let j = 0; j < R; j++) { const a = (i + j * .5) / N * Math.PI * 2, b = (i + (j + 1) * .5) / N * Math.PI * 2, [r1, y1] = prof(j), [r2, y2] = prof(j + 1); pts.push(Math.cos(a) * r1, y1, Math.sin(a) * r1, Math.cos(b) * r2, y2, Math.sin(b) * r2); }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+  const bag = new THREE.Group();
+  bag.add(new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: '#f0f4f8' })));
+  const fill = new THREE.Mesh(new THREE.LatheGeometry(Array.from({ length: R + 1 }, (_, j) => new THREE.Vector2(...prof(j))), 24), new THREE.MeshBasicMaterial({ color: '#dfe6ee', transparent: true, opacity: .14, side: THREE.DoubleSide, depthWrite: false }));
+  bag.add(fill);
+  return bag;
+}
+
+// the mailman: a pith helmet, specs, a light-blue shirt with a tie and a patch, navy trousers with a stripe (the ones the
+// dog is after), and a leather mail bag full of letters on a strap across his chest; a letter in his hand
+const LETTER_TEX = canvasTex(128, 80, (g, w, h) => {
+  g.fillStyle = '#fbf8ef'; g.fillRect(0, 0, w, h);
+  for (let x = -h; x < w; x += 14) { g.fillStyle = (x / 14) % 2 ? '#d8283a' : '#1f4fa8'; g.beginPath(); g.moveTo(x, 0); g.lineTo(x + 7, 0); g.lineTo(x + 7 + h, h); g.lineTo(x + h, h); g.fill(); }
+  g.fillStyle = '#fbf8ef'; g.fillRect(6, 6, w - 12, h - 12);
+  g.fillStyle = '#d8283a'; g.fillRect(w - 30, 12, 18, 22);
+  g.fillStyle = '#9a9488'; for (let i = 0; i < 3; i++) g.fillRect(30, 36 + i * 9, 52 - i * 8, 3);
+});
+function letter(k = 1) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(.24 * k, .15 * k, .008 * k), [matte('#fbf8ef'), matte('#fbf8ef'), matte('#fbf8ef'), matte('#fbf8ef'), new THREE.MeshStandardMaterial({ map: LETTER_TEX, roughness: .8 }), matte('#f2eee2')]);
+  m.castShadow = true;
+  return m;
+}
+function buildMailman() {
+  const g = buildPerson({ shirt: '#a9c8ec', pants: '#2a3a62', stripe: '#0e1630', skin: '#c98c5c', hair: '#1c1410', iris: '#3a2416', shortSleeves: true,
+    necktie: '#1f2f5a', patch: '#e23a3a', glasses: true, browTilt: .2, sole: '#2a2a2a', blush: '#d47f68' });
+  const ud = g.userData, head = ud.head, body = ud.body;
+  // the pith helmet: a dome, a wide brim, a band and a little vent on top
+  const helm = glossy('#ece4cc', { roughness: .6, clearcoat: .3 });
+  part(new THREE.SphereGeometry(.29, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2), helm, 0, .1, -.01, head).scale.set(1, 1.05, 1.08);
+  const brim = part(new THREE.CylinderGeometry(.4, .42, .02, 36), helm, 0, .1, .0, head); brim.scale.z = 1.12; brim.rotation.x = -.06;
+  part(new THREE.CylinderGeometry(.292, .292, .05, 32, 1, true), matte('#1f2f5a'), 0, .13, -.01, head).scale.z = 1.08;
+  part(new THREE.SphereGeometry(.035, 10, 8), helm, 0, .41, -.01, head);
+  // the bag, on a strap from the left shoulder to the right hip
+  const leather = glossy('#7a4a24', { roughness: .55, clearcoat: .4 });
+  const bag = new THREE.Group(); bag.position.set(-.33, 1.0, .05); bag.rotation.y = -Math.PI / 2 + .2; body.add(bag); ud.bag = bag;
+  part(new RoundedBoxGeometry(.36, .3, .12, 3, .04), leather, 0, 0, 0, bag);
+  const flap = part(new RoundedBoxGeometry(.37, .17, .03, 3, .02), glossy('#6a3c1a', { roughness: .5 }), 0, .08, .07, bag); flap.rotation.x = -.15;
+  part(new RoundedBoxGeometry(.06, .05, .02, 2, .008), MAT.gold, 0, .02, .09, bag);
+  ud.bagLetters = [];
+  for (let i = 0; i < 4; i++) { const l = letter(1); l.rotation.set(Math.PI / 2 + rand(-.2, .2), 0, rand(-.2, .2)); l.position.set(-.12 + i * .08, .17, -.01); l.scale.set(.6, .6, 1); bag.add(l); ud.bagLetters.push(l); }
+  const strap = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V3(.3, 1.62, -.05), V3(.15, 1.58, .22), V3(-.1, 1.3, .25), V3(-.28, 1.1, .2), V3(-.34, 1.08, .06)]), 24, .022, 6), leather);
+  strap.scale.set(1, 1, 1); body.add(strap); strap.castShadow = true;
+  // the letter he's delivering
+  const held = letter(1.1); held.position.set(0, -.1, .05); held.rotation.set(0, 0, Math.PI / 2); ud.hands[1].add(held); ud.held = held;
+  // what the dog can tear off: patches of boxer shorts that show through, and trouser legs that go missing
+  const boxers = new THREE.MeshPhysicalMaterial({ map: HEARTS, roughness: .7, sheen: .4, sheenColor: new THREE.Color('#ffc0c8') });
+  const seat = part(new THREE.SphereGeometry(.3, 24, 12, 0, Math.PI * 2, Math.PI * .45, Math.PI * .35), boxers, 0, 1.0, -.012, body); seat.scale.set(.99, 1, .76); seat.visible = false;
+  const seatPatch = part(ellipsoid(.13, .1, .05, 16), boxers, .05, .93, -.205, body); seatPatch.visible = false;
+  ud.boxers = boxers; ud.tears = 0;
+  ud.rips = [
+    () => { seatPatch.visible = true; },                                     // a hole in the seat of his pants
+    () => { tearLeg(ud, 0, 'shin'); },                                         // the left trouser leg below the knee
+    () => { tearLeg(ud, 1, 'shin'); },                                         // the right one
+    () => { tearLeg(ud, 0, 'thigh'); },                                        // the whole left leg: boxer shorts!
+    () => { tearLeg(ud, 1, 'thigh'); seat.visible = true; ud.pelvis.material = boxers; }, // nothing left but the boxers
+  ];
+  personFace(g, 'calm');
+  return g;
+}
+// the dog tore off a piece of trouser: the shin goes to bare leg and a sock, or the thigh goes to boxer shorts
+function tearLeg(ud, i, which) {
+  if (which === 'shin') { ud.shins[i].material = ud.skin; ud.cuffs[i].visible = false; ud[i ? 'sockR' : 'sockL'].visible = true; }
+  else ud.thighs[i].material = ud.boxers;
+}
+function ripPants(c) { const ud = c.userData; if (ud.tears < ud.rips.length) ud.rips[ud.tears++](); }
+// a torn scrap of navy trouser cloth (ragged edges), for the dog to hold
+function clothScrap(k, color = '#2a3a62') {
+  const s = new THREE.Shape(), n = 11;
+  for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, r = (i % 2 ? .65 : 1) * (.8 + Math.random() * .3); s[i ? 'lineTo' : 'moveTo'](Math.cos(a) * r * .5, Math.sin(a) * r * .32); }
+  const m = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: .03, bevelEnabled: false }), cloth(color, { side: THREE.DoubleSide }));
+  m.scale.setScalar(k); m.castShadow = true;
+  return m;
+}
+
 // ---------- the symbols as 3D models ----------
-// Every reel symbol is a real model: rarity bones, the PAW / BONE / FRISBEE bonus coins, a dog house per dog with that dog
+// Every reel symbol is a real model: rarity bones, the PAW / BONE / MAIL bonus coins, a dog house per dog with that dog
 // looking out of the door, and the Doggie Mansion. They are rendered once into sprites for the spinning reels (like a
 // casino's pre-rendered CGI), and the live models pop out of the reels and animate when they win.
 const BONE_LOOK = {
@@ -3547,13 +3841,18 @@ function buildBone(rarity) {
 }
 
 // bonus coins: a thick gold coin with a raised rim, an enamel field and an embossed emblem
-const ENAMEL = { paw: '#8a3df0', bone: '#16b08c', frisbee: '#ff6a1a' };
+const ENAMEL = { paw: '#8a3df0', bone: '#16b08c', mail: '#d8283a' };
 function emblemShapes(kind) {
   const ell = (x, y, rx, ry, rot = 0) => { const s = new THREE.Shape(); s.absellipse(x, y, rx, ry, 0, Math.PI * 2, false, rot); return s; };
   if (kind === 'paw') return [ell(0, -.16, .3, .25), ell(-.36, .12, .11, .15, .45), ell(-.13, .32, .11, .16, .15), ell(.13, .32, .11, .16, -.15), ell(.36, .12, .11, .15, -.45)];
   if (kind === 'bone') {
     const r = new THREE.Shape(); r.moveTo(-.4, -.1); r.lineTo(.4, -.1); r.lineTo(.4, .1); r.lineTo(-.4, .1); r.closePath();
     return [r, ell(-.42, -.12, .16, .16), ell(-.42, .12, .16, .16), ell(.42, -.12, .16, .16), ell(.42, .12, .16, .16)];
+  }
+  if (kind === 'mail') { // an envelope: the outline with the flap's V cut out
+    const env = new THREE.Shape(); env.moveTo(-.52, -.34); env.lineTo(.52, -.34); env.lineTo(.52, .34); env.lineTo(-.52, .34); env.closePath();
+    const h = new THREE.Path(); h.moveTo(-.4, .16); h.lineTo(0, -.12); h.lineTo(.4, .16); h.lineTo(.4, -.23); h.lineTo(-.4, -.23); h.closePath(); env.holes.push(h);
+    return [env];
   }
   const ring = ell(0, -.02, .56, .27), hole = new THREE.Path(); hole.absellipse(0, -.02, .42, .17, 0, Math.PI * 2, true); ring.holes.push(hole);
   return [ring, ell(0, .02, .3, .13)];
@@ -3573,7 +3872,7 @@ function buildCoin(kind) {
   const ring = new THREE.Mesh(new THREE.TorusGeometry(.8, .035, 10, 64), MAT.gold); ring.position.z = .1; body.add(ring);
   const shapes = emblemShapes(kind);
   const emb = new THREE.Mesh(new THREE.ExtrudeGeometry(shapes, { depth: .05, bevelEnabled: true, bevelThickness: .035, bevelSize: .03, bevelSegments: 4, curveSegments: 24 }), MAT.gold);
-  emb.position.z = .1; if (kind === 'bone') emb.rotation.z = .35; if (kind === 'frisbee') emb.rotation.z = -.2;
+  emb.position.z = .1; if (kind === 'bone') emb.rotation.z = .35; if (kind === 'mail') emb.rotation.z = -.12;
   body.add(emb);
   body.rotation.set(.12, -.38, 0);
   g.userData = { kind: 'coin', coin: kind, body };
@@ -3680,13 +3979,13 @@ const SYMBOL_PLATES = {
   D: ['MANSION', '#e0a800', '#7a5200'], X: ['DUKE', '#ff5a4a', '#8a0a14'], W: ['KODA', '#37b6ff', '#0b4a8a'], Y: ['REX', '#3d7bd6', '#12336e'],
   V: ['BISCUIT', '#4fc85a', '#126b25'], Z: ['PEANUT', '#d08a4a', '#5a2e0c'],
   Q: ['LEGENDARY', '#ffb52e', '#a35a00'], B: ['EPIC', '#b06bff', '#4a1499'], T: ['RARE', '#4f9bff', '#0b3f99'], P: ['UNCOMMON', '#3fc35e', '#0c6b25'], L: ['COMMON', '#a8a29a', '#4e4a45'],
-  S: ['BONE DIG', '#b06bff', '#4a1499'], K: ['DOG HOUSE', '#2bbf9c', '#0a4a40'], F: ['FRISBEE', '#ff8a2a', '#8a2a00'],
+  S: ['BONE DIG', '#b06bff', '#4a1499'], K: ['DOG HOUSE', '#2bbf9c', '#0a4a40'], F: ['MAIL', '#ff4a5a', '#8a0a1a'],
 };
 const HOUSE_OF = { X: ['h3', 'corso'], W: ['h5', 'husky'], Y: ['h2', 'gsd'], V: ['h6', 'lab'], Z: ['h1', 'pup'] };
 function buildSymbol(s) {
   if (s === 'D') return buildMansion();
   if (HOUSE_OF[s]) return buildHouse(...HOUSE_OF[s]);
-  if ('SKF'.includes(s)) return buildCoin({ S: 'paw', K: 'bone', F: 'frisbee' }[s]);
+  if ('SKF'.includes(s)) return buildCoin({ S: 'paw', K: 'bone', F: 'mail' }[s]);
   return buildBone({ Q: 'legendary', B: 'epic', T: 'rare', P: 'uncommon', L: 'common' }[s]);
 }
 // frame a model: centre it and scale it to fit a box `size` across
@@ -4698,7 +4997,7 @@ const WIN_LINES = {
   pup: ['YIP YIP YIP!', 'WE\'RE RICH! RICH!', 'Again! AGAIN!'],
 };
 const BONUS_HOST = {
-  dig: ['husky', 'Huskies LOVE to dig. Let\'s go!'], pick: ['corso', 'Pick a house. Any house.'], fling: ['lab', 'THROW IT! THROW IT!'],
+  dig: ['husky', 'Huskies LOVE to dig. Let\'s go!'], pick: ['corso', 'Pick a house. Any house.'], mail: ['gsd', 'MAILMAN! Nobody move.'],
 };
 // now and then during a spin a dog tears across the front of the reels (just for show: the result is already set)
 function* driveBy(d) {
@@ -4838,7 +5137,7 @@ function drawCast(dt, now) {
 // ---------- the bonus games in 3D ----------
 // Each bonus keeps its buttons and rules exactly as they are (the buttons stay in place, invisible, so tapping works
 // the same); a 3D scene is drawn underneath them: Koda digs up the yard, Duke's dog houses open on a lawn, and
-// Biscuit chases the frisbee across a park.
+// Rex chases the mailman down the street.
 const bonus3d = { on: false, kind: null };
 const grassTex = canvasTex(256, 256, (g, w) => {
   g.fillStyle = '#3f9a3e'; g.fillRect(0, 0, w, w);
@@ -4948,43 +5247,6 @@ function beam(pos, color, k, h = 4) {
 }
 const shake = mag => { bonus3d.shake = Math.max(bonus3d.shake || 0, mag); };
 
-// ---- the dog catcher, in 3D ----
-function buildCatcher() {
-  const g = new THREE.Group(), body = new THREE.Group(); g.add(body); let legs;
-  const uni = glossy('#2f4a7a', { roughness: .5, clearcoat: .3 }), skin = new THREE.MeshPhysicalMaterial({ color: '#f1c27d', roughness: .55, sheen: .3 });
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(.32, .5, 6, 16), uni); torso.position.y = 1.15; body.add(torso);
-  for (const s of [1, -1]) {
-    const hip = new THREE.Group(); hip.position.set(s * .15, .78, 0); body.add(hip); (legs || (legs = [])).push(hip);
-    const leg = new THREE.Mesh(new THREE.CapsuleGeometry(.12, .55, 6, 12), uni); leg.position.y = -.33; hip.add(leg);
-    const boot = new THREE.Mesh(ellipsoid(.13, .09, .2, 12), matte('#1a1a1a')); boot.position.set(0, -.7, .06); hip.add(boot);
-  }
-  const armL = new THREE.Group(); armL.position.set(.38, 1.45, 0); body.add(armL);
-  const aL = new THREE.Mesh(new THREE.CapsuleGeometry(.09, .5, 6, 12), uni); aL.position.y = -.3; armL.add(aL);
-  const armR = new THREE.Group(); armR.position.set(-.38, 1.45, 0); body.add(armR);
-  const aR = new THREE.Mesh(new THREE.CapsuleGeometry(.09, .5, 6, 12), uni); aR.position.y = -.3; armR.add(aR);
-  const head = new THREE.Group(); head.position.y = 1.85; body.add(head);
-  head.add(new THREE.Mesh(new THREE.SphereGeometry(.27, 24, 16), skin));
-  const nose = new THREE.Mesh(new THREE.SphereGeometry(.07, 12, 8), skin); nose.position.set(0, -.02, .27); head.add(nose);
-  const stache = new THREE.Mesh(ellipsoid(.13, .04, .05, 12), matte('#3a2210')); stache.position.set(0, -.1, .24); head.add(stache);
-  for (const s of [1, -1]) {
-    const eye = new THREE.Mesh(new THREE.SphereGeometry(.035, 10, 8), MAT.nose); eye.position.set(s * .09, .05, .24); head.add(eye);
-    const brow = new THREE.Mesh(ellipsoid(.06, .015, .02, 8), matte('#3a2210')); brow.position.set(s * .09, .11, .24); brow.rotation.z = s * -.4; head.add(brow);
-  }
-  const cap = new THREE.Mesh(new THREE.SphereGeometry(.29, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), uni); cap.position.y = .05; head.add(cap);
-  const brim = new THREE.Mesh(ellipsoid(.2, .02, .16, 16), uni); brim.position.set(0, .07, .25); head.add(brim);
-  const badge = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, .01, 6), MAT.gold); badge.rotation.x = Math.PI / 2; badge.position.set(0, .2, .25); head.add(badge);
-  const star = new THREE.Mesh(new THREE.CylinderGeometry(.06, .06, .01, 5), MAT.gold); star.rotation.x = Math.PI / 2; star.position.set(.15, 1.32, .3); body.add(star);
-  // the net on its pole, held in the right hand
-  const net = new THREE.Group(); net.position.set(0, -.55, 0); armR.add(net);
-  const pole = new THREE.Mesh(new THREE.CylinderGeometry(.025, .025, 1.6, 8), matte('#6b4220')); pole.position.set(0, .6, .2); pole.rotation.x = .3; net.add(pole);
-  const hoop = new THREE.Group(); hoop.position.set(0, 1.35, .45); net.add(hoop);
-  hoop.add(new THREE.Mesh(new THREE.TorusGeometry(.34, .025, 8, 28), MAT.chrome));
-  const mesh = new THREE.Mesh(new THREE.SphereGeometry(.34, 16, 10, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#e8eef4', wireframe: true, transparent: true, opacity: .8 }));
-  mesh.scale.y = 1.5; hoop.add(mesh); hoop.rotation.x = -Math.PI / 2;
-  g.userData = { body, armL, armR, head, net, hoop, legs };
-  return castShadows(g);
-}
-
 // ---- Bone Dig: Koda digs the yard ----
 function startDig3D() {
   const B3 = bonus3d, area = $('yard');
@@ -5080,30 +5342,38 @@ function dirtClod(at, k) {
 }
 // the dog catcher jumps in and nets Koda
 function* catchSeq(it) {
-  const B3 = bonus3d, dog = B3.dog, c = buildCatcher();
-  c.scale.setScalar(it.k * 1.15); B3.scene.add(c); B3.catcher = c;
-  const side = dog.pos.x > 0 ? -1 : 1;
-  const to = dog.pos.clone().add(V3(side * it.k * 1.15, 0, it.k * .5)), from = to.clone().add(V3(side * it.k * 3.2, 0, it.k * 1.2));
-  c.position.copy(from); c.rotation.y = side > 0 ? -1.9 : 1.9;
+  const B3 = bonus3d;
   if (B3.lurker) B3.lurker.visible = false;
-  const ud = c.userData;
-  yield* tween(.45, u => { c.position.lerpVectors(from, to, u); c.position.y = Math.sin(u * Math.PI) * it.k * 1.2; c.rotation.z = Math.sin(u * Math.PI) * .3 * side; walkCatcher(c, u * 12, 1); }, t => t);
-  c.position.y = 0; c.rotation.z = 0; puff(c.position, it.k, 6); shake(.1);
-  dog.want.perk = .1; dog.want.brow = .9; dog.headingWant = Math.atan2(c.position.x - dog.pos.x, c.position.z - dog.pos.z);
-  yield* tween(.35, u => { ud.armR.rotation.x = -2.6 + u * 2.2; ud.armR.rotation.z = .3; });
-  // the net drops over the dog
-  const net = new THREE.Mesh(new THREE.SphereGeometry(.5, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#e8eef4', wireframe: true, transparent: true, opacity: .85 }));
-  net.scale.set(it.k * 1.1, it.k * 1.2, it.k * 1.1); net.position.copy(dog.pos); B3.scene.add(net); B3.net = net;
-  yield* tween(.3, u => { net.position.y = (1 - u) * it.k * 1.5; }, t => t * t);
-  shake(.18); puff(dog.pos, it.k, 8); kick(dog, -1.4);
-  dog.want.sit = 1; dog.want.headPitch = -.2; dog.want.wag = 0; dog.want.perk = 0;
-  for (;;) { const t = performance.now() / 1000; ud.body.rotation.z = Math.sin(t * 3) * .04; ud.head.rotation.z = Math.sin(t * 2) * .1; dog.root.position.x += Math.sin(t * 30) * .002; yield 0; }
+  yield* catcherNets(B3.dog, it.k * 1.15, B3.dog.pos.x > 0 ? -1 : 1, true);
 }
-// the catcher's stride: legs swing, arms pump, a bob; amt 0..1
-function walkCatcher(c, ph, amt) {
-  const ud = c.userData;
-  if (ud.legs) { ud.legs[0].rotation.x = Math.sin(ph) * .7 * amt; ud.legs[1].rotation.x = -Math.sin(ph) * .7 * amt; }
-  ud.armL.rotation.x = -Math.sin(ph) * .6 * amt; ud.body.position.y = Math.abs(Math.sin(ph)) * .08 * amt;
+// the dog catcher comes in from one side (running, or with a flying leap), raises his net and brings it down over the dog
+function* catcherNets(dog, k, side, leap = false) {
+  const B3 = bonus3d, c = buildCatcher();
+  c.scale.setScalar(k); B3.scene.add(c); B3.catcher = c;
+  const ud = c.userData, to = dog.pos.clone().add(V3(side * k * 1.05, 0, k * .45)), from = to.clone().add(V3(side * k * (leap ? 3.2 : 4.5), 0, k * 1.2));
+  c.position.copy(from); c.rotation.y = Math.atan2(to.x - from.x, to.z - from.z);
+  personFace(c, 'angry'); ud.body.rotation.x = leap ? 0 : .2;
+  yield* tween(leap ? .45 : .75, u => {
+    c.position.lerpVectors(from, to, u);
+    if (leap) { c.position.y = Math.sin(u * Math.PI) * k * 1.2; c.rotation.z = Math.sin(u * Math.PI) * .3 * side; }
+    walkPerson(c, u * (leap ? 12 : 15), 1);
+  }, t => t);
+  c.position.y = 0; c.rotation.z = 0; ud.body.rotation.x = 0; walkPerson(c, 0, 0); puff(c.position, k, 6); shake(.1);
+  c.rotation.y = Math.atan2(dog.pos.x - c.position.x, dog.pos.z - c.position.z);
+  dog.look = null; dog.want.perk = .1; dog.want.brow = .9; dog.headingWant = Math.atan2(c.position.x - dog.pos.x, c.position.z - dog.pos.z);
+  // up goes the net... and down
+  yield* tween(.28, u => { ud.armR.rotation.x = -2.7 * u; ud.armL.rotation.x = -.6 * u; }, t => t);
+  personFace(c, 'yell');
+  yield* tween(.22, u => { ud.armR.rotation.x = -2.7 + u * 2.2; ud.body.rotation.x = u * .25; }, t => t * t);
+  const net = new THREE.Group(), bag = netBag(.55, .75); bag.rotation.x = Math.PI; net.add(bag);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(.55, .02, 8, 40), MAT.chrome); rim.rotation.x = Math.PI / 2; net.add(rim);
+  ud.hoop.visible = false;
+  net.scale.setScalar(dog.root.scale.x * 1.1); net.position.copy(dog.pos); B3.scene.add(net); B3.net = net;
+  yield* tween(.25, u => { net.position.y = (1 - u) * k * 1.4; }, t => t * t);
+  shake(.18); puff(dog.pos, k, 8); kick(dog, -1.4);
+  dog.want.sit = 1; dog.want.headPitch = -.2; dog.want.wag = 0; dog.want.perk = 0;
+  personFace(c, 'smug');
+  for (;;) { const t = performance.now() / 1000; ud.body.rotation.x = .1; ud.body.rotation.z = Math.sin(t * 3) * .04; ud.head.rotation.z = Math.sin(t * 2) * .1; blinkPerson(c); dog.root.position.x += Math.sin(t * 30) * .002; yield 0; }
 }
 function bonk3D() {
   const c = bonus3d.catcher; if (!c) return;
@@ -5180,108 +5450,256 @@ function animPick(dt) {
   });
 }
 
-// ---- Frisbee Fling: Biscuit chases the frisbee across the park ----
-function startFling3D() {
-  const B3 = bonus3d, area = $('park');
-  attachBonus(area);
-  const s = outdoorScene(['#4fb0f5', '#dff4ff']);
-  const cam = B3.cam; cam.fov = 40; cam.position.set(0, 3.2, 7); cam.lookAt(0, 0, .6); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
-  // mown stripes
-  const stripes = canvasTex(64, 512, (g, w, h) => { for (let i = 0; i < 16; i++) { g.fillStyle = i % 2 ? '#3f9a3e' : '#4cab48'; g.fillRect(0, i * h / 16, w, h / 16); } });
-  const lawn = new THREE.Mesh(new THREE.PlaneGeometry(40, 60), new THREE.MeshStandardMaterial({ map: stripes, roughness: .95 }));
-  lawn.rotation.x = -Math.PI / 2; lawn.position.z = -22; lawn.receiveShadow = true; s.add(lawn);
-  const blades = ground(s, 40, 60, 10); blades.position.set(0, .002, -22); blades.material.transparent = true; blades.material.opacity = .45;
-  for (let i = 0; i < 9; i++) tree(s, (i % 2 ? 1 : -1) * rand(5.5, 9), -4 - i * 3.2, rand(1.2, 1.9));
-  // the far fence
-  const fence = new THREE.Group(), wood = glossy('#fff6e8', { roughness: .6 });
-  const far = toGround(B3.W / 2, B3.H * .13, B3.W, B3.H);
-  for (let x = -14; x <= 14; x += .7) { const p = new THREE.Mesh(new RoundedBoxGeometry(.35, 1.2, .1, 2, .03), wood); p.position.set(x, .6, far.z - .5); fence.add(p); }
-  s.add(castShadows(fence));
-  // catch zones: glowing lines across the grass where the labels are
-  const zones = FRISBEE_ZONES.filter(z => z.mult).map(z => {
-    const p = toGround(B3.W / 2, B3.H * z.y / 100, B3.W, B3.H);
-    const line = new THREE.Mesh(new THREE.PlaneGeometry(30, .09), new THREE.MeshBasicMaterial({ color: ZONE_COLORS[z.mult], transparent: true, opacity: .85, toneMapped: false }));
-    line.rotation.x = -Math.PI / 2; line.position.set(0, .01, p.z); s.add(line);
-    return line;
-  });
-  const start = toGround(B3.W * .5, B3.H * .93, B3.W, B3.H);
-  const k = unitsPerPx(start, B3.H) * 95;
-  const dog = buildDog('lab'); dog.root.scale.setScalar(k); castShadows(dog.root); dog.shadow.visible = false;
-  dog.pos.copy(start); dog.heading = dog.headingWant = 0; s.add(dog.root);
-  // the classic frisbee: a shallow domed plastic disc with a rolled lip, raised flight rings and a paw logo on top
-  const disc = new THREE.Group();
-  const prof = [[0, .062], [.18, .06], [.32, .054], [.42, .044], [.48, .028], [.505, .005], [.51, -.025], [.5, -.05], [.475, -.062], [.455, -.05],
-    [.45, -.02], [.43, .005], [.3, .02], [0, .028]].map(([x, y]) => new THREE.Vector2(x, y));
-  const top = new THREE.Mesh(new THREE.LatheGeometry(prof, 64), glossy('#ff5a1a', { roughness: .22, side: THREE.DoubleSide }));
-  disc.add(top);
-  for (const r of [.27, .37]) { const ring = new THREE.Mesh(new THREE.TorusGeometry(r, .009, 8, 64), glossy('#fff4e0', { roughness: .3 })); ring.rotation.x = Math.PI / 2; ring.position.y = .052 + (.37 - r) * .05; disc.add(ring); }
-  const logo = canvasTex(128, 128, (g, w) => {
-    g.clearRect(0, 0, w, w); g.fillStyle = '#fff4e0'; g.translate(64, 70); g.scale(1.6, 1.6);
-    [[0, 6, 14, 11], [-16, -9, 5.5, 7.5], [-6, -18, 5.5, 7.8], [6, -18, 5.5, 7.8], [16, -9, 5.5, 7.5]].forEach(([x, y, rx, ry]) => { g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, 7); g.fill(); });
-  });
-  const badge = new THREE.Mesh(new THREE.CircleGeometry(.17, 40), new THREE.MeshPhysicalMaterial({ map: logo, transparent: true, roughness: .3, clearcoat: 1 }));
-  badge.rotation.x = -Math.PI / 2; badge.position.y = .0635; disc.add(badge);
-  disc.scale.setScalar(k * .32); castShadows(disc); disc.visible = false; s.add(disc);
-  Object.assign(B3, { on: true, kind: 'fling', scene: s, dog, disc, top, zones, start, k, fx: [], gen: null });
-  B3.gen = (function* () { dog.want.sit = 1; dog.want.wag = .6; for (;;) yield 0; })();
+// ---- Mailman Chase: Rex guards the street while the mailman does his round ----
+const HOME_COLS = ['#f6d7a8', '#bfe3f2', '#f7c6cc', '#cfe8b8', '#fff0b0'], ROOF_COLS = ['#8a3a2a', '#3e4a6e', '#6a4a36', '#2f5a4a', '#7a2a3a'];
+const SIDING = canvasTex(128, 128, (g, w) => {
+  for (let y = 0; y < w; y += 16) { const gr = g.createLinearGradient(0, y, 0, y + 16); gr.addColorStop(0, '#ffffff'); gr.addColorStop(.75, '#e6e6e6'); gr.addColorStop(1, '#a4a4a4'); g.fillStyle = gr; g.fillRect(0, y, w, 16); }
+});
+SIDING.wrapS = SIDING.wrapT = THREE.RepeatWrapping; SIDING.repeat.set(2, 2);
+// a little suburban house, 1 wide, front door facing the street (+z): siding, a gable roof, windows with shutters,
+// a porch with a light, a chimney, bushes, a house number
+function buildHome(i) {
+  const g = new THREE.Group(), wall = new THREE.MeshStandardMaterial({ map: SIDING, color: HOME_COLS[i % 5], roughness: .8 });
+  const trim = glossy('#fffaf0', { roughness: .45 }), roof = new THREE.MeshStandardMaterial({ map: shingleTex, color: ROOF_COLS[i % 5], roughness: .7 });
+  part(new RoundedBoxGeometry(1, .62, .72, 2, .02), wall, 0, .31, 0, g);
+  part(new THREE.BoxGeometry(1.04, .05, .76), trim, 0, .025, 0, g); // the foundation
+  const tri = new THREE.Shape(); tri.moveTo(-.5, 0); tri.lineTo(.5, 0); tri.lineTo(0, .38); tri.closePath();
+  const gable = new THREE.ExtrudeGeometry(tri, { depth: .72, bevelEnabled: false }); gable.translate(0, .62, -.36);
+  part(gable, wall, 0, 0, 0, g);
+  for (const s of [1, -1]) { // the two roof slopes, overhanging
+    const slab = part(new RoundedBoxGeometry(.72, .045, .86, 2, .015), roof, s * .27, .82, 0, g); slab.rotation.z = s * -.65;
+    part(new RoundedBoxGeometry(.73, .03, .05, 2, .01), trim, s * .27, .8, .43, g).rotation.z = s * -.65;
+  }
+  part(new RoundedBoxGeometry(.13, .32, .13, 2, .02), matte('#a84a32'), .28, 1.0, -.12, g); // chimney
+  part(new THREE.CylinderGeometry(.07, .07, .03, 16), trim, 0, .82, .37, g).rotation.x = Math.PI / 2; // round attic window
+  part(new THREE.CylinderGeometry(.055, .055, .035, 16), glossy('#9fd8ff', { emissive: '#3a6a8a', emissiveIntensity: .3 }), 0, .82, .375, g).rotation.x = Math.PI / 2;
+  // the door, porch roof and step
+  part(new RoundedBoxGeometry(.2, .36, .04, 2, .012), glossy(ROOF_COLS[(i + 2) % 5], { roughness: .35 }), 0, .2, .36, g);
+  part(new THREE.SphereGeometry(.018, 8, 6), MAT.gold, .06, .2, .385, g);
+  part(new RoundedBoxGeometry(.32, .03, .14, 2, .01), trim, 0, .42, .42, g).rotation.x = .15;
+  part(new RoundedBoxGeometry(.3, .04, .1, 2, .01), matte('#d8d0c4'), 0, .02, .42, g);
+  part(new THREE.SphereGeometry(.025, 8, 6), new THREE.MeshBasicMaterial({ color: '#fff2b0' }), .14, .34, .38, g);
+  // windows with frames, mullions and shutters
+  for (const s of [1, -1]) {
+    part(new RoundedBoxGeometry(.2, .2, .03, 2, .01), trim, s * .3, .34, .36, g);
+    part(new THREE.BoxGeometry(.16, .16, .01), glossy('#a8dcff', { emissive: '#3a6a8a', emissiveIntensity: .25, roughness: .05 }), s * .3, .34, .378, g);
+    part(new THREE.BoxGeometry(.012, .16, .012), trim, s * .3, .34, .384, g); part(new THREE.BoxGeometry(.16, .012, .012), trim, s * .3, .34, .384, g);
+    for (const t of [1, -1]) part(new RoundedBoxGeometry(.06, .22, .02, 2, .006), glossy(ROOF_COLS[i % 5], { roughness: .4 }), s * .3 + t * .14, .34, .37, g);
+    part(new THREE.SphereGeometry(.11, 14, 10), matte('#3f8a3a'), s * .32, .08, .45, g).scale.set(1.3, .8, .8); // bushes
+  }
+  // the house number over the door
+  const num = canvasTex(64, 64, (c, w) => { c.fillStyle = '#1a1a1a'; c.fillRect(0, 0, w, w); c.fillStyle = '#ffd24a'; c.font = '700 44px Rubik, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), 32, 36); });
+  num.userData.keep = false;
+  part(new THREE.PlaneGeometry(.08, .08), new THREE.MeshBasicMaterial({ map: num, toneMapped: false }), 0, .47, .44, g);
+  g.traverse(m => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } });
+  return g;
 }
-// a throw, already decided by the game: tx/ty where the disc lands (park %), dx/dy where the dog ends up
-function fling3D({ tx, ty, dx, dy, caught, golden, T }) {
+// a mailbox on a post: a rounded box with a door that drops open and a red flag that goes up when mail is in
+function buildMailbox(golden) {
+  const g = new THREE.Group(), body = golden ? MAT.gold : glossy('#2a3442', { roughness: .3 });
+  part(new RoundedBoxGeometry(.05, .5, .05, 2, .01), glossy('#fffaf0', { roughness: .5 }), 0, .25, 0, g);
+  const box = part(new RoundedBoxGeometry(.13, .12, .26, 3, .055), body, 0, .54, 0, g);
+  const door = new THREE.Group(); door.position.set(0, .48, .13); g.add(door);
+  part(new RoundedBoxGeometry(.13, .12, .012, 2, .005), body, 0, .06, 0, door);
+  const flag = new THREE.Group(); flag.position.set(.07, .5, .03); g.add(flag);
+  part(new THREE.BoxGeometry(.008, .012, .14), glossy('#e02a2a'), 0, 0, .0, flag).position.z = -.0;
+  part(new THREE.BoxGeometry(.008, .06, .05), glossy('#e02a2a'), 0, .03, -.06, flag);
+  flag.rotation.x = 0;
+  g.userData = { door, flag, box };
+  g.traverse(m => { if (m.isMesh) m.castShadow = true; });
+  return g;
+}
+function startMail3D() {
+  const B3 = bonus3d, area = $('street');
+  attachBonus(area);
+  const s = outdoorScene(['#5cb4f0', '#e2f4ff']);
+  const cam = B3.cam; cam.fov = 38; cam.position.set(0, 3, 9); cam.lookAt(0, 1.2, 0); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+  ground(s, 90, 90, 30);
+  const P = (x, y) => toGround(B3.W * x / 100, B3.H * y / 100, B3.W, B3.H);
+  const spots = MAIL_X.map(x => P(x, MAIL_GROUND));
+  const mid = spots[2], kk = B3.W / MAIL_HOUSES * .86 * unitsPerPx(mid, B3.H);
+  const zs = P(50, MAIL_Y).z, start = P(MAIL_DOG.x, MAIL_DOG.y);
+  // the sidewalk (concrete slabs), the curb, and the strip of lawn the dog guards
+  const walkW = kk * .5, slab = matte('#d9d3c6', { roughness: .92 });
+  const sw = new THREE.Mesh(new THREE.BoxGeometry(90, .03, walkW), slab); sw.position.set(0, .015, zs); sw.receiveShadow = true; s.add(sw);
+  for (let x = -24; x <= 24; x += kk * .55) part(new THREE.BoxGeometry(.03, .032, walkW), matte('#b0a998'), x, .016, zs, s).receiveShadow = true;
+  part(new THREE.BoxGeometry(90, .07, .14), matte('#c8c2b4'), 0, .035, zs + walkW / 2 + .07, s).receiveShadow = true;
+  // the houses, each with a path to the sidewalk and a mailbox at the curb; everything sits where the game's own layout
+  // has it on screen (so the street converges a little with distance, as it would)
+  const homes = spots.map((p, i) => {
+    const h = buildHome(i); h.scale.setScalar(kk); h.position.set(p.x, 0, p.z - kk * .36); s.add(h);
+    const q = P(MAIL_X[i], MAIL_Y), len = Math.hypot(q.x - p.x, q.z - p.z);
+    const path = new THREE.Mesh(new THREE.PlaneGeometry(kk * .24, len), matte('#cfc6b6')); path.rotation.set(-Math.PI / 2, 0, Math.atan2(q.x - p.x, q.z - p.z)); path.position.set((p.x + q.x) / 2, .012, (p.z + q.z) / 2); path.receiveShadow = true; s.add(path);
+    const box = buildMailbox(i === MAIL_HOUSES - 1); box.scale.setScalar(kk * .95); box.position.copy(P(MAIL_X[i] + 5, MAIL_Y - 1.5)); s.add(box);
+    return { g: h, box, x: p.x };
+  });
+  for (let i = 0; i < MAIL_HOUSES - 1; i++) {
+    const x = (spots[i].x + spots[i + 1].x) / 2;
+    tree(s, x, spots[i].z - kk * .6, kk * .5);
+    const hedge = part(new RoundedBoxGeometry(kk * .16, kk * .16, kk * .55, 2, kk * .05), matte('#2f7a34'), x, kk * .08, spots[i].z - kk * .05, s); hedge.castShadow = true;
+  }
+  for (let i = 0; i < 9; i++) tree(s, rand(-16, 16), mid.z - kk * rand(2.4, 4.5), kk * rand(.6, .85));
+  // one scale for the mailman, the dog and the dog catcher
+  const sd = kk * .36;
+  const dog = buildDog('gsd'); dog.root.scale.setScalar(sd * 1.15); castShadows(dog.root); dog.shadow.visible = false;
+  dog.pos.copy(start); dog.heading = dog.headingWant = Math.PI * .85; s.add(dog.root);
+  const man = buildMailman(); man.scale.setScalar(sd); s.add(man);
+  const standAt = i => P(manX(i), MAIL_Y);
+  const offL = standAt(0).clone(); offL.x = P(-12, MAIL_Y).x;
+  man.position.copy(offL); man.rotation.y = Math.PI / 2;
+  Object.assign(B3, { on: true, kind: 'mail', scene: s, dog, man, homes, kk, sd, start, standAt, fx: [], gen: null, pile: 0 });
+  B3.gen = (function* () { dog.want.sit = 1; yield* manWalk(man, standAt(0), 1.2); yield* mailIdle(); })();
+}
+// the mailman walks (speed 1) or runs (2+) to a point
+function* manWalk(m, to, speed = 1) {
+  const B3 = bonus3d, ud = m.userData, from = m.position.clone(), d = from.distanceTo(to), T = d / (B3.sd * 1.6 * speed);
+  if (d < 1e-3) return;
+  m.rotation.y = Math.atan2(to.x - from.x, to.z - from.z); ud.body.rotation.x = speed > 1.5 ? .22 : 0;
+  ud.armL.rotation.z = 0; ud.armR.rotation.z = 0; ud.head.rotation.y = 0;
+  yield* tween(T, u => { m.position.lerpVectors(from, to, u); walkPerson(m, u * T * (6 + speed * 3.5), Math.min(1, .7 + speed * .2), true); }, t => t);
+  walkPerson(m, 0, 0, true); ud.body.rotation.x = 0;
+}
+// between chases: the mailman fusses with his letters and keeps a nervous eye on Rex; Rex sits, stares, growls now and then
+function* mailIdle() {
+  const { man, dog, sd } = bonus3d, ud = man.userData;
+  dog.want.sit = 1; dog.want.walk = 0; dog.want.wag = .4; dog.want.brow = .7; dog.want.perk = 1; dog.want.headRoll = 0;
+  dog.look = V3();
+  personFace(man, 'worried'); man.rotation.y = Math.PI / 2;
+  ud.armL.rotation.set(0, 0, 0); ud.armR.rotation.set(-.6, 0, 0); ud.elbows[1].rotation.x = -.9;
+  for (let t = 0, g = 2; ; ) {
+    const dt = yield; t += dt; g -= dt;
+    dog.look.copy(man.position).y += sd * 1.7;
+    ud.head.rotation.y = -1 + Math.sin(t * 1.1) * .25; ud.head.rotation.z = Math.sin(t * .7) * .05;
+    ud.body.position.y = Math.sin(t * 2.2) * .008; ud.armR.rotation.x = -.6 + Math.sin(t * 3) * .08;
+    blinkPerson(man);
+    if (g < 0) { g = rand(1.5, 3); dog.want.jaw = .35; dog.want.brow = 1; kick(dog, .3); setTimeout(() => { dog.want.jaw = 0; dog.want.brow = .7; }, 350); }
+  }
+}
+// letters spill out of the bag and flutter down
+function scatterLetters(m, n) {
+  const B3 = bonus3d, at = m.position.clone(); at.y += B3.sd * 1.1;
+  for (let i = 0; i < n; i++) {
+    const l = letter(B3.sd); l.position.copy(at); B3.scene.add(l);
+    B3.fx.push({ m: l, v: V3(rand(-1, 1), rand(1.6, 2.8), rand(-.3, .8)).multiplyScalar(B3.sd), g: 3.2 * B3.sd, drag: 1.4, t: 0, life: rand(1.1, 1.5), spinV: V3(rand(-6, 6), rand(-6, 6), 0) });
+  }
+}
+// a chase, already decided by the game: Rex bites off a piece of the trousers (bit) or the mailman gets the mail in and
+// away, and then the dog catcher comes for Rex
+function mail3D({ house: i, bit, gain, golden }) {
   const B3 = bonus3d;
-  if (B3.kind !== 'fling') return;
-  const { dog, disc, top, k } = B3, P = (x, y) => toGround(B3.W * x / 100, B3.H * y / 100, B3.W, B3.H);
-  const start = B3.start.clone(), land = P(tx, ty), stop = P(dx, dy);
-  top.material.color.set(golden ? '#ffc93a' : '#ff5a1a'); top.material.metalness = golden ? 1 : 0; top.material.roughness = golden ? .2 : .32;
+  if (B3.kind !== 'mail') return;
+  const { dog, man, sd } = B3, ud = man.userData, stand = B3.standAt(i), mb = B3.homes[i].box.userData;
   B3.gen = (function* () {
-    dog.want.sit = 0; dog.want.perk = 1;
-    disc.visible = true;
-    const t0 = performance.now() / 1000, Td = T / 1000, run = (T + 250) / 1000 * .82, big = caught && (ty <= 36 || golden);
-    let ran = 0;
-    dog.headingWant = Math.atan2(stop.x - start.x, stop.z - start.z); dog.want.walk = 1; dog.speed = 3;
-    for (;;) {
-      const t = performance.now() / 1000 - t0;
-      // the disc: a high floating arc, spinning
-      const u = Math.min(t / Td, 1), e = 1 - (1 - u) ** 2;
-      disc.position.lerpVectors(start, land, e); disc.position.y = k * (.9 + Math.sin(u * Math.PI) * 3.2 * (caught ? 1 : 1.3));
-      disc.rotation.y += .5; disc.rotation.z = .18 + Math.sin(t * 3) * .1; disc.rotation.x = -.12;
-      if (u < 1 && Math.random() < .8) fxSprite(disc.position, golden ? '#ffd24a' : '#fff6e0', k * rand(.12, .22), V3(0, 0, 0), .35);
-      // the dog runs after it, then leaps for the catch
-      const v = Math.min(Math.max(t - .12, 0) / run, 1);
-      dog.pos.lerpVectors(start, stop, easeInOut(v));
-      if (v >= 1 && !ran) { ran = 1; dog.want.walk = 0; dog.speed = 0; }
-      if (ran && t < .12 + run + .3) { if (!dog.leapt) { dog.leapt = 1; kick(dog, 1.1); } const j = (t - .12 - run) / .3; dog.lift = Math.sin(Math.min(j, 1) * Math.PI) * k * (big ? 1.3 : .9); dog.want.air = 1; dog.want.headPitch = .6; if (big && caught) dog.spin = easeInOut(Math.min(j, 1)) * Math.PI * 2; }
-      else if (ran && dog.leapt) { dog.leapt = 0; dog.lift = 0; dog.spin = 0; dog.want.air = 0; kick(dog, -1.4); dust(dog, 8, 1.4); }
-      if (t > .12 + run + .3) break;
-      yield 0;
-    }
-    dog.want.headPitch = 0;
-    if (caught) {
-      // the disc is in his mouth; trot back with it
-      disc.visible = false; dog.want.tongue = 0; dog.want.jaw = .3;
-      // the catch lands: the zone line flashes, sparks fly, and big ones get confetti and a shake
-      const zl = B3.zones.reduce((a, l) => Math.abs(l.position.z - stop.z) < Math.abs(a.position.z - stop.z) ? l : a);
-      B3.flashLine = { line: zl, t: 0 };
-      const at = dog.pos.clone(); at.y += k * .6;
-      sparkBurst(at, golden ? '#ffd24a' : '#ffffff', big ? 30 : 14, k * .9); groundRing(dog.pos, golden ? '#ffd24a' : zl.material.color.getStyle(), k * 1.2);
-      if (big) { confetti(at, golden ? 70 : 40, k); shake(.08); }
-      const held = disc.clone(); held.visible = true; held.scale.setScalar(.26); held.position.set(0, -.07, .2); dog.head.add(held);
-      dog.want.wag = 1; dog.want.wagRate = 16;
-      yield* wait(.35);
-      dog.headingWant = Math.atan2(start.x - dog.pos.x, start.z - dog.pos.z); dog.want.walk = 1; dog.speed = 2.5;
-      const from = dog.pos.clone(); yield* tween(.65, w => { dog.pos.lerpVectors(from, start, w); });
-      dog.want.walk = 0; dog.headingWant = 0; dog.want.sit = 1;
-      yield* wait(.2); dog.head.remove(held); dog.want.jaw = 0; dog.want.tongue = 1;
-    } else {
-      dog.want.lean = 1; kick(dog, -.8); dust(dog, 8, 2); yield* wait(.15); dog.want.lean = 0; // skids, too late
-      yield* tween(.5, u => { disc.position.y += .05; disc.position.z -= .2; }, t => t);
-      disc.visible = false;
-      dog.want.perk = .2; dog.want.headPitch = -.3; dog.want.wag = 0; yield* wait(.4);
-      dog.headingWant = Math.atan2(start.x - dog.pos.x, start.z - dog.pos.z); dog.want.walk = 1; dog.speed = 1.6;
-      const from = dog.pos.clone(); yield* tween(.65, w => { dog.pos.lerpVectors(from, start, w); });
-      dog.want.walk = 0; dog.headingWant = 0; dog.want.sit = 1; dog.want.perk = 1; dog.want.headPitch = 0;
-    }
-    for (;;) yield 0;
+    man.position.copy(stand); man.rotation.y = Math.PI / 2; ud.head.rotation.set(0, 0, 0);
+    ud.armR.rotation.set(0, 0, 0); ud.elbows[1].rotation.x = -.2;
+    dog.look = null; dog.want.sit = 0; dog.want.brow = 1; dog.want.jaw = .7; dog.want.perk = 1; kick(dog, 1); dust(dog, 6, 1.3);
+    const bite = stand.clone().add(V3(-sd * .7, 0, sd * .1)), from = dog.pos.clone();
+    dog.headingWant = Math.atan2(bite.x - from.x, bite.z - from.z); dog.want.walk = 1; dog.speed = 3.4;
+    // the mailman's reaction while Rex charges: panic (he's caught) or quick hands (he makes it)
+    const react = bit ? (function* () {
+      yield* wait(.18); personFace(man, 'yell'); ud.head.rotation.y = -1.2;
+      yield* tween(.2, u => { man.position.y = Math.sin(u * Math.PI) * sd * .4; ud.armL.rotation.z = u * 2.5; ud.armR.rotation.z = -u * 2.5; }, t => t);
+      man.position.y = 0; scatterLetters(man, 4);
+    })() : (function* () {
+      yield* wait(.08); personFace(man, 'worried'); ud.head.rotation.y = -1.1;
+      yield* tween(.22, u => { ud.armR.rotation.x = -1.5 * u; ud.elbows[1].rotation.x = -.2 + u * .2; mb.door.rotation.x = u * 1.4; }, t => t);
+      ud.held.visible = false;
+      yield* tween(.18, u => { mb.door.rotation.x = 1.4 * (1 - u); mb.flag.rotation.x = -u * 1.5; ud.armR.rotation.x = -1.5 * (1 - u); });
+      // the hop: up and over the mailbox, out of reach
+      personFace(man, 'yell');
+      yield* tween(.42, u => { man.position.x = stand.x + u * sd * 1.6; man.position.y = Math.sin(u * Math.PI) * sd * .75; ud.legs[0].rotation.x = -.9 * Math.sin(u * Math.PI); ud.legs[1].rotation.x = .4 * Math.sin(u * Math.PI); }, t => t);
+      man.position.y = 0; walkPerson(man, 0, 0, true);
+    })();
+    yield* together(tween(.62, u => { dog.pos.lerpVectors(from, bite, u); }, t => t), react);
+    dog.want.walk = 0; dog.speed = 0; dog.headingWant = Math.PI / 2;
+    if (bit) yield* biteSeq(i, gain, golden); else yield* missSeq(i);
   })();
+}
+// Rex grabs the trousers and pulls, the mailman runs on the spot; RRRIP: a piece comes away, and off he goes
+function* biteSeq(i, gain, golden) {
+  const B3 = bonus3d, { dog, man, sd } = B3, ud = man.userData, stand = B3.standAt(i), last = golden || i === MAIL_HOUSES - 1;
+  kick(dog, -1); dust(dog, 6, 1.4);
+  dog.want.headPitch = .2; dog.want.jaw = .25; dog.want.crouch = .7; dog.want.wag = 1; dog.want.wagRate = 22; dog.want.shake = .8;
+  const dx = dog.pos.x;
+  yield* tween(.6, u => {
+    const t = u * .6;
+    ud.body.rotation.x = .38; walkPerson(man, t * 24, 1, false); ud.body.rotation.x = .38;
+    man.position.x = stand.x + Math.sin(t * 31) * sd * .04;
+    dog.pos.x = dx - Math.abs(Math.sin(t * 8)) * sd * .14;
+  }, t => t);
+  dog.want.shake = 0; dog.want.crouch = 0;
+  // the rip
+  ripPants(man);
+  const scrap = clothScrap(.2 + Math.min(gain, 25) * .012); scrap.position.set(0, -.1, .3); scrap.rotation.set(.4, 0, .3); dog.head.add(scrap);
+  const at = dog.pos.clone().add(V3(sd * .4, sd * .75, 0));
+  puff(at, sd * .7, 5); sparkBurst(at, golden ? '#ffd24a' : '#ffffff', 10 + gain, sd * .8); groundRing(dog.pos, golden ? '#ffd24a' : '#7fd0ff', sd * 1.2); shake(.05 + Math.min(gain, 25) * .004);
+  if (gain >= 10) { confetti(at, 30 + gain * 2, sd); beam(dog.pos, golden ? '#ffd24a' : '#ff7ad8', sd, 4); }
+  kick(dog, -1.3);
+  // the mailman shoots forward, then twists round to look at the damage (hands on the seat), then runs for it
+  personFace(man, 'yell'); walkPerson(man, 0, 0, true);
+  yield* tween(.3, u => { man.position.x = stand.x + u * sd * .45; man.position.y = Math.sin(u * Math.PI) * sd * .5; ud.body.rotation.x = .1; }, t => t);
+  man.position.y = 0; ud.body.rotation.x = 0;
+  yield* tween(.28, u => {
+    man.rotation.y = Math.PI / 2 + u * Math.PI * .75;
+    ud.armL.rotation.set(.9 * u, 0, 2.5 * (1 - u) + .15 * u); ud.armR.rotation.set(.9 * u, 0, -2.5 * (1 - u) - .15 * u);
+    ud.elbows[0].rotation.x = ud.elbows[1].rotation.x = -.9 * u; ud.head.rotation.y = .9 * u; ud.head.rotation.x = .35 * u;
+  });
+  dog.want.jaw = .15; dog.want.wag = 1; dog.want.tongue = 0;
+  yield* wait(.2);
+  ud.armL.rotation.set(0, 0, 0); ud.armR.rotation.set(0, 0, 0); ud.head.rotation.set(0, 0, 0); ud.elbows[0].rotation.x = ud.elbows[1].rotation.x = -.2;
+  const off = man.position.clone(); off.x = toGround(B3.W * 1.15, B3.H * MAIL_Y / 100, B3.W, B3.H).x;
+  yield* together(
+    manWalk(man, last ? off : B3.standAt(i + 1), last ? 3 : 2.6),
+    dogHome(scrap),
+  );
+  if (last) { // the whole street done: Rex celebrates
+    const p = dog.pos.clone(); p.y += sd;
+    confetti(p, 80, sd * 1.2); sparkBurst(p, '#ffd24a', 30, sd); shake(.12);
+    yield* tween(.6, u => { dog.lift = Math.sin(u * Math.PI) * sd * .9; dog.flip = -easeInOut(u) * Math.PI * 2; dog.want.air = 1; }, t => t);
+    dog.lift = 0; dog.flip = 0; dog.want.air = 0; kick(dog, -1.3); dust(dog, 8);
+    dog.want.sit = 1; dog.want.tongue = 1; dog.want.wag = 1;
+    for (;;) yield 0;
+  }
+  yield* mailIdle();
+}
+// Rex trots back with his prize and drops it on his pile
+function* dogHome(scrap) {
+  const B3 = bonus3d, { dog, sd, start } = B3, from = dog.pos.clone();
+  yield* wait(.15);
+  dog.headingWant = Math.atan2(start.x - from.x, start.z - from.z); dog.want.walk = 1; dog.speed = 2;
+  yield* tween(.75, u => { dog.pos.lerpVectors(from, start, u); });
+  dog.want.walk = 0; dog.speed = 0; dog.headingWant = Math.PI * .85;
+  yield* wait(.1);
+  B3.scene.attach(scrap);
+  const p0 = scrap.position.clone(), r0 = scrap.rotation.clone(), n = B3.pile++;
+  const to = start.clone().add(V3(sd * (.75 + (n % 3) * .12), .012 + n * .004 * sd, sd * (.3 + (n % 2) * .1)));
+  yield* tween(.25, u => { scrap.position.lerpVectors(p0, to, u); scrap.position.y += Math.sin(u * Math.PI) * sd * .2; scrap.rotation.set(r0.x + (-Math.PI / 2 - r0.x) * u, r0.y, r0.z + u * n); }, t => t * t);
+  dog.want.sit = 1; dog.want.tongue = 1;
+}
+// he got the mail in: Rex bites thin air and skids; the mailman tips his helmet; then the dog catcher comes for Rex
+function* missSeq(i) {
+  const B3 = bonus3d, { dog, man, sd } = B3, ud = man.userData;
+  yield* tween(.32, u => { dog.lift = Math.sin(u * Math.PI) * sd * .45; dog.want.air = 1; dog.want.jaw = u < .6 ? 1 : 0; }, t => t);
+  dog.lift = 0; dog.want.air = 0; dog.want.lean = 1; kick(dog, -1.4); dust(dog, 10, 2);
+  yield* tween(.25, u => { dog.pos.x += sd * .02 * (1 - u); });
+  dog.want.lean = 0; dog.want.sit = 1; dog.want.perk = .2; dog.want.headRoll = .4; dog.want.brow = 0; dog.want.wag = 0;
+  // smug: turn to the camera, tip the helmet, while Rex slinks home with his head down
+  personFace(man, 'smug'); man.rotation.y = .3;
+  const { start } = B3, from = dog.pos.clone();
+  yield* together((function* () {
+    yield* tween(.3, u => { ud.armR.rotation.set(-2.6 * u, 0, -.3 * u); ud.elbows[1].rotation.x = -1.2 * u; });
+    yield* wait(.25);
+    yield* tween(.25, u => { ud.armR.rotation.x = -2.6 * (1 - u); ud.elbows[1].rotation.x = -1.2 * (1 - u); });
+  })(), (function* () {
+    yield* wait(.2);
+    dog.want.sit = 0; dog.want.headRoll = 0; dog.want.headPitch = -.35; dog.want.tailUp = -.5;
+    dog.headingWant = Math.atan2(start.x - from.x, start.z - from.z); dog.want.walk = 1; dog.speed = 1.4;
+    yield* tween(.9, u => { dog.pos.lerpVectors(from, start, u); });
+    dog.want.walk = 0; dog.speed = 0; dog.headingWant = 0; dog.want.sit = 1; dog.want.tailUp = 0;
+  })());
+  const side = Math.random() < .5 ? -1 : 1;
+  const off = man.position.clone(); off.x = toGround(B3.W * 1.2, B3.H * MAIL_Y / 100, B3.W, B3.H).x;
+  yield* together(catcherNets(dog, sd * 1.05, side), (function* () { yield* wait(1.1); personFace(man, 'calm'); yield* manWalk(man, off, 1); })());
 }
 
 function drawBonus3D(dt) {
@@ -5332,8 +5750,8 @@ function drawBonus3D(dt) {
     B3.r.render(B3.scene, cam); cam.position.copy(o); B3.shake *= Math.exp(-7 * dt);
   } else B3.r.render(B3.scene, cam);
 }
-const BONUS_DLG = { dig: 'bonusDlg', pick: 'pickDlg', fling: 'flingDlg' };
-const BONUS_NAME = { dig: ['BONE YARD', 'DIG!'], pick: ['DOG HOUSE', 'PICK!'], fling: ['FRISBEE', 'FLING!'] };
+const BONUS_DLG = { dig: 'bonusDlg', pick: 'pickDlg', mail: 'mailDlg' };
+const BONUS_NAME = { dig: ['BONE YARD', 'DIG!'], pick: ['DOG HOUSE', 'PICK!'], mail: ['MAILMAN', 'CHASE!'] };
 // the feature splash: rays and the bonus name slam in, a fanfare, then it clears to the game
 function bonusSplash(kind) {
   const scr = $(BONUS_DLG[kind]).querySelector('.screen');
@@ -5360,7 +5778,7 @@ function endBonus3D() {
   document.querySelectorAll('.bsplash, .bdone').forEach(e => e.remove());
   const B3 = bonus3d;
   B3.doneShown = false; B3.sceneRef = B3.scene;
-  B3.on = false; B3.kind = null; B3.scene = null; B3.items = null; B3.dog = null; B3.catcher = null; B3.gen = null; B3.fx = []; B3.flashLine = null; B3.shake = 0;
+  B3.on = false; B3.kind = null; B3.scene = null; B3.items = null; B3.dog = null; B3.man = null; B3.homes = null; B3.catcher = null; B3.net = null; B3.gen = null; B3.fx = []; B3.flashLine = null; B3.shake = 0;
   if (B3.cv) B3.cv.remove();
   if (B3.sceneRef) { disposeTree(B3.sceneRef); B3.sceneRef = null; }
 }
@@ -5396,7 +5814,7 @@ async function boot3D() {
   initCast();
   setTimeout(() => { try { sessionStorage.setItem('dqm3d', 'ok'); } catch { /* storage unavailable */ } }, 3000);
   window.G3 = G3;
-  window.__g3 = { cast, reels3d, bonus3d, DOGS, ROUTINES, duo, SKITS, castApi, play: play_, step: (n = 1, dt = 1 / 60) => { for (let i = 0; i < n; i++) drawCast(dt, performance.now()); } }; // handy for poking at the 3D from the console
+  window.__g3 = { buildCatcher, buildMailman, cast, reels3d, bonus3d, DOGS, ROUTINES, duo, SKITS, castApi, play: play_, stepBonus: (n = 1, dt = 1 / 30) => { for (let i = 0; i < n; i++) if (bonus3d.on) drawBonus3D(dt); }, step: (n = 1, dt = 1 / 60) => { for (let i = 0; i < n; i++) drawCast(dt, performance.now()); } }; // handy for poking at the 3D from the console
   let last = performance.now();
   (function loop(now) {
     const dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now;
@@ -5421,11 +5839,11 @@ const G3 = {
   ladder: title => castApi.ladder(title),
   bonusOpen(kind) {
     stopAll(); for (const d of onStage()) gone(d);
-    try { ({ dig: startDig3D, pick: startPick3D, fling: startFling3D })[kind](); bonus3d.doneShown = false; bonusSplash(kind); } catch (e) { console.error(e); endBonus3D(); }
+    try { ({ dig: startDig3D, pick: startPick3D, mail: startMail3D })[kind](); bonus3d.doneShown = false; bonusSplash(kind); } catch (e) { console.error(e); endBonus3D(); }
   },
   dig: (i, item) => dig3D(i, item),
   pick: (i, j) => pick3D(i, j),
-  fling: info => fling3D(info),
+  mail: info => mail3D(info),
   bonk: () => bonk3D(),
   bonusClose: () => endBonus3D(),
   coin: () => castApi.coin(),
