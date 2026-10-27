@@ -4,10 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Doggie Quarter Mania</title>
+<script>
+(function () {
+  function say(html, err) {
+    var b = document.getElementById('dqmBoot');
+    if (!b || window.__dqmReady) return;
+    b.innerHTML = html + (err ? '<small style="display:block;margin-top:14px;opacity:.55;font-size:12px;word-break:break-word">' + String(err).replace(/</g, '&lt;') + '</small>' : '');
+  }
+  var help = '<b style="display:block;font-size:24px;color:#ffd24a;margin-bottom:10px">Doggie Quarter Mania</b>This browser couldn\'t start the game.<br>Open the link in Safari or Chrome<br>(in an app, tap \u2022\u2022\u2022 and choose \u201cOpen in browser\u201d).';
+  window.addEventListener('error', function (e) { say(help, e.message || 'script error'); });
+  setTimeout(function () { if (!window.__dqmReady) say(help, 'The game did not finish starting (' + document.readyState + ').'); }, 20000);
+})();
+</script>
 <!-- display font for the logo and win banners; without a connection the page falls back to Impact -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@500;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   :root {
     --gold: #ffd24a; --gold-dk: #b8860b; --red: #e0202e; --led: #ff4a2a; --amber: #ffb52e;
@@ -861,6 +873,7 @@
 </style>
 </head>
 <body>
+<div id="dqmBoot" style="position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;padding:24px;background:#0a0408;color:#fff;font:600 17px/1.45 system-ui,-apple-system,sans-serif;text-align:center">Loading Doggie Quarter Mania&hellip;</div>
 
 <canvas id="floor"></canvas>
 <div class="floorglow" id="floorGlow"></div>
@@ -2845,6 +2858,7 @@ fit();
 placeSides();
 paintFloor();
 window.__dqmReady = true;
+{ const boot = document.getElementById('dqmBoot'); if (boot) boot.remove(); }
 // phones settle their real size late (address bars, rotation, in-app browsers): lay out again once they have
 const refit = () => { fit(); paintFloor(); };
 addEventListener('load', refit);
@@ -3671,7 +3685,8 @@ function frameModel(m, size) {
 }
 
 // ---------- the foundry: renders every symbol into sprites once ----------
-const SPRITE = 320;
+const LITE = Math.min(screen.width, screen.height) < 500 || (navigator.deviceMemory || 8) <= 3;
+const SPRITE = LITE ? 256 : 320;
 const SPRITES = {}; // symbol -> { sharp: canvas, blur: canvas, tex, blurTex, url }
 function drawPlate(g, text, c1, c2, S) {
   const fs = Math.round(S * (text.length > 7 ? .1 : .118));
@@ -3736,7 +3751,7 @@ async function runFoundry(r) {
     SPRITES[s] = { raw, sharp, blur, url: sharp.toDataURL() };
   }
   // the bone flush and win rain: each rarity bone tumbling through 16 angles (160 x 80 sprite units, see paintBone3D)
-  const ROLLS = 16, bw = 160 * BSCALE, bh = 80 * BSCALE;
+  const ROLLS = LITE ? 8 : 16, bw = 160 * BSCALE, bh = 80 * BSCALE;
   cam.position.set(0, 0, 7.6); cam.lookAt(0, 0, 0);
   const frames = RARITY_NAMES.map(n => Array.from({ length: ROLLS }, (_, f) => {
     const m = buildBone(n); m.userData.body.rotation.set(f / ROLLS * Math.PI * 2, .35 * Math.sin(f / ROLLS * Math.PI * 2), 0);
@@ -3745,8 +3760,9 @@ async function runFoundry(r) {
   }));
   // the topper's mansion emblems turn in 3D: 24 frames of a slow turn
   cam.position.set(0, .3, 7.6); cam.lookAt(0, 0, 0);
-  const mansionFrames = Array.from({ length: 24 }, (_, f) => {
-    const m = buildMansion(); m.userData.body.rotation.y = Math.sin(f / 24 * Math.PI * 2) * .55;
+  const MF = LITE ? 12 : 24;
+  const mansionFrames = Array.from({ length: MF }, (_, f) => {
+    const m = buildMansion(); m.userData.body.rotation.y = Math.sin(f / MF * Math.PI * 2) * .55;
     return snap(frameModel(m, 2.6), 192, 192);
   });
   return { frames, mansionFrames };
@@ -3828,7 +3844,7 @@ function layoutReels3D() {
   const W = host.offsetWidth, H = CELL * 3;
   if (!W) return;
   R3.W = W; R3.H = H;
-  sizeRenderer(R3.r, W, H);
+  sizeRenderer(R3.r, W, H, LITE ? 1.5 : 2);
   pixelCamera(R3.cam, W, H, 18);
   R3.groups.forEach(g => { R3.scene.remove(g.root); R3.scene.remove(g.streak); R3.scene.remove(g.flash); });
   R3.live.forEach(m => R3.scene.remove(m.obj)); R3.live.clear();
@@ -4090,7 +4106,7 @@ function layoutCast() {
   const C3 = cast, cab = $('cabinet'), W = cab.offsetWidth, H = cab.offsetHeight;
   if (!W) return;
   C3.W = W; C3.H = H;
-  sizeRenderer(C3.r, W, H, isPhone() ? 1.6 : 2);
+  sizeRenderer(C3.r, W, H, isPhone() ? (LITE ? 1.25 : 1.5) : 2);
   pixelCamera(C3.cam, W, H, 18);
   const g = offsetIn($('glass'), cab);
   C3.glass = g;
@@ -4799,7 +4815,7 @@ function attachBonus(area) {
   const B3 = bonus3d;
   area.append(B3.cv); // last, so the game's children[i] still finds button i
   const W = area.clientWidth, H = area.clientHeight;
-  sizeRenderer(B3.r, W, H, isPhone() ? 1.6 : 2);
+  sizeRenderer(B3.r, W, H, isPhone() ? (LITE ? 1.25 : 1.5) : 2);
   B3.W = W; B3.H = H; B3.area = area;
   B3.cam.aspect = W / H; B3.cam.updateProjectionMatrix();
 }
@@ -5241,6 +5257,10 @@ function endBonus3D() {
 
 // ---------- start-up and the frame loop ----------
 async function boot3D() {
+  let mode = null;
+  try { mode = sessionStorage.getItem('dqm3d'); } catch { /* storage unavailable */ }
+  if (mode === 'starting' || mode === 'off') { try { sessionStorage.setItem('dqm3d', 'off'); } catch { /* storage unavailable */ } return; }
+  try { sessionStorage.setItem('dqm3d', 'starting'); } catch { /* storage unavailable */ }
   const cv = document.createElement('canvas'); cv.id = 'reels3d';
   const r = makeRenderer(cv); // throws without WebGL: the game simply stays in its 2D look
   const { frames, mansionFrames } = await runFoundry(r);
@@ -5263,6 +5283,7 @@ async function boot3D() {
   document.body.classList.add('g3');
   initReels3D(r);
   initCast();
+  setTimeout(() => { try { sessionStorage.setItem('dqm3d', 'ok'); } catch { /* storage unavailable */ } }, 3000);
   window.G3 = G3;
   window.__g3 = { cast, reels3d, bonus3d, DOGS, ROUTINES, duo, SKITS, castApi, play: play_, step: (n = 1, dt = 1 / 60) => { for (let i = 0; i < n; i++) drawCast(dt, performance.now()); } }; // handy for poking at the 3D from the console
   let last = performance.now();
