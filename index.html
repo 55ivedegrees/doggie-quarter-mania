@@ -4559,7 +4559,61 @@ function* chase() {
   yield* together(walkTo(pea, -far, 3.4), walkTo(lab, -far, 3.3), walkTo(kod, -far, 3.3), walkTo(duke, -far, 2.4));
   [pea, lab, kod, duke].forEach(gone);
 }
-const SKITS = { duo: ['corso', duo], tug: ['lab', tug], patrol: ['gsd', patrol], howloff: ['husky', howlOff], parade: ['pup', parade], lineup: ['corso', lineup], chase: ['pup', chase] };
+// the dog catcher as a cast member (a person, so a few things work differently: he has his own walk, and no tail to wag)
+let CATCHER = null;
+function catcher() {
+  if (CATCHER) return CATCHER;
+  const m = buildCatcher(); m.visible = false; cast.scene.add(m);
+  CATCHER = { root: m, head: m.userData.head, B: { name: 'DOG CATCHER', size: 1.7, small: false }, actor: { bubble: null, out: true }, pos: V3(), ph: 0 };
+  return CATCHER;
+}
+function placeCatcher(c) { c.root.position.copy(c.pos); c.root.scale.setScalar(cast.unit * .82); }
+function catcherGone() { if (CATCHER) { CATCHER.root.visible = false; CATCHER.actor.out = true; unbubble(CATCHER); } }
+function* catcherWalk(c, x, speed = 1, sneak = false) {
+  const dir = Math.sign(x - c.pos.x) || 1;
+  c.root.rotation.y = dir * Math.PI / 2 + (sneak ? 0 : 0); c.root.userData.body.rotation.x = sneak ? .35 : speed > 1.5 ? .18 : 0;
+  while (Math.abs(x - c.pos.x) > 1) {
+    const dt = yield; c.pos.x += dir * Math.min(Math.abs(x - c.pos.x), dt * cast.unit * 1.3 * speed); c.ph += dt * (sneak ? 5 : 7 + speed * 3);
+    walkCatcher(c.root, c.ph, sneak ? .55 : 1); placeCatcher(c);
+  }
+  walkCatcher(c.root, 0, 0); c.root.userData.body.rotation.x = 0;
+}
+function* catcherShow(c, x) { c.pos.set(x, cast.floor, -30); c.root.visible = true; c.actor.out = false; placeCatcher(c); yield 0; }
+// a swipe of the net
+function* swipe(c) { const a = c.root.userData.armR; yield* tween(.25, u => { a.rotation.x = -2.6 + u * 2.4; }, t => t); yield* tween(.2, u => { a.rotation.x = -.2 - u * .3; }); }
+// Peanut zooms across with the catcher after him; he misses, and Duke sends him packing
+function* catcherChase() {
+  const c = catcher(), pea = cast.dogs.pup, duke = cast.dogs.corso, far = cast.W / 2 + cast.unit * 1.4;
+  yield* show(pea, -far, yStand(), Math.PI / 2); yield* catcherShow(c, -far - cast.unit * 1.2);
+  pea.want.brow = 1; bubble(pea, 'YIP! HE\'S GOT A NET!', 1.6);
+  yield* together(walkTo(pea, far, 3.2), (function* () { yield* catcherWalk(c, midX(.1), 2.2); })());
+  gone(pea);
+  yield* swipe(c); kick(c, 0);
+  c.root.rotation.y = 0; bubble(c, pick(['Where\'d that mutt go?!', 'Come back here, you little...', 'I\'ll get you next time!']), 2);
+  yield* tween(1.4, u => { c.head.rotation.y = Math.sin(u * 9) * .8; }, t => t); c.head.rotation.y = 0;
+  yield* show(duke, midX(-.45), yDuck(duke), .5); yield* popUp(duke);
+  duke.want.brow = -1; duke.want.crouch = .5; growl(.8, 0, .2, 75); bk(duke, .3, .7);
+  bubble(duke, 'Not in MY house.', 1.8);
+  c.root.rotation.y = -1; yield* tween(.3, u => { c.root.position.y = cast.floor + Math.sin(u * Math.PI) * cast.unit * .5; }, t => t); // startled jump
+  bubble(c, 'Yikes!', 1.2);
+  yield* catcherWalk(c, far + cast.unit, 3); catcherGone();
+  duke.want.crouch = 0; yield* face(duke, .35, .2); yield* talk(duke, 'Hmph. Amateurs.', 1.6); yield* dive(duke);
+}
+// he tiptoes across with his net up; Koda spots him and howls, and he runs for it
+function* catcherSneak() {
+  const c = catcher(), kod = cast.dogs.husky, far = cast.W / 2 + cast.unit * 1.4, from = Math.random() < .5 ? -1 : 1;
+  yield* catcherShow(c, from * far);
+  c.root.userData.armR.rotation.x = -1.8; bubble(c, 'Shhh... here, doggies...', 2);
+  yield* catcherWalk(c, midX(-from * .1), .7, true);
+  yield* show(kod, -from * (midX() + (cast.right - cast.left) * .35), yDuck(kod), from * .5); yield* popUp(kod);
+  kod.look = c.head.getWorldPosition(V3()); kod.want.brow = .8; yield* wait(.3);
+  kod.want.headPitch = .85; kod.want.jaw = 1; kod.look = null; howl(0); bubble(kod, 'AWOOO! CATCHER! CATCHER!', 1.8);
+  c.root.rotation.y = -from * 1.2; yield* tween(.3, u => { c.root.position.y = cast.floor + Math.sin(u * Math.PI) * cast.unit * .45; }, t => t);
+  c.root.userData.armR.rotation.x = -.3;
+  yield* together(catcherWalk(c, from * (far + cast.unit), 3), (function* () { yield* wait(1); kod.want.headPitch = 0; kod.want.jaw = 0; yield* talk(kod, 'And STAY out!', 1.6); })());
+  catcherGone(); yield* dive(kod);
+}
+const SKITS = { catcher: ['pup', catcherChase], sneak: ['husky', catcherSneak], duo: ['corso', duo], tug: ['lab', tug], patrol: ['gsd', patrol], howloff: ['husky', howlOff], parade: ['pup', parade], lineup: ['corso', lineup], chase: ['pup', chase] };
 function glint(d) {
   const s = glintSprite(cast.unit * .6, '#fff6c8'); d.head.getWorldPosition(s.position); s.position.y -= dogH(d) * .25; s.position.z += 80;
   cast.scene.add(s);
@@ -4569,7 +4623,7 @@ function glint(d) {
 
 // ---- reacting to play ----
 function play_(d, gen) { d.actor.gen = gen; }
-function stopAll() { for (const d of Object.values(cast.dogs)) d.actor.gen = null; for (const p of cast.props) cast.scene.remove(p); cast.props = []; }
+function stopAll() { catcherGone(); for (const d of Object.values(cast.dogs)) d.actor.gen = null; for (const p of cast.props) cast.scene.remove(p); cast.props = []; }
 const onStage = () => Object.values(cast.dogs).filter(d => !d.actor.out);
 // one dog peeks over a bottom corner of the window, head and paws up, eyes on the spinning reels
 function* peek(d, side) {
@@ -4644,11 +4698,20 @@ function* driveBy(d) {
   }
   gone(d);
 }
+// a spin drive-by with the catcher hot on the dog's heels
+function* chasedBy(d) {
+  yield* wait(rand(.2, .5));
+  const c = catcher(), dir = Math.random() < .5 ? 1 : -1, far = cast.W / 2 + cast.unit * 1.3;
+  yield* show(d, -dir * far, yStand(), dir * Math.PI / 2); yield* catcherShow(c, -dir * (far + cast.unit * 1.1));
+  d.want.brow = 1; c.root.userData.armR.rotation.x = -2;
+  yield* together(walkTo(d, dir * far, 3.4), catcherWalk(c, dir * (far + cast.unit * 1.5), 3.1));
+  gone(d); catcherGone();
+}
 let peeker = null;
 const castApi = {
   // a spin: whoever is out front gets out of the way (a dive or a dash), and one dog peeks over a corner to watch
   spin() {
-    cast.lastEvent = performance.now();
+    cast.lastEvent = performance.now(); catcherGone();
     for (const p of cast.props) cast.scene.remove(p); cast.props = [];
     const out = onStage();
     peeker = out.length ? out[0] : Math.random() < .65 ? cast.dogs[pick(DOG_ORDER)] : null;
@@ -4664,7 +4727,7 @@ const castApi = {
     }
     for (const d of Object.values(cast.dogs)) if (d.actor.out && d !== peeker) d.actor.gen = null;
     if (peeker && !out.includes(peeker)) { const d = peeker; play_(d, (function* () { yield* wait(.3); yield* peek(d, side); })()); }
-    if (Math.random() < .22) { const free = DOG_ORDER.map(k => cast.dogs[k]).filter(d => d !== peeker && d.actor.out); if (free.length) { const d = pick(free); play_(d, driveBy(d)); } }
+    if (Math.random() < .22) { const free = DOG_ORDER.map(k => cast.dogs[k]).filter(d => d !== peeker && d.actor.out); if (free.length) { const d = pick(free); play_(d, Math.random() < .35 && d.key !== 'corso' ? chasedBy(d) : driveBy(d)); } }
   },
   tease() { if (peeker && !peeker.actor.out) play_(peeker, peekTease(peeker)); },
   // a bonus coin landed (n of that coin showing so far): the peeking dog reacts, louder each time
@@ -4683,7 +4746,7 @@ const castApi = {
     peeker = null;
   },
   win({ landed, ratio, jackpot }) {
-    cast.lastEvent = performance.now();
+    cast.lastEvent = performance.now(); catcherGone();
     const big = jackpot || ratio >= 20;
     // the dogs whose houses won come out; bones bring out Biscuit; a big win brings the whole pack
     let keys = [...new Set(landed.map(s => DOG_BY_SYM[s]).filter(Boolean))];
@@ -4699,7 +4762,7 @@ const castApi = {
     peeker = null;
   },
   bonus(kind) {
-    cast.lastEvent = performance.now();
+    cast.lastEvent = performance.now(); catcherGone();
     const [k, line] = BONUS_HOST[kind], d = cast.dogs[k];
     for (const o of Object.values(cast.dogs)) if (o !== d) { if (o.actor.out) o.actor.gen = null; else play_(o, dive(o)); }
     play_(d, cheer(d, midX(0), line, true));
@@ -4744,6 +4807,7 @@ function drawCast(dt, now) {
     updateDog(d, dt);
     placeBubble(d);
   }
+  if (CATCHER && CATCHER.root.visible) { any = true; placeBubble(CATCHER); }
   updatePuffs(dt);
   if (any || C3.dirty) { C3.r.render(C3.scene, C3.cam); C3.dirty = any; }
 }
@@ -4863,12 +4927,13 @@ const shake = mag => { bonus3d.shake = Math.max(bonus3d.shake || 0, mag); };
 
 // ---- the dog catcher, in 3D ----
 function buildCatcher() {
-  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body); let legs;
   const uni = glossy('#2f4a7a', { roughness: .5, clearcoat: .3 }), skin = new THREE.MeshPhysicalMaterial({ color: '#f1c27d', roughness: .55, sheen: .3 });
   const torso = new THREE.Mesh(new THREE.CapsuleGeometry(.32, .5, 6, 16), uni); torso.position.y = 1.15; body.add(torso);
   for (const s of [1, -1]) {
-    const leg = new THREE.Mesh(new THREE.CapsuleGeometry(.12, .55, 6, 12), uni); leg.position.set(s * .15, .45, 0); body.add(leg);
-    const boot = new THREE.Mesh(ellipsoid(.13, .09, .2, 12), matte('#1a1a1a')); boot.position.set(s * .15, .08, .06); body.add(boot);
+    const hip = new THREE.Group(); hip.position.set(s * .15, .78, 0); body.add(hip); (legs || (legs = [])).push(hip);
+    const leg = new THREE.Mesh(new THREE.CapsuleGeometry(.12, .55, 6, 12), uni); leg.position.y = -.33; hip.add(leg);
+    const boot = new THREE.Mesh(ellipsoid(.13, .09, .2, 12), matte('#1a1a1a')); boot.position.set(0, -.7, .06); hip.add(boot);
   }
   const armL = new THREE.Group(); armL.position.set(.38, 1.45, 0); body.add(armL);
   const aL = new THREE.Mesh(new THREE.CapsuleGeometry(.09, .5, 6, 12), uni); aL.position.y = -.3; armL.add(aL);
@@ -4893,7 +4958,7 @@ function buildCatcher() {
   hoop.add(new THREE.Mesh(new THREE.TorusGeometry(.34, .025, 8, 28), MAT.chrome));
   const mesh = new THREE.Mesh(new THREE.SphereGeometry(.34, 16, 10, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#e8eef4', wireframe: true, transparent: true, opacity: .8 }));
   mesh.scale.y = 1.5; hoop.add(mesh); hoop.rotation.x = -Math.PI / 2;
-  g.userData = { body, armL, armR, head, net, hoop };
+  g.userData = { body, armL, armR, head, net, hoop, legs };
   return castShadows(g);
 }
 
@@ -4930,7 +4995,11 @@ function startDig3D() {
   const dog = buildDog('husky'); dog.root.scale.setScalar(kk * 1.15); castShadows(dog.root); dog.shadow.visible = false;
   const mid = items[Math.min(items.length - 1, Math.floor(items.length / 2) + 2)].g.position;
   dog.pos.set(mid.x + kk * .9, 0, mid.z - kk * .5); dog.heading = dog.headingWant = -.5; s.add(dog.root);
-  Object.assign(B3, { on: true, kind: 'dig', scene: s, items, dog, gen: null, catcher: null, fx: [] });
+  // the dog catcher lurks behind the back fence, peeking over it now and then
+  const lurker = buildCatcher(); lurker.scale.setScalar(kk * 1.05); lurker.rotation.y = 0;
+  const fzz = Math.min(...items.map(it => it.g.position.z)) - kk * 1.1 - .35;
+  lurker.position.set(0, -kk * 2.2, fzz); s.add(lurker);
+  Object.assign(B3, { on: true, kind: 'dig', scene: s, items, dog, gen: null, catcher: null, fx: [], lurker, lurk: { t: 2, x: 0, z: fzz, k: kk } });
   // while waiting Koda can't sit still: looks around, wags, bounces on the spot
   B3.gen = (function* () {
     dog.want.sit = 1;
@@ -4990,10 +5059,12 @@ function dirtClod(at, k) {
 function* catchSeq(it) {
   const B3 = bonus3d, dog = B3.dog, c = buildCatcher();
   c.scale.setScalar(it.k * 1.15); B3.scene.add(c); B3.catcher = c;
-  const to = dog.pos.clone().add(V3(it.k * 1.1, 0, it.k * .4)), from = to.clone().add(V3(it.k * 3, 0, it.k * 1));
-  c.position.copy(from); c.rotation.y = -1.9;
+  const side = dog.pos.x > 0 ? -1 : 1;
+  const to = dog.pos.clone().add(V3(side * it.k * 1.15, 0, it.k * .5)), from = to.clone().add(V3(side * it.k * 3.2, 0, it.k * 1.2));
+  c.position.copy(from); c.rotation.y = side > 0 ? -1.9 : 1.9;
+  if (B3.lurker) B3.lurker.visible = false;
   const ud = c.userData;
-  yield* tween(.45, u => { c.position.lerpVectors(from, to, u); c.position.y = Math.sin(u * Math.PI) * it.k * 1.2; c.rotation.z = Math.sin(u * Math.PI) * .3; }, t => t);
+  yield* tween(.45, u => { c.position.lerpVectors(from, to, u); c.position.y = Math.sin(u * Math.PI) * it.k * 1.2; c.rotation.z = Math.sin(u * Math.PI) * .3 * side; walkCatcher(c, u * 12, 1); }, t => t);
   c.position.y = 0; c.rotation.z = 0; puff(c.position, it.k, 6); shake(.1);
   dog.want.perk = .1; dog.want.brow = .9; dog.headingWant = Math.atan2(c.position.x - dog.pos.x, c.position.z - dog.pos.z);
   yield* tween(.35, u => { ud.armR.rotation.x = -2.6 + u * 2.2; ud.armR.rotation.z = .3; });
@@ -5004,6 +5075,12 @@ function* catchSeq(it) {
   shake(.18); puff(dog.pos, it.k, 8); kick(dog, -1.4);
   dog.want.sit = 1; dog.want.headPitch = -.2; dog.want.wag = 0; dog.want.perk = 0;
   for (;;) { const t = performance.now() / 1000; ud.body.rotation.z = Math.sin(t * 3) * .04; ud.head.rotation.z = Math.sin(t * 2) * .1; dog.root.position.x += Math.sin(t * 30) * .002; yield 0; }
+}
+// the catcher's stride: legs swing, arms pump, a bob; amt 0..1
+function walkCatcher(c, ph, amt) {
+  const ud = c.userData;
+  if (ud.legs) { ud.legs[0].rotation.x = Math.sin(ph) * .7 * amt; ud.legs[1].rotation.x = -Math.sin(ph) * .7 * amt; }
+  ud.armL.rotation.x = -Math.sin(ph) * .6 * amt; ud.body.position.y = Math.abs(Math.sin(ph)) * .08 * amt;
 }
 function bonk3D() {
   const c = bonus3d.catcher; if (!c) return;
@@ -5206,6 +5283,15 @@ function drawBonus3D(dt) {
   B3.t = (B3.t || 0) + dt;
   if (bonus && bonus.done && !B3.doneShown) { B3.doneShown = true; setTimeout(() => { if (bonus && bonus.done) bonusDone(B3.kind); }, 900); }
   if (B3.kind === 'dig') B3.items.forEach((it, i) => { if (!it.open) { const ph = (B3.t + i * .53) % 3.3, w = ph < .35 ? Math.sin(ph / .35 * Math.PI) : 0; it.mound.scale.y = it.k * .55 * (1 + w * .18); it.mound.rotation.z = w * Math.sin(B3.t * 40) * .05; } });
+  // the lurking catcher: rises behind the fence, looks around, ducks, moves along, again
+  if (B3.lurker && B3.lurker.visible && !(bonus && bonus.done)) {
+    const L = B3.lurk, c = B3.lurker; L.t += dt;
+    const cyc = L.t % 6.5, up = cyc < .4 ? 0 : cyc < .8 ? (cyc - .4) / .4 : cyc < 2.6 ? 1 : cyc < 3 ? 1 - (cyc - 2.6) / .4 : 0;
+    if (cyc > 3 && !L.moved) { L.x = rand(-.8, .8) * B3.W * unitsPerPx(V3(0, 0, L.z), B3.H) * .5; L.moved = true; }
+    if (cyc < 3) L.moved = false;
+    c.position.set(L.x, -L.k * 2.2 + easeInOut(up) * L.k * 1.25, L.z);
+    c.userData.head.rotation.y = Math.sin(L.t * 2.2) * .7; c.userData.armR.rotation.x = -1.2 * up;
+  }
   if (B3.flashLine) { const f = B3.flashLine; f.t += dt; const u = Math.min(f.t / 1.2, 1); f.line.scale.y = 1 + Math.sin(u * Math.PI) * 5; f.line.material.opacity = .85 + Math.sin(f.t * 30) * .15 * (1 - u); if (u >= 1) { f.line.scale.y = 1; B3.flashLine = null; } }
   B3.fx = B3.fx.filter(f => {
     f.t += dt; const u = f.t / f.life;
