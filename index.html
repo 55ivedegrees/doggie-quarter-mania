@@ -815,6 +815,53 @@
   .g3 .ml-pop { z-index: 2; }
   .g3 .kennel .sym { opacity: 0; }
   .g3 .kennels { min-height: 200px; border-radius: 12px; overflow: hidden; }
+  /* ---------- the big moments: a flash over the scene; labels fade while the camera leans in ---------- */
+  .bflash { position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: inherit;
+    background: radial-gradient(circle at 50% 55%, var(--c, #fff), transparent 78%); animation: bflash .45s ease-out forwards; }
+  @keyframes bflash { from { opacity: .9; } to { opacity: 0; } }
+  .g3 .ml-house span, .g3 .mound .x { transition: opacity .25s; }
+  .g3 .cine .ml-house span, .g3 .cine .mound .x { opacity: 0; }
+  .g3 .kennels { padding: 24px 0 18px; }
+  /* ---------- the mailman chase: a pay ladder the light races along, comic pops, the golden-house banner ---------- */
+  .ml-ladder { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin: 8px 2px 2px; }
+  .ml-ladder i { font-style: normal; display: grid; place-items: center; padding: 5px 0 4px; border-radius: 8px; background: linear-gradient(#2a0f45, #12041f);
+    box-shadow: inset 0 0 0 1.5px #ffffff26; opacity: .6; transition: opacity .08s, transform .08s, box-shadow .08s; }
+  .ml-ladder b { font: 400 18px/1 var(--display); color: var(--c); text-shadow: 0 2px 0 #000; }
+  .ml-ladder small { font: 800 9px/1.3 var(--ui); letter-spacing: 1px; color: #fff; opacity: .85; }
+  .ml-ladder i.lit { opacity: 1; transform: translateY(-2px) scale(1.07); box-shadow: inset 0 0 0 2px var(--c), 0 0 14px var(--c); background: linear-gradient(#4a1f6a, #12041f); }
+  .ml-ladder i.hit { animation: ladhit .2s steps(2) 6; }
+  @keyframes ladhit { 50% { opacity: .3; } }
+  .ml-ladder.gold i:not(.away) { box-shadow: inset 0 0 0 1.5px #ffd24a, 0 0 8px #ffb30066; }
+  .ml-ladder.gold i:not(.away) b { color: #ffd24a; }
+  .ml-pop { text-align: center; }
+  .ml-pop small { display: block; font-size: .5em; letter-spacing: 2px; color: var(--c, #ffd24a); }
+  .ml-pop em { display: block; font-style: normal; font-size: 1.15em; color: var(--c, #ffd24a); }
+  .ml-pop.big { font-size: 38px; animation-duration: 1.9s; }
+  .ml-pop.big::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 240px; height: 240px; margin: -120px 0 0 -120px; border-radius: 50%;
+    background: repeating-conic-gradient(var(--c) 0 10deg, transparent 10deg 20deg); opacity: .45;
+    -webkit-mask: radial-gradient(closest-side, #000 35%, transparent); mask: radial-gradient(closest-side, #000 35%, transparent); animation: turn 3s linear infinite; }
+  .street.shake { animation: stshake .45s ease-out; }
+  @keyframes stshake { 20% { translate: -5px 2px; } 40% { translate: 4px -3px; } 60% { translate: -3px 2px; } 80% { translate: 2px 0; } }
+  .ml-banner { position: absolute; z-index: 4; left: 0; right: 0; top: 26%; padding: 8px 0 10px; text-align: center; pointer-events: none;
+    background: linear-gradient(90deg, transparent, #000c 14%, #000c 86%, transparent); box-shadow: 0 -2px 0 #ffd24a88, 0 2px 0 #ffd24a88;
+    animation: mlbanner 2.1s ease-in-out forwards; }
+  .ml-banner small { display: block; font: 800 11px/1.2 var(--ui); letter-spacing: 3px; color: #fff; }
+  .ml-banner b { display: block; font: 400 30px/1.05 var(--display); letter-spacing: 1px; color: #ffd24a; text-shadow: 0 3px 0 #6a4300, 0 0 14px #ffb300; }
+  .ml-banner em { display: block; font: 800 11px/1.3 var(--ui); font-style: normal; letter-spacing: 2px; color: #ffe9a0; }
+  @keyframes mlbanner { 0% { opacity: 0; transform: scaleX(.2); } 12% { opacity: 1; transform: scaleX(1.05); } 20% { transform: none; } 85% { opacity: 1; } 100% { opacity: 0; transform: translateY(-14px); } }
+  .m .street { height: 250px; }
+  .m .ml-ladder b { font-size: 15px; }
+  .m .ml-ladder small { font-size: 8px; letter-spacing: .5px; }
+  .m .ml-banner b { font-size: 24px; }
+  .m .ml-pop.big { font-size: 30px; }
+  /* ---------- a picked dog house rattles before it opens ---------- */
+  .kennel.rattle { animation: rattle .09s linear infinite; }
+  @keyframes rattle { 25% { transform: rotate(-4deg) translateY(-2px); } 75% { transform: rotate(4deg) translateY(-1px); } }
+  /* ---------- the bonus symbols: the mystery dog house sits in the rays; the mound and the mailbox hop when they win ---------- */
+  .dq > .house { font-size: .92em; }
+  .dq > .house > strong, .dq > .house::after { display: none !important; }
+  .cell.win .sx.obj { animation: objhop .8s ease-in-out infinite; transform-origin: 50% 90%; }
+  @keyframes objhop { 0%, 100% { transform: none; } 25% { transform: translateY(-8%) rotate(-6deg); } 50% { transform: scale(1.06, .94); } 75% { transform: translateY(-5%) rotate(5deg); } }
 
   /* ---------- bonus screens: a lit marquee frame, a big gold title, an LED win meter, candy buttons ---------- */
   .screen.bonus { position: relative; padding-top: 18px;
@@ -966,7 +1013,7 @@
         </table>
         <p class="stats" id="stats"></p>
         <p class="fine">Five reels, ten lines. One coin per line; each coin bet lights one more line (middle, top, bottom, the two V's, then the rest).
-          Line wins pay left to right from the first reel, and all line wins are added together. Three or more PAW coins anywhere on screen start the bone dig; three or more BONE coins anywhere start the dog house pick bonus; three or more MAIL coins anywhere start the mailman chase. Every bonus pays a multiple of your total bet. Demo game for entertainment only — no real money is wagered or paid.<br>Dog sounds from Wikimedia Commons: Amada44 (CC BY-SA 3.0), MichaeltheFox8621 (CC BY-SA 4.0), Kriplozoik (CC BY-SA 3.0), Faragó, Pongrácz, Miklósi, Huber, Virányi &amp; Range (CC BY 2.5), amethysta (public domain), Frey, Volodin, Fritsch &amp; Volodina (CC BY 4.0), Knites (CC0); trimmed and level-matched.</p>
+          Line wins pay left to right from the first reel, and all line wins are added together. Three or more DIRT MOUNDS anywhere on screen start the bone dig; three or more mystery DOG HOUSES (the purple ones with a ? on the door) anywhere start the dog house pick bonus; three or more MAILBOXES anywhere start the mailman chase. Every bonus pays a multiple of your total bet. Demo game for entertainment only — no real money is wagered or paid.<br>Dog sounds from Wikimedia Commons: Amada44 (CC BY-SA 3.0), MichaeltheFox8621 (CC BY-SA 4.0), Kriplozoik (CC BY-SA 3.0), Faragó, Pongrácz, Miklósi, Huber, Virányi &amp; Range (CC BY 2.5), amethysta (public domain), Frey, Volodin, Fritsch &amp; Volodina (CC BY 4.0), Knites (CC0); trimmed and level-matched.</p>
         <button class="close" id="paysClose">RETURN TO GAME</button>
       </div>
     </div>
@@ -993,6 +1040,7 @@
           <div class="ml-dog" id="mlDog"><i>🐕</i></div>
           <div class="ml-catcher" id="mlCatcher"></div>
         </div>
+        <div class="ml-ladder" id="mlLadder"></div>
         <button class="close flipbtn" id="mailBtn">SIC 'EM!</button>
         <p class="fine" id="mailFine"></p>
       </div>
@@ -1052,7 +1100,7 @@ addEventListener('error', e => {
 });
 // D = Doggie Mansion (top symbol), dog bones by rarity: Q = Legendary, B = Epic, T = Rare, P = Uncommon, L = Common
 // X / W / Y / V / Z = dog houses: Duke (Top Dog), Koda (Husky), Rex (Guard Dog), Biscuit (Lab), Peanut (Pup)
-// S = PAW coin, K = BONE coin, F = MAIL coin (scatters). Two or three of each per reel; the same coin is always at least
+// S = DIRT MOUND, K = mystery DOG HOUSE, F = MAILBOX (the bonus scatters). Two or three of each per reel; the same coin is always at least
 // eight stops apart (a reel never shows two), and different coins are never within two stops (a reel shows one coin at most).
 const STRIPS = [
   'YPLPBSTZTVTLFQDVQPTBWLKTZLSYLZDXLQBVLTSPLKLYWXBZF',
@@ -1464,13 +1512,37 @@ const coinArt = (enamel, emblem) => `<svg class="sx" viewBox="-50 -50 100 100">`
   `<path d="M-35 -12A37 37 0 0 1 10 -36" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="5" stroke-linecap="round"/></svg>`;
 const COIN_FRISBEE = '<g transform="rotate(-8)"><path fill-rule="evenodd" d="M-27-17H27V17H-27ZM-21-9L0 6 21-9V12H-21Z"/></g>'; // an envelope
 const PAW_COIN = coinArt('paw', PAW), BONE_COIN = coinArt('bone', COIN_BONE), FRISBEE_COIN = coinArt('frisbee', COIN_FRISBEE);
+// the bonus symbols are pieces of their bonus games: a freshly dug mound with a gold bone poking out and a shovel in it
+const MOUND_ART = '<svg class="sx obj" viewBox="-50 -50 100 100"><defs><radialGradient id="soil" cx=".42" cy=".3" r=".8"><stop offset="0" stop-color="#b8784a"/><stop offset=".55" stop-color="#7a4622"/><stop offset="1" stop-color="#3e200c"/></radialGradient></defs>' +
+  '<ellipse cx="0" cy="36" rx="47" ry="7" fill="#000" opacity=".35"/>' +
+  '<g transform="rotate(24 26 0)"><rect x="24" y="-40" width="4.5" height="58" rx="2" fill="#c08a4a" stroke="#5a3a18" stroke-width="1"/><path d="M19 -41h15" stroke="#2a1a10" stroke-width="4.5" stroke-linecap="round"/>' +
+  '<path d="M16 12h21v11q0 9-10.5 11q-10.5-2-10.5-11z" fill="#d8283a" stroke="#6a0a14" stroke-width="1.5"/><path d="M20 16v7" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/></g>' +
+  '<g transform="translate(-13 -15) rotate(-38) scale(.36) translate(-60 -32)"><g fill="#6b4300" stroke="#6b4300" stroke-width="7">' + BONE_PARTS + '</g><g fill="url(#gold)">' + BONE_PARTS + '</g></g>' +
+  '<path d="M-45 35C-43 11-29-6-8-9C11-11 23-3 31 7C38 16 42 25 45 35Z" fill="url(#soil)" stroke="#2e1606" stroke-width="2"/>' +
+  '<path d="M-31 2Q-14-10 4-9" fill="none" stroke="#d09a6a" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>' +
+  '<g fill="#2e1606" opacity=".55"><circle cx="-24" cy="16" r="2.4"/><circle cx="-6" cy="4" r="1.8"/><circle cx="20" cy="22" r="2.2"/><circle cx="-34" cy="28" r="1.6"/><circle cx="6" cy="27" r="1.9"/></g>' +
+  '<g fill="#c99060"><circle cx="-15" cy="24" r="1.6"/><circle cx="12" cy="10" r="1.4"/><circle cx="28" cy="27" r="1.3"/></g>' +
+  '<g transform="translate(-4 20) scale(.32) rotate(-12)" fill="#2e1606" opacity=".75">' + PAW + '</g>' +
+  '<g fill="#3f9a3e" stroke="#245a24" stroke-width="1"><path d="M-48 36q2-10 4 0q2-12 5 0q2-9 4 0z"/><path d="M34 36q2-11 4 0q2-8 4 0q2-12 5 0z"/><path d="M-6 37q2-7 3 0q2-9 4 0z"/></g>' +
+  '<g fill="#5a3418"><circle cx="-41" cy="33" r="3"/><circle cx="40" cy="31" r="2.6"/><circle cx="25" cy="34" r="2"/></g></svg>';
+// a red mailbox on a white post, letters sticking out of the open front, the gold flag up
+const MAILBOX_ART = '<svg class="sx obj" viewBox="-50 -50 100 100"><defs><linearGradient id="mbred" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7480"/><stop offset=".45" stop-color="#d8283a"/><stop offset="1" stop-color="#6a0612"/></linearGradient></defs>' +
+  '<ellipse cx="0" cy="41" rx="28" ry="5.5" fill="#000" opacity=".35"/>' +
+  '<rect x="-5" y="-4" width="10" height="45" rx="2" fill="#fffaf0" stroke="#8a8478" stroke-width="1.2"/><path d="M-2 0v38" stroke="#fff" stroke-width="2" opacity=".7"/>' +
+  '<rect x="-15" y="-9" width="30" height="6" rx="2" fill="#fffaf0" stroke="#8a8478" stroke-width="1.2"/>' +
+  '<path d="M19 -30V-48" stroke="#8a6500" stroke-width="4.5" stroke-linecap="round"/><path d="M19 -30V-48" stroke="url(#gold)" stroke-width="3" stroke-linecap="round"/><rect x="19" y="-49" width="14" height="9" rx="1.5" fill="url(#gold)" stroke="#8a6500" stroke-width="1.2"/>' +
+  '<path d="M-36 -9V-25Q-36 -38 -23 -38H23Q36 -38 36 -25V-9Z" fill="url(#mbred)" stroke="#4a040c" stroke-width="2"/>' +
+  '<path d="M-27 -37.5V-9M27 -37.5V-9" stroke="#ffd24a" stroke-width="2.6"/><path d="M-30 -32Q-28 -35 -22 -35H22" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" stroke-linecap="round"/>' +
+  '<g transform="rotate(-24 -36 -20)"><rect x="-50" y="-29" width="18" height="12" rx="1" fill="#fbf8ef" stroke="#7a7468" stroke-width="1"/><path d="M-50 -29l9 6 9-6" fill="none" stroke="#7a7468" stroke-width="1"/><rect x="-37" y="-27" width="3" height="3.5" fill="#d8283a"/></g>' +
+  '<g transform="rotate(10 -36 -16)"><rect x="-49" y="-21" width="17" height="11" rx="1" fill="#fff4dc" stroke="#7a7468" stroke-width="1"/><path d="M-49 -21l8.5 5.5 8.5-5.5" fill="none" stroke="#7a7468" stroke-width="1"/><path d="M-47 -11h13" stroke="#2f72d8" stroke-width="1.5" stroke-dasharray="2 2"/></g>' +
+  '<g fill="#3f9a3e" stroke="#245a24" stroke-width="1"><path d="M-16 41q2-9 4 0q2-11 4 0q2-8 4 0z"/><path d="M5 41q2-10 4 0q2-8 4 0q2-11 4 0z"/></g></svg>';
 
 function symbolHTML(s) {
   const inner = {
     D: `<span class="dq">${MANSION}<strong>DOGGIE MANSION</strong></span>`,
-    K: `<span class="dq picksym">${BONE_COIN}<strong>DOG HOUSE</strong></span>`,
-    S: `<span class="dq flipsym">${PAW_COIN}<strong>BONE DIG</strong></span>`,
-    F: `<span class="dq flingsym">${FRISBEE_COIN}<strong>MAIL</strong></span>`,
+    K: `<span class="dq picksym">${houseHTML('h0', '?', '')}<strong>DOG HOUSE</strong></span>`,
+    S: `<span class="dq flipsym">${MOUND_ART}<strong>BONE DIG</strong></span>`,
+    F: `<span class="dq flingsym">${MAILBOX_ART}<strong>MAIL</strong></span>`,
     X: houseHTML('h3', DOG_ART.corso, 'DUKE', '<em>👑</em>'),
     W: houseHTML('h5', DOG_ART.husky, 'KODA'),
     Y: houseHTML('h2', DOG_ART.gsd, 'REX'),
@@ -1915,7 +1987,7 @@ function say(text, cls = 'pop') {
   m.firstElementChild.textContent = text;
   if (cls !== 'attract') lastSaid = Date.now();
 }
-const ATTRACT = ['Insert coins to play', 'Five Doggie Mansions pay 500 per line', 'Every dog has its payday', 'Meet Duke, Koda, Rex, Biscuit and Peanut', 'Line up the dog houses', 'Three paw coins start the bone dig', 'Dig up a legendary bone', 'Three bone coins open the dog houses', 'Three mail coins start the mailman chase', 'Bite the mailman, dodge the dog catcher', 'Play 10 lines — hit Max Bet', 'Touch the coin to change denomination', 'Rarer bones pay bigger'];
+const ATTRACT = ['Insert coins to play', 'Five Doggie Mansions pay 500 per line', 'Every dog has its payday', 'Meet Duke, Koda, Rex, Biscuit and Peanut', 'Line up the dog houses', 'Three dirt mounds start the bone dig', 'Dig up a legendary bone', 'Three mystery houses open the dog house pick', 'Three mailboxes start the mailman chase', 'Bite the mailman, dodge the dog catcher', 'Play 10 lines — hit Max Bet', 'Touch the coin to change denomination', 'Rarer bones pay bigger'];
 let attractAt = 0;
 setInterval(() => {
   if (spinning || pending || overlayOpen() || Date.now() - lastSaid < 7000) return;
@@ -2623,6 +2695,7 @@ function startMail(wins, lineTotal, cells) {
   $('mlHouses').innerHTML = MAIL_X.map((x, i) => `<div class="ml-house${i === MAIL_HOUSES - 1 ? ' gold' : ''}" style="left:${x}%">` +
     `<span>${i === MAIL_HOUSES - 1 ? '★ ×2' : 'No. ' + (i + 1)}</span><i>🏠</i><b>📫</b></div>`).join('');
   $('mlRoute').innerHTML = MAIL_X.map((_, i) => `<i class="${i === MAIL_HOUSES - 1 ? 'gold' : ''}">✉️</i>`).join('');
+  $('mlLadder').innerHTML = ladderHTML(false); $('mlLadder').classList.remove('gold');
   $('mailFine').textContent = `Tap SIC 'EM or the street. At each of the ${MAIL_HOUSES} houses your dog chases the mailman: catch him and bite a piece off ` +
     `his pants for ×2 to ×25 — but if he gets the mail in, the dog catcher comes and the chase is over. The last mailbox is golden: a bite there counts double. ` +
     `Every chase is a fair random draw.`;
@@ -2643,10 +2716,51 @@ function startMail(wins, lineTotal, cells) {
 function paintMail() {
   const { house, total, done, busy, mult } = bonus, shown = done ? mult : total;
   [...$('mlRoute').children].forEach((d, i) => d.classList.toggle('used', i < house));
-  $('mlTotal').textContent = `×${shown} · ${(shown * bet).toLocaleString()} CR`;
+  if (!bonus.rolling) setMlTotal(shown);
   $('mailBtn').disabled = busy;
   if (done) return;
   $('mailSub').textContent = house === MAIL_HOUSES - 1 ? 'Golden mailbox — this bite counts double!' : `House ${house + 1} of ${MAIL_HOUSES} — get him before the mail goes in!`;
+}
+
+// the pay ladder under the street: what a chase can win, left to right, and "away" at the end
+const LADDER_NAMES = { 2: 'PATCH', 3: 'POCKET', 5: 'CUFF', 10: 'LEG', 25: 'SEAT' };
+const ladderHTML = golden => MAIL_PIECES.map(p => `<i class="${p.mult ? '' : 'away'}" style="--c:${p.mult ? PIECE_COLORS[p.mult] : '#ff4a4a'}">` +
+  `<b>${p.mult ? '×' + p.mult * (golden ? 2 : 1) : '✉'}</b><small>${p.mult ? LADDER_NAMES[p.mult] : 'AWAY'}</small></i>`).join('');
+// a light races along the ladder, slowing down, and stops on what the chase decided (it is decided before it starts)
+function runLadder(target, dur) {
+  const cells = [...$('mlLadder').children], n = cells.length;
+  cells.forEach(c => c.classList.remove('lit', 'hit'));
+  let at = randomInt(n), k = 0;
+  const S = n * 2 + ((target - at + n) % n), a = 28, b = Math.max(0, (dur - S * a) * 2 / (S * (S - 1)));
+  (function step() {
+    if (!bonus || !bonus.mail) return;
+    cells.forEach(c => c.classList.remove('lit'));
+    if (k === S) { cells[target].classList.add('lit', 'hit'); bell(target === n - 1 ? 330 : 1320, 0, .12, .5); return; }
+    at = (at + 1) % n; cells[at].classList.add('lit'); bell(1700 + at * 70, 0, .025, .05);
+    setTimeout(step, a + b * k++);
+  })();
+}
+const setMlTotal = v => { $('mlTotal').textContent = `×${v} · ${(v * bet).toLocaleString()} CR`; };
+// the win meter counts up to the new total, ticking
+function rollTotal(from, to) {
+  bonus.rolling = true;
+  const t0 = performance.now(), dur = 300 + (to - from) * 22;
+  let shown = from;
+  (function f(now) {
+    if (!bonus || !bonus.mail) return;
+    const u = Math.min((now - t0) / dur, 1), v = Math.round(from + (to - from) * u);
+    if (v !== shown) { shown = v; setMlTotal(v); bell(1100 + v * 9, 0, .03, .06); }
+    if (u < 1) requestAnimationFrame(f); else { bonus.rolling = false; paintMail(); }
+  })(t0);
+}
+// the dog made it to the last house: a banner sweeps across and the ladder turns gold (every bite pays double)
+function goldenBanner() {
+  if (!bonus || !bonus.mail || bonus.done) return;
+  const b = document.createElement('div'); b.className = 'ml-banner';
+  b.innerHTML = '<small>FINAL HOUSE</small><b>GOLDEN MAILBOX</b><em>EVERY BITE PAYS DOUBLE</em>';
+  $('street').appendChild(b); setTimeout(() => b.remove(), 2100);
+  $('mlLadder').innerHTML = ladderHTML(true); $('mlLadder').classList.add('gold');
+  [0, .12, .24, .36, .52].forEach((d, k) => bell(880 * 2 ** (k / 4), d, .1, .8));
 }
 
 function chaseMailman() {
@@ -2660,6 +2774,7 @@ function chaseMailman() {
   for (const p of MAIL_PIECES) { if (roll < p.weight) { piece = p; break; } roll -= p.weight; }
   const i = bonus.house, golden = i === MAIL_HOUSES - 1, bit = piece.mult > 0, gain = piece.mult * (golden ? 2 : 1), T = 1600;
   window.G3?.mail({ house: i, bit, gain, golden, T });
+  runLadder(MAIL_PIECES.indexOf(piece), T * .82);
   const man = $('mlMan'), dog = $('mlDog'), mx = manX(i), at = streetAt(mx - 5, MAIL_Y + 3);
   dog.animate([
     { transform: streetAt(MAIL_DOG.x, MAIL_DOG.y) }, { transform: at, offset: .4 },
@@ -2670,24 +2785,29 @@ function chaseMailman() {
   bark(300, 0, 0.6); growl(0.35, 0.3, 0.5, 90);
   setTimeout(() => {
     bonus.house++;
+    const before = bonus.total, big = gain >= 10;
     bonus.total += gain;
     const pop = document.createElement('div');
-    pop.className = 'ml-pop';
+    pop.className = 'ml-pop' + (big ? ' big' : '');
     pop.style.setProperty('--c', bit ? PIECE_COLORS[piece.mult] : '#ff3b3b');
-    pop.textContent = bit ? `${piece.name}! +×${gain}` : 'HE GOT AWAY!';
-    pop.style.transform = streetAt(Math.min(Math.max(mx, 24), 76), 40);
+    pop.innerHTML = bit ? `<small>RRRIP!</small>${piece.name}!<em>+×${gain}</em>` : '<small>MAIL DELIVERED</small>HE GOT AWAY!';
+    pop.style.transform = streetAt(Math.min(Math.max(mx, 30), 70), 44);
     $('street').appendChild(pop);
-    setTimeout(() => pop.remove(), 1300);
+    setTimeout(() => pop.remove(), big ? 1900 : 1400);
+    if (big || !bit) { const st = $('street'); st.classList.remove('shake'); void st.offsetWidth; st.classList.add('shake'); }
     const tag = $('mlHouses').children[i];
     tag.classList.add(bit ? 'bit' : 'away');
     tag.querySelector('span').textContent = bit ? `+×${gain}` : '✉ IN';
-    if (bit) { if (gain >= 10) { barkTune([420, 500, 560, 640], 0, 0.6); howl(0.7); } else barkTune([420, 500], 0, 0.55); }
+    if (bit) { if (big) { barkTune([420, 500, 560, 640], 0, 0.6); howl(0.7); } else barkTune([420, 500], 0, 0.55); }
     else { whine(0.1, 0.7, 0.14, 700); }
+    if (bit) rollTotal(before, bonus.total);
     paintMail();
     if (bit && !golden) { // the mailman hurries on to the next house; the dog trots home
       man.animate([{ transform: streetAt(mx, MAIL_Y) }, { transform: streetAt(manX(i + 1), MAIL_Y) }], { duration: 1100, delay: 200, easing: 'ease-in-out', fill: 'forwards' });
       dog.animate([{ transform: at }, { transform: streetAt(MAIL_DOG.x, MAIL_DOG.y) }], { duration: 800, delay: 300, easing: 'ease-in-out', fill: 'forwards' });
-      setTimeout(() => { bonus.busy = false; paintMail(); }, 1400);
+      const toGold = bonus.house === MAIL_HOUSES - 1;
+      if (toGold) setTimeout(goldenBanner, 1250);
+      setTimeout(() => { bonus.busy = false; paintMail(); }, toGold ? 2300 : 1400);
       return;
     }
     if (bit) man.animate([{ transform: streetAt(mx, MAIL_Y) }, { transform: streetAt(115, MAIL_Y) }], { duration: 900, delay: 200, easing: 'ease-in', fill: 'forwards' });
@@ -2760,6 +2880,21 @@ function pickHouse(i) {
   const shut = bonus.board.map((_, n) => n).filter(n => !bonus.opened.has(n));
   if (i == null) i = shut[randomInt(shut.length)];
   if (bonus.opened.has(i)) return;
+  // the picked door rattles for a moment (and Duke runs over to it), then it opens; what's inside was dealt at the start
+  bonus.busy = true;
+  const btn = $('kennels').children[i];
+  btn.classList.add('rattle');
+  window.G3?.pickTease(i);
+  rumble(0, .4, 2); wuf(0.05, 0.25);
+  setTimeout(() => {
+    btn.classList.remove('rattle');
+    if (!bonus || !bonus.pick) return;
+    bonus.busy = false;
+    openKennel(i);
+  }, 560);
+}
+
+function openKennel(i) {
   const j = bonus.board[i], btn = $('kennels').children[i];
   bonus.opened.add(i);
   bonus.found[j]++;
@@ -3802,8 +3937,8 @@ function clothScrap(k, color = '#2a3a62') {
 }
 
 // ---------- the symbols as 3D models ----------
-// Every reel symbol is a real model: rarity bones, the PAW / BONE / MAIL bonus coins, a dog house per dog with that dog
-// looking out of the door, and the Doggie Mansion. They are rendered once into sprites for the spinning reels (like a
+// Every reel symbol is a real model: rarity bones, the three bonus symbols (a dirt mound with a bone in it, a mystery
+// dog house, a mailbox stuffed with letters), a dog house per dog with that dog looking out of the door, and the Doggie Mansion. They are rendered once into sprites for the spinning reels (like a
 // casino's pre-rendered CGI), and the live models pop out of the reels and animate when they win.
 const BONE_LOOK = {
   common: () => new THREE.MeshPhysicalMaterial({ color: '#f1e6cc', roughness: .42, clearcoat: .6, clearcoatRoughness: .3, sheen: .4, sheenColor: '#fff3d6' }),
@@ -3974,6 +4109,135 @@ function buildMansion() {
   return g;
 }
 
+// ---- the bonus symbols: each one is a piece of its bonus game ----
+// soil for the dig mound: dark loam with crumbs, pebbles and roots (also its own bump map)
+const SOIL_TEX = canvasTex(256, 256, (g, w) => {
+  g.fillStyle = '#6a3f1e'; g.fillRect(0, 0, w, w);
+  for (let i = 0; i < 4200; i++) { const r = Math.random(); g.fillStyle = r < .5 ? `rgba(30,14,4,${.25 + Math.random() * .4})` : r < .9 ? `rgba(150,96,52,${.2 + Math.random() * .4})` : 'rgba(200,180,150,.6)'; const z = 1 + Math.random() * 3; g.fillRect(Math.random() * w, Math.random() * w, z, z); }
+  g.strokeStyle = 'rgba(40,20,6,.5)'; g.lineWidth = 1.5;
+  for (let i = 0; i < 14; i++) { g.beginPath(); let x = Math.random() * w, y = Math.random() * w; g.moveTo(x, y); for (let k = 0; k < 4; k++) { x += rand(-14, 14); y += rand(4, 14); g.lineTo(x, y); } g.stroke(); }
+});
+SOIL_TEX.wrapS = SOIL_TEX.wrapT = THREE.RepeatWrapping;
+const soilMat = () => new THREE.MeshStandardMaterial({ map: SOIL_TEX, bumpMap: SOIL_TEX, bumpScale: 3, roughness: .97, color: '#e2b088' });
+// a lumpy dome: a half sphere pushed in and out by a few overlapping waves (the rim stays on the ground)
+function lumpyDome(seg = 48) {
+  const g = new THREE.SphereGeometry(1, seg, Math.round(seg / 2), 0, Math.PI * 2, 0, Math.PI / 2), p = g.attributes.position;
+  const ph = [rand(0, 6), rand(0, 6), rand(0, 6)];
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), y = p.getY(i), z = p.getZ(i), a = Math.atan2(z, x);
+    const n = 1 + .07 * Math.sin(a * 5 + ph[0]) * (1 - y) + .05 * Math.sin(a * 9 + y * 6 + ph[1]) + .04 * Math.sin(y * 11 + ph[2]);
+    p.setXYZ(i, x * n, y * n, z * n);
+  }
+  g.computeVertexNormals();
+  return g;
+}
+// grass blades in a ring round a base, for the mound and the mailbox post
+function grassTufts(parent, r, n, k = 1) {
+  const blade = new THREE.ConeGeometry(.035 * k, .26 * k, 4); blade.translate(0, .13 * k, 0);
+  const greens = ['#3f9a3e', '#57b84a', '#2f7a34', '#6cc456'].map(c => matte(c, { roughness: .7 }));
+  for (let i = 0; i < n; i++) {
+    const a = i / n * Math.PI * 2 + rand(-.2, .2), rr = r * rand(.92, 1.08);
+    for (let j = 0; j < 3; j++) {
+      const m = new THREE.Mesh(blade, greens[(i + j) % 4]); m.position.set(Math.cos(a) * rr + rand(-.04, .04), 0, Math.sin(a) * rr + rand(-.04, .04));
+      m.rotation.set(rand(-.5, .5), rand(0, 3), rand(-.5, .5)); m.scale.y = rand(.7, 1.3); parent.add(m);
+    }
+  }
+}
+// S, the Bone Dig: a freshly dug mound with a golden bone sticking out of the top, a shovel stuck in its side, clods and
+// paw prints, ringed with grass
+function buildMoundSym() {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const soil = soilMat();
+  const mound = new THREE.Mesh(lumpyDome(), soil); mound.scale.set(1.05, 1.0, .9); body.add(mound);
+  const lip = new THREE.Mesh(new THREE.TorusGeometry(1.12, .1, 10, 40), soil); lip.rotation.x = Math.PI / 2; lip.scale.set(.92, .82, 1); lip.position.y = .04; body.add(lip);
+  for (let i = 0; i < 16; i++) { // loose clods round the foot
+    const a = rand(0, Math.PI * 2), r = rand(.95, 1.45), c = new THREE.Mesh(new THREE.DodecahedronGeometry(rand(.05, .11), 0), soil);
+    c.position.set(Math.cos(a) * r * 1.1, rand(0, .05), Math.sin(a) * r * .85); c.rotation.set(rand(0, 3), rand(0, 3), 0); body.add(c);
+  }
+  // the golden bone, half buried, poking up out of the top
+  const bone = buildBone('legendary'); bone.scale.setScalar(.75); bone.position.set(-.12, 1.02, .12); bone.rotation.set(.15, .25, .75); body.add(bone);
+  // a garden shovel: wooden shaft, a D grip, a red steel blade buried in the soil
+  const shovel = new THREE.Group(); shovel.position.set(.62, .5, -.05); shovel.rotation.set(-.12, 0, -.38); shovel.scale.setScalar(1.25); body.add(shovel);
+  const wood = glossy('#b07a3e', { roughness: .45 });
+  part(new THREE.CylinderGeometry(.035, .04, 1.1, 12), wood, 0, .55, 0, shovel);
+  part(new THREE.TorusGeometry(.09, .025, 8, 20, Math.PI), MAT.dark, 0, 1.12, 0, shovel);
+  part(new THREE.CylinderGeometry(.022, .022, .18, 8), wood, 0, 1.12, 0, shovel).rotation.z = Math.PI / 2;
+  part(new RoundedBoxGeometry(.24, .3, .03, 2, .012), glossy('#d8283a', { metalness: .4, roughness: .3 }), 0, -.05, 0, shovel);
+  // paw prints pressed into the front of the mound
+  const pawMat = new THREE.MeshStandardMaterial({ color: '#3a1f0c', roughness: 1 });
+  [[-.42, .42, .72, -.35], [.18, .26, .8, .1]].forEach(([x, y, z, r]) => {
+    const p = new THREE.Mesh(new THREE.ExtrudeGeometry(emblemShapes('paw'), { depth: .02, bevelEnabled: false }), pawMat);
+    p.scale.setScalar(.2); p.position.set(x, y, z); p.rotation.set(-.55, 0, r); body.add(p);
+  });
+  grassTufts(body, 1.3, 18);
+  body.position.y = -.35; body.rotation.set(.18, -.25, 0);
+  g.userData = { kind: 'coin', coin: 'dig', body, obj: true, turn: -.25 };
+  return g;
+}
+// the mystery dog house of the pick bonus: the closed door glows with a gold question mark
+const QMARK = canvasTex(128, 128, (g, w) => { g.fillStyle = '#0c0603'; g.fillRect(0, 0, w, w); g.font = '400 100px "Lilita One", Impact'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#ffd24a'; g.shadowColor = '#ffb300'; g.shadowBlur = 18; g.fillText('?', 64, 70); });
+function mysteryHouse() {
+  const h = buildHouse('h0', null), body = h.userData.body;
+  const q = new THREE.Mesh(new THREE.PlaneGeometry(.6, .6), new THREE.MeshBasicMaterial({ map: QMARK, toneMapped: false })); q.position.set(0, -.5, .56); body.add(q);
+  h.userData.door = q;
+  return h;
+}
+// K, the Dog House pick: the mystery house, with a gold star on the ridge, a gold "?" sign over the door, and a bowl of
+// kibble with a bone out front
+function buildKennelSym() {
+  const h = mysteryHouse(), body = h.userData.body;
+  const star = new THREE.Shape(); for (let i = 0; i < 10; i++) { const r = i % 2 ? .1 : .24, a = i / 10 * Math.PI * 2 + Math.PI / 2; star[i ? 'lineTo' : 'moveTo'](Math.cos(a) * r, Math.sin(a) * r); }
+  const st = new THREE.Mesh(new THREE.ExtrudeGeometry(star, { depth: .06, bevelEnabled: true, bevelThickness: .03, bevelSize: .025, bevelSegments: 2 }), MAT.gold);
+  st.position.set(0, 1.18, -.03); body.add(st);
+  const bowl = new THREE.Group(); bowl.position.set(.62, -.82, .78); body.add(bowl);
+  const red = glossy('#e0283a'); red.side = THREE.DoubleSide;
+  part(new THREE.CylinderGeometry(.2, .15, .1, 24, 1, true), red, 0, .05, 0, bowl);
+  part(new THREE.TorusGeometry(.2, .025, 8, 28), red, 0, .1, 0, bowl).rotation.x = Math.PI / 2;
+  for (let i = 0; i < 9; i++) part(new THREE.SphereGeometry(.045, 8, 6), matte('#8a5222'), rand(-.11, .11), .09, rand(-.11, .11), bowl);
+  const bone = buildBone('common'); bone.scale.setScalar(.24); bone.position.set(-.2, .06, .08); bone.rotation.set(0, .5, 0); bowl.add(bone);
+  // the sign: a gold plaque with a "?" hanging on two chains under the roof
+  const sign = new THREE.Group(); sign.position.set(0, .2, .64); body.add(sign);
+  part(new RoundedBoxGeometry(.5, .2, .04, 2, .02), MAT.gold, 0, -.14, 0, sign);
+  const sq = new THREE.Mesh(new THREE.PlaneGeometry(.17, .17), new THREE.MeshBasicMaterial({ map: QMARK, toneMapped: false })); sq.position.set(0, -.14, .022); sign.add(sq);
+  for (const x of [-.18, .18]) part(new THREE.CylinderGeometry(.008, .008, .1, 6), MAT.gold, x, -.02, 0, sign);
+  Object.assign(h.userData, { kind: 'coin', coin: 'kennel', obj: true, turn: -.32, crown: st, sign });
+  return h;
+}
+// F, the Mailman Chase: a red mailbox on a white post, the door dropped open and letters fanning out, the gold flag up
+function buildMailboxSym() {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const red = glossy('#d8283a', { roughness: .25 }), trim = MAT.gold;
+  // the tunnel-shaped box: a half cylinder on a box, gold bands round both ends
+  const box = new THREE.Group(); box.position.y = .55; body.add(box);
+  part(new RoundedBoxGeometry(.7, .32, 1.3, 2, .03), red, 0, 0, 0, box);
+  const arch = new THREE.CylinderGeometry(.35, .35, 1.3, 32, 1, false, -Math.PI / 2, Math.PI); arch.rotateX(-Math.PI / 2);
+  part(arch, red, 0, .16, 0, box);
+  for (const z of [-.6, .6]) part(new THREE.TorusGeometry(.36, .025, 8, 32, Math.PI), trim, 0, .16, z, box);
+  // the front opening: a dark mouth, the door dropped open, and letters fanning out of it
+  const hole = new THREE.Shape(); hole.moveTo(-.3, -.13); hole.lineTo(.3, -.13); hole.lineTo(.3, .16); hole.absarc(0, .16, .3, 0, Math.PI, false); hole.lineTo(-.3, -.13);
+  part(new THREE.ShapeGeometry(hole, 20), new THREE.MeshBasicMaterial({ color: '#160606' }), 0, 0, .652, box);
+  const door = new THREE.Group(); door.position.set(0, -.15, .66); door.rotation.x = 1.25; box.add(door);
+  const dg = new THREE.ExtrudeGeometry(hole, { depth: .03, bevelEnabled: true, bevelThickness: .01, bevelSize: .01, bevelSegments: 2 }); dg.translate(0, .13, 0);
+  part(dg, red, 0, 0, 0, door);
+  part(new THREE.CylinderGeometry(.03, .03, .1, 12), trim, 0, .5, .05, door).rotation.x = Math.PI / 2;
+  [[-.12, .02, -.25, .3], [.06, .1, -.1, -.15], [.14, -.02, .1, .4], [-.04, .2, .05, -.05]].forEach(([x, y, rz, ry]) => {
+    const l = letter(2.2); l.position.set(x, y, .76); l.rotation.set(-.35, ry, rz); box.add(l);
+  });
+  // the flag, up
+  const flag = new THREE.Group(); flag.position.set(.37, .1, .2); box.add(flag);
+  part(new THREE.BoxGeometry(.03, .62, .05), trim, 0, .26, 0, flag);
+  part(new RoundedBoxGeometry(.03, .2, .3, 2, .01), trim, 0, .47, -.14, flag);
+  flag.rotation.x = -.1;
+  // a white post in a tuft of grass
+  const post = glossy('#fffaf0', { roughness: .45 });
+  part(new RoundedBoxGeometry(.18, .95, .18, 2, .03), post, 0, -.1, 0, body);
+  part(new RoundedBoxGeometry(.46, .06, .5, 2, .02), post, 0, .37, 0, body);
+  grassTufts(body, .28, 10, 1.1);
+  body.position.y = -.35; body.rotation.set(.12, -.62, 0);
+  g.userData = { kind: 'coin', coin: 'mail', body, obj: true, turn: -.62, flag };
+  return g;
+}
+
 // which model each reel symbol is, and the name plate under it
 const SYMBOL_PLATES = {
   D: ['MANSION', '#e0a800', '#7a5200'], X: ['DUKE', '#ff5a4a', '#8a0a14'], W: ['KODA', '#37b6ff', '#0b4a8a'], Y: ['REX', '#3d7bd6', '#12336e'],
@@ -3985,7 +4249,9 @@ const HOUSE_OF = { X: ['h3', 'corso'], W: ['h5', 'husky'], Y: ['h2', 'gsd'], V: 
 function buildSymbol(s) {
   if (s === 'D') return buildMansion();
   if (HOUSE_OF[s]) return buildHouse(...HOUSE_OF[s]);
-  if ('SKF'.includes(s)) return buildCoin({ S: 'paw', K: 'bone', F: 'mail' }[s]);
+  if (s === 'S') return buildMoundSym();
+  if (s === 'K') return buildKennelSym();
+  if (s === 'F') return buildMailboxSym();
   return buildBone({ Q: 'legendary', B: 'epic', T: 'rare', P: 'uncommon', L: 'common' }[s]);
 }
 // frame a model: centre it and scale it to fit a box `size` across
@@ -4049,7 +4315,7 @@ async function runFoundry(r) {
     return c;
   };
   for (const s of Object.keys(SYMBOL_PLATES)) {
-    const model = frameModel(buildSymbol(s), s === 'D' || HOUSE_OF[s] ? 2.55 : 2.35);
+    const model = frameModel(buildSymbol(s), s === 'D' || HOUSE_OF[s] || s === 'K' ? 2.55 : 'SF'.includes(s) ? 2.45 : 2.35);
     model.position.y = .22;
     const raw = snap(model);
     const sharp = document.createElement('canvas'); sharp.width = sharp.height = SPRITE;
@@ -4311,7 +4577,11 @@ function animFlash(f, dt) {
   const u = Math.min(f.t / 1, 1), k = .6 + f.n * .25, pop = Math.sin(u * Math.PI);
   f.obj.position.z = f.z + pop * CELL * .7 * k;
   f.obj.scale.setScalar(1 + pop * .3 * k);
-  if (f.body) f.body.rotation.y = -.38 + easeOut(u) * Math.PI * 4;
+  if (f.body) { // coins spin as they land; the mound, the dog house and the mailbox jolt and wobble
+    const ud = f.obj.children[0].children[0].userData;
+    if (ud.obj) { f.body.rotation.y = ud.turn + Math.sin(u * Math.PI * 3) * .55 * (1 - u); f.body.rotation.z = Math.sin(u * Math.PI * 5) * .12 * (1 - u); }
+    else f.body.rotation.y = -.38 + easeOut(u) * Math.PI * 4;
+  }
   f.ring.scale.setScalar(CELL * (.4 + easeOut(u) * 2.4 * k)); f.ring.material.opacity = (1 - u) * .95;
   if (u >= 1) { const model = f.obj.children[0]; f.obj.remove(model); giveModel(model); reels3d.scene.remove(f.obj); disposeTree(f.ring); return false; }
   return true;
@@ -4369,7 +4639,11 @@ function animLive(m, dt) {
   m.obj.scale.setScalar((t > 0 ? 1 : 0) * (1 + leap * .08 + Math.sin(t * 6) * .02 + kk));
   m.obj.rotation.y = Math.sin(t * 2.2 + m.phase) * .22; m.obj.rotation.x = Math.sin(t * 1.7) * .08;
   m.frame.material.opacity = .65 + Math.sin(t * 12) * .35;
-  if (ud.kind === 'bone' || ud.kind === 'coin') body.rotation.y = (ud.kind === 'coin' ? -.38 : 0) + t * (ud.kind === 'coin' ? 5 : 2.4);
+  if (ud.obj) { // the bonus symbols sway and hop on the spot; the dog house's sign swings, the mailbox flag waves
+    body.rotation.y = ud.turn + Math.sin(t * 2.6) * .45; body.rotation.z = Math.sin(t * 5.2) * .07;
+    if (ud.sign) ud.sign.rotation.x = Math.sin(t * 4) * .35;
+    if (ud.flag) ud.flag.rotation.x = -.1 + Math.sin(t * 7) * .25;
+  } else if (ud.kind === 'bone' || ud.kind === 'coin') body.rotation.y = (ud.kind === 'coin' ? -.38 : 0) + t * (ud.kind === 'coin' ? 5 : 2.4);
   if (ud.dog) {
     const d = ud.dog; updateDog(d, dt);
     d.p.jaw = Math.max(0, Math.sin(t * 9)) * .9; d.root.position.z = .5 + Math.min(t * 2, 1) * .35 + kk * .4; d.root.position.y = -.36 + Math.abs(Math.sin(t * 5)) * .08; d.p.perk = 1;
@@ -4890,7 +5164,7 @@ function catcher() {
   return CATCHER;
 }
 function placeCatcher(c) { c.root.position.copy(c.pos); c.root.scale.setScalar(cast.unit * .82); }
-function catcherGone() { if (CATCHER) { CATCHER.root.visible = false; CATCHER.actor.out = true; unbubble(CATCHER); } }
+function catcherGone() { if (CATCHER) { CATCHER.root.visible = false; CATCHER.actor.out = true; unbubble(CATCHER); } mailmanGone(); }
 function* catcherWalk(c, x, speed = 1, sneak = false) {
   const dir = Math.sign(x - c.pos.x) || 1;
   c.root.rotation.y = dir * Math.PI / 2 + (sneak ? 0 : 0); c.root.userData.body.rotation.x = sneak ? .35 : speed > 1.5 ? .18 : 0;
@@ -4935,7 +5209,88 @@ function* catcherSneak() {
   yield* together(catcherWalk(c, from * (far + cast.unit), 3), (function* () { yield* wait(1); kod.want.headPitch = 0; kod.want.jaw = 0; yield* talk(kod, 'And STAY out!', 1.6); })());
   catcherGone(); yield* dive(kod);
 }
-const SKITS = { catcher: ['pup', catcherChase], sneak: ['husky', catcherSneak], duo: ['corso', duo], tug: ['lab', tug], patrol: ['gsd', patrol], howloff: ['husky', howlOff], parade: ['pup', parade], lineup: ['corso', lineup], chase: ['pup', chase] };
+// the mailman on his round: he strolls past the machine now and then, and the dogs have opinions about that
+let MAILMAN = null;
+function mailman() {
+  if (MAILMAN && MAILMAN.root.userData.tears >= MAILMAN.root.userData.rips.length) { disposeTree(MAILMAN.root); MAILMAN = null; } // down to his boxers: a fresh uniform
+  if (MAILMAN) return MAILMAN;
+  const m = buildMailman(); m.visible = false; cast.scene.add(m);
+  MAILMAN = { root: m, head: m.userData.head, B: { name: 'MAILMAN', size: 1.7, small: false }, actor: { bubble: null, out: true }, pos: V3(), ph: 0 };
+  return MAILMAN;
+}
+function mailmanGone() { if (MAILMAN) { MAILMAN.root.visible = false; MAILMAN.actor.out = true; unbubble(MAILMAN); } }
+function* mailmanShow(x) {
+  const m = mailman(), ud = m.root.userData;
+  ud.armL.rotation.set(0, 0, 0); ud.armR.rotation.set(0, 0, 0); ud.elbows.forEach(e => { e.rotation.x = -.2; }); ud.head.rotation.set(0, 0, 0); ud.body.rotation.set(0, 0, 0);
+  ud.held.visible = true; personFace(m.root, 'calm');
+  yield* catcherShow(m, x);
+  return m;
+}
+// he strolls past whistling; Rex pops up, "MAILMAN!", chases him off, and comes back with a souvenir
+function* mailRun() {
+  const rex = cast.dogs.gsd, far = cast.W / 2 + cast.unit * 1.4, from = Math.random() < .5 ? -1 : 1;
+  const m = yield* mailmanShow(from * far), ud = m.root.userData;
+  bubble(m, pick(['♪ Neither rain, nor snow... ♪', '♪ Dum de dum de dum... ♪', 'Lovely day for the mail!']), 2.2);
+  yield* catcherWalk(m, midX(-from * .12), .8);
+  yield* show(rex, midX(from * .55), yDuck(rex), -from * .6); yield* popUp(rex);
+  rex.look = m.head.getWorldPosition(V3()); rex.want.brow = 1; rex.want.crouch = .4; yield* wait(.35);
+  rex.want.crouch = 0; bk(rex, 0, .6); bubble(rex, pick(['MAILMAN!!', 'HALT! Who goes there?!', 'INTRUDER!']), 1.6);
+  m.root.rotation.y = from * Math.PI / 2 * .6; personFace(m.root, 'yell'); bubble(m, pick(['Yikes!', 'Not again!', 'Nice doggy...?']), 1.2);
+  yield* tween(.3, u => { m.root.position.y = cast.floor + Math.sin(u * Math.PI) * cast.unit * .45; ud.armL.rotation.z = u * 2.4; ud.armR.rotation.z = -u * 2.4; }, t => t);
+  rex.look = null;
+  // he runs back the way he came, Rex hot on his heels
+  yield* together(catcherWalk(m, from * (far + cast.unit), 3.3), (function* () { yield* wait(.15); yield* walkTo(rex, from * far, 3.5); })());
+  ripPants(m.root); mailmanGone(); gone(rex);
+  yield* wait(.7);
+  // Rex trots back with a scrap of trouser in his teeth, very pleased with himself
+  yield* show(rex, from * far, yStand(), -from * Math.PI / 2);
+  holdProp(rex, frameModel(clothScrap(1), cast.unit * .3));
+  rex.want.wag = 1; rex.want.wagRate = 16;
+  yield* walkTo(rex, midX(from * .35), 1.1);
+  yield* face(rex, -from * .4, .25);
+  bubble(rex, pick(['Perimeter secured.', 'Souvenir. Don\'t ask.', 'He\'ll be back. They always come back.']), 2);
+  yield* wait(2);
+  yield* dive(rex);
+}
+// the mailman tries making friends: Biscuit is all for it (treats!), until Peanut shows up yapping
+function* mailTreat() {
+  const bis = cast.dogs.lab, pea = cast.dogs.pup, far = cast.W / 2 + cast.unit * 1.4, from = Math.random() < .5 ? -1 : 1;
+  const m = yield* mailmanShow(from * far), ud = m.root.userData;
+  yield* catcherWalk(m, midX(from * .25), .9);
+  yield* show(bis, midX(-from * .3), yDuck(bis), from * .6); yield* popUp(bis);
+  bis.want.wag = 1; bis.want.wagRate = 18; bis.want.tongue = 1; bis.look = m.head.getWorldPosition(V3());
+  m.root.rotation.y = -from * Math.PI / 2 * .55; personFace(m.root, 'worried');
+  bubble(m, 'N-nice doggy...', 1.6); yield* wait(1.2);
+  ud.held.visible = false;
+  const treat = buildBone('common'); treat.scale.setScalar(.22); treat.position.set(0, -.12, .06); ud.hands[1].add(treat);
+  yield* tween(.35, u => { ud.armR.rotation.x = -1.3 * u; });
+  bubble(bis, 'Is that... for ME?!', 1.6); yield* spring(bis, .45, .4); bk(bis, 0, .3);
+  disposeTree(treat); holdProp(bis, frameModel(buildBone('common'), cast.unit * .3));
+  yield* tween(.3, u => { ud.armR.rotation.x = -1.3 * (1 - u); });
+  personFace(m.root, 'smug'); bubble(m, 'Who\'s a good boy?', 1.6);
+  bis.look = null; bis.want.wagRate = 24; yield* twirl(bis, 1, .6); yield* wait(.6);
+  // ...and here comes Peanut
+  yield* show(pea, midX(from * .7), yDuck(pea), -from * .6); yield* popUp(pea);
+  pea.want.brow = 1; bk(pea, 0, .4); bk(pea, .2, .4); bubble(pea, 'YIP YIP YIP! GET OUT!', 1.6);
+  personFace(m.root, 'yell'); bubble(m, 'Eep!', 1);
+  yield* tween(.25, u => { m.root.position.y = cast.floor + Math.sin(u * Math.PI) * cast.unit * .4; ud.armL.rotation.z = u * 2.4; ud.armR.rotation.z = -u * 2.4; }, t => t);
+  ud.held.visible = true;
+  yield* together(catcherWalk(m, -from * (far + cast.unit), 3.2), (function* () { yield* wait(.2); yield* walkTo(pea, midX(-from * .2), 3); bk(pea, 0, .3); })());
+  mailmanGone();
+  yield* talk(bis, 'Aww. I liked him.', 1.8);
+  yield* together(dive(bis), (function* () { yield* talk(pea, 'You\'re welcome.', 1.6); yield* dive(pea); })());
+}
+// a spin drive-by: the mailman sprints across, hands up, a dog right behind him
+function* mailChase(d) {
+  yield* wait(rand(.2, .5));
+  const dir = Math.random() < .5 ? 1 : -1, far = cast.W / 2 + cast.unit * 1.3;
+  const m = yield* mailmanShow(-dir * far), ud = m.root.userData;
+  yield* show(d, -dir * (far + cast.unit * 1.2), yStand(), dir * Math.PI / 2);
+  personFace(m.root, 'yell'); ud.armL.rotation.z = 2.3; ud.armR.rotation.z = -2.3; d.want.brow = 1; d.want.jaw = .6;
+  yield* together(catcherWalk(m, dir * (far + cast.unit * 1.6), 3.3), walkTo(d, dir * far, 3.5));
+  mailmanGone(); gone(d);
+}
+const SKITS = { mailrun: ['gsd', mailRun], mailtreat: ['lab', mailTreat], catcher: ['pup', catcherChase], sneak: ['husky', catcherSneak], duo: ['corso', duo], tug: ['lab', tug], patrol: ['gsd', patrol], howloff: ['husky', howlOff], parade: ['pup', parade], lineup: ['corso', lineup], chase: ['pup', chase] };
 function glint(d) {
   const s = glintSprite(cast.unit * .6, '#fff6c8'); d.head.getWorldPosition(s.position); s.position.y -= dogH(d) * .25; s.position.z += 80;
   cast.scene.add(s);
@@ -5049,7 +5404,7 @@ const castApi = {
     }
     for (const d of Object.values(cast.dogs)) if (d.actor.out && d !== peeker) d.actor.gen = null;
     if (peeker && !out.includes(peeker)) { const d = peeker; play_(d, (function* () { yield* wait(.3); yield* peek(d, side); })()); }
-    if (Math.random() < .22) { const free = DOG_ORDER.map(k => cast.dogs[k]).filter(d => d !== peeker && d.actor.out); if (free.length) { const d = pick(free); play_(d, Math.random() < .35 && d.key !== 'corso' ? chasedBy(d) : driveBy(d)); } }
+    if (Math.random() < .22) { const free = DOG_ORDER.map(k => cast.dogs[k]).filter(d => d !== peeker && d.actor.out); if (free.length) { const d = pick(free), r = Math.random(); play_(d, d.key === 'corso' ? driveBy(d) : r < .3 ? chasedBy(d) : r < .6 ? mailChase(d) : driveBy(d)); } }
   },
   tease() { if (peeker && !peeker.actor.out) play_(peeker, peekTease(peeker)); },
   // a bonus coin landed (n of that coin showing so far): the peeking dog reacts, louder each time
@@ -5129,15 +5484,15 @@ function drawCast(dt, now) {
     updateDog(d, dt);
     placeBubble(d);
   }
-  if (CATCHER && CATCHER.root.visible) { any = true; placeBubble(CATCHER); }
+  for (const p of [CATCHER, MAILMAN]) if (p && p.root.visible) { any = true; placeBubble(p); blinkPerson(p.root); }
   updatePuffs(dt);
   if (any || C3.dirty) { C3.r.render(C3.scene, C3.cam); C3.dirty = any; }
 }
 
 // ---------- the bonus games in 3D ----------
 // Each bonus keeps its buttons and rules exactly as they are (the buttons stay in place, invisible, so tapping works
-// the same); a 3D scene is drawn underneath them: Koda digs up the yard, Duke's dog houses open on a lawn, and
-// Rex chases the mailman down the street.
+// the same); a 3D scene is drawn underneath them: Koda digs up the yard, Duke shows you round the dog houses at sunset,
+// and Rex chases the mailman down the street. The dog catcher lurks in the background of all three.
 const bonus3d = { on: false, kind: null };
 const grassTex = canvasTex(256, 256, (g, w) => {
   g.fillStyle = '#3f9a3e'; g.fillRect(0, 0, w, w);
@@ -5161,12 +5516,13 @@ function initBonus3D() {
   r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
   Object.assign(bonus3d, { cv, r, cam: new THREE.PerspectiveCamera(), ray: new THREE.Raycaster() });
 }
-// a sunny outdoor scene: sky, sun with soft shadows, grass
-function outdoorScene(sky = ['#7cc8ff', '#d8f2ff']) {
+// an outdoor scene: sky, sun with soft shadows, grass
+function outdoorScene(sky = ['#7cc8ff', '#d8f2ff'], sunColor = '#fff4dc', groundColor = '#4a7a2a') {
   const s = new THREE.Scene(); s.environment = bonus3d.r.userData.env;
   s.background = canvasTex(4, 256, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, sky[0]); gr.addColorStop(1, sky[1]); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
-  s.add(new THREE.HemisphereLight('#eaf6ff', '#4a7a2a', 1.1));
-  const sun = new THREE.DirectionalLight('#fff4dc', 2.4); sun.position.set(-5, 9, 6); sun.castShadow = true;
+  s.background.userData.keep = false;
+  s.add(new THREE.HemisphereLight('#eaf6ff', groundColor, 1.1));
+  const sun = new THREE.DirectionalLight(sunColor, 2.4); sun.position.set(-5, 9, 6); sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: .5, far: 40 }); sun.shadow.bias = -.0008; sun.shadow.radius = 4;
   s.add(sun); s.add(sun.target);
   const rim = new THREE.DirectionalLight('#ffd0f0', .8); rim.position.set(6, 3, -8); s.add(rim);
@@ -5187,6 +5543,124 @@ function tree(s, x, z, k = 1) {
   s.add(castShadows(g));
   return g;
 }
+
+// ---- scenery shared by the bonus scenes ----
+// many small parts in one mesh (one draw call): each part may carry a colour (see tint)
+function merged(parts, mat) {
+  const g = mergeGeometries(parts.map(p => p.index ? p.toNonIndexed() : p));
+  parts.forEach(p => p.dispose());
+  const m = new THREE.Mesh(g, mat); m.castShadow = m.receiveShadow = true;
+  return m;
+}
+function tint(geo, c) {
+  const col = new THREE.Color(c), n = geo.attributes.position.count, a = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) col.toArray(a, i * 3);
+  geo.setAttribute('color', new THREE.BufferAttribute(a, 3));
+  return geo;
+}
+// a white picket fence from x0 to x1 at depth z, k tall, with gaps [a, b] where paths cross it
+function picketFence(s, x0, x1, z, k, gaps = []) {
+  const parts = [], step = k * .42, inGap = x => gaps.some(([a, b]) => x > a && x < b);
+  for (let x = x0; x <= x1; x += step) {
+    if (inGap(x)) continue;
+    const p = new THREE.BoxGeometry(k * .26, k * .9, k * .06); p.translate(x, k * .45, z); parts.push(p);
+    const tip = new THREE.ConeGeometry(k * .185, k * .2, 4); tip.rotateY(Math.PI / 4); tip.scale(1, 1, .33); tip.translate(x, k, z); parts.push(tip);
+  }
+  const edges = [x0, ...gaps.flat(), x1];
+  for (let i = 0; i < edges.length; i += 2) {
+    const a = edges[i], b = edges[i + 1];
+    if (b - a < step) continue;
+    for (const y of [.3, .68]) { const r = new THREE.BoxGeometry(b - a, k * .08, k * .05); r.translate((a + b) / 2, k * y, z - k * .055); parts.push(r); }
+  }
+  const m = merged(parts, glossy('#fffaf0', { roughness: .5 }));
+  s.add(m);
+  return m;
+}
+// a row of round shrubs along a line, in a few greens
+function shrubs(s, x0, x1, z, k) {
+  const parts = [];
+  for (let x = x0; x <= x1; x += k * rand(.9, 1.3)) {
+    const g = new THREE.IcosahedronGeometry(k * rand(.45, .6), 1); g.scale(1.3, .85, .9); g.translate(x, k * .32, z + rand(-.1, .1) * k);
+    parts.push(tint(g, pick(['#2f7a34', '#3f8a3a', '#357f30', '#4a9a40'])));
+  }
+  const m = merged(parts, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .85 }));
+  s.add(m);
+  return m;
+}
+// flower beds: a strip of soil with flowers in it, all beds in one mesh
+function flowerBeds(s, beds) {
+  const soil = [], bloom = [];
+  for (const [x0, x1, z, k] of beds) {
+    const b = new THREE.BoxGeometry(x1 - x0, k * .06, k * .32); b.translate((x0 + x1) / 2, k * .03, z); soil.push(b);
+    for (let x = x0 + k * .08; x < x1 - k * .05; x += k * .14) for (const dz of [-.08, .08]) {
+      const leaf = new THREE.ConeGeometry(k * .06, k * .14, 5); leaf.translate(x + rand(-.03, .03) * k, k * .1, z + dz * k); bloom.push(tint(leaf, '#3f8a3a'));
+      const f = new THREE.IcosahedronGeometry(k * rand(.045, .06), 0); f.translate(x + rand(-.03, .03) * k, k * rand(.17, .22), z + dz * k); bloom.push(tint(f, pick(['#ff5a7a', '#ffd24a', '#ff9a3d', '#c574ff', '#ffffff', '#5aa8ff'])));
+    }
+  }
+  s.add(merged(soil, matte('#5a3418', { roughness: 1 })));
+  s.add(merged(bloom, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .6 })));
+}
+// a cast-iron street lamp, h tall
+function lampPost(s, p, h) {
+  const g = new THREE.Group(); g.position.copy(p); s.add(g);
+  const iron = glossy('#1f2e2a', { roughness: .4 });
+  part(new THREE.CylinderGeometry(h * .025, h * .04, h, 12), iron, 0, h / 2, 0, g);
+  part(new THREE.CylinderGeometry(h * .06, h * .075, h * .08, 12), iron, 0, h * .04, 0, g);
+  part(new THREE.CylinderGeometry(h * .02, h * .085, h * .07, 6), iron, 0, h * 1.11, 0, g);
+  part(new THREE.CylinderGeometry(h * .065, h * .045, h * .12, 6), new THREE.MeshStandardMaterial({ color: '#fff3c4', emissive: '#ffd27a', emissiveIntensity: 1.1 }), 0, h * 1.02, 0, g);
+  part(new THREE.SphereGeometry(h * .022, 8, 6), iron, 0, h * 1.16, 0, g);
+  part(new THREE.CylinderGeometry(h * .05, h * .03, h * .03, 6), iron, 0, h * .955, 0, g);
+  return castShadows(g);
+}
+// a red fire hydrant, h tall (a dog's favourite)
+function hydrant(s, p, h) {
+  const g = new THREE.Group(); g.position.copy(p); s.add(g);
+  const red = glossy('#d42a2a', { roughness: .3 });
+  part(new THREE.CylinderGeometry(h * .2, h * .22, h * .62, 16), red, 0, h * .35, 0, g);
+  part(new THREE.SphereGeometry(h * .2, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), red, 0, h * .66, 0, g);
+  part(new THREE.CylinderGeometry(h * .05, h * .07, h * .1, 8), red, 0, h * .9, 0, g);
+  part(new THREE.CylinderGeometry(h * .27, h * .27, h * .06, 16), red, 0, h * .05, 0, g);
+  part(new THREE.CylinderGeometry(h * .25, h * .25, h * .05, 16), red, 0, h * .64, 0, g);
+  for (const a of [Math.PI / 2, -Math.PI / 2, 0]) {
+    const n = new THREE.CylinderGeometry(h * .08, h * .08, h * .14, 12); n.rotateX(Math.PI / 2); n.rotateY(a); n.translate(Math.sin(a) * h * .24, h * .42, Math.cos(a) * h * .24);
+    part(n, red, 0, 0, 0, g);
+    const c = new THREE.CylinderGeometry(h * .095, h * .095, h * .04, 12); c.rotateX(Math.PI / 2); c.rotateY(a); c.translate(Math.sin(a) * h * .32, h * .42, Math.cos(a) * h * .32);
+    part(c, MAT.chrome, 0, 0, 0, g);
+  }
+  return castShadows(g);
+}
+// soft clouds far off in the sky, drifting (see drawBonus3D)
+const CLOUD_TEX = canvasTex(256, 128, (g, w, h) => {
+  for (let i = 0; i < 16; i++) {
+    const x = w * (.16 + Math.random() * .68), r = h * (.14 + Math.random() * .2) * (1 - Math.abs(x / w - .5)), y = h * .62 - r * .4 - Math.random() * h * .08;
+    const gr = g.createRadialGradient(x, y - r * .35, r * .1, x, y, r); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(.65, 'rgba(255,255,255,.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+  }
+  g.globalCompositeOperation = 'source-atop';
+  const sh = g.createLinearGradient(0, h * .4, 0, h * .8); sh.addColorStop(0, 'rgba(160,180,210,0)'); sh.addColorStop(1, 'rgba(150,170,205,.55)');
+  g.fillStyle = sh; g.fillRect(0, 0, w, h);
+});
+function clouds(s, n, z, y0, y1, span) {
+  return Array.from({ length: n }, () => {
+    const c = new THREE.Sprite(new THREE.SpriteMaterial({ map: CLOUD_TEX, transparent: true, depthWrite: false, toneMapped: false }));
+    const k = rand(7, 12); c.scale.set(k * 2, k, 1); c.position.set(rand(-span, span), rand(y0, y1), z - rand(0, 10)); s.add(c);
+    return { m: c, v: rand(.2, .5), span };
+  });
+}
+// fireflies at dusk: little lights that wander and blink (see drawBonus3D)
+function fireflies(s, n, box) {
+  return Array.from({ length: n }, () => {
+    const m = glintSprite(box.k * .14, '#fff3a0'); m.position.set(rand(box.x0, box.x1), rand(.2, 1.1) * box.k, rand(box.z0, box.z1)); s.add(m);
+    return { m, base: m.position.clone(), ph: rand(0, 9), k: box.k };
+  });
+}
+// glyphs that pop out of heads: "!", "?", music notes
+const ICON_TEX = {};
+const iconTex = ch => ICON_TEX[ch] || (ICON_TEX[ch] = canvasTex(64, 64, (g) => {
+  g.font = '400 50px "Lilita One", Impact, "Segoe UI Symbol", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.lineJoin = 'round'; g.lineWidth = 9; g.strokeStyle = '#1a1020'; g.strokeText(ch, 32, 35); g.fillStyle = '#fff'; g.fillText(ch, 32, 35);
+}));
+
 // screen point (CSS px inside the play area) -> point on the ground
 const groundPlane = new THREE.Plane(V3(0, 1, 0), 0);
 function toGround(px, py, W, H, out = V3()) {
@@ -5204,9 +5678,12 @@ function attachBonus(area) {
   sizeRenderer(B3.r, W, H, isPhone() ? (LITE ? 1.25 : 1.5) : 2);
   B3.W = W; B3.H = H; B3.area = area;
   B3.cam.aspect = W / H; B3.cam.updateProjectionMatrix();
+  Object.assign(B3, { cam0: null, camK: 0, camGoal: 0, slowT: 0, lurker: null, lurk: null, clouds: [], flies: [], bulbs: [], fx: [], t: 0 });
 }
+// remember where the camera rests, so it can lean in on the action and come back exactly
+function camRest(look) { const B3 = bonus3d; B3.cam0 = { pos: B3.cam.position.clone(), look: look.clone() }; }
 
-// ---- effects shared by the bonus scenes: sparks, confetti, smoke puffs, light beams, shock rings, camera shake ----
+// ---- effects shared by the bonus scenes: sparks, confetti, smoke puffs, light beams, shock rings, camera moves ----
 const RARE_COL = { common: '#fff4dc', uncommon: '#62e07f', rare: '#62acff', epic: '#c574ff', legendary: '#ffd23a' };
 const CONFETTI = ['#ff4f6d', '#ffd24a', '#4fd8ff', '#7dff6a', '#c574ff', '#ff9a3d'];
 function fxSprite(pos, color, size, v, life, g = 0, map) {
@@ -5227,6 +5704,11 @@ function puff(pos, k, n = 6) {
     bonus3d.fx.at(-1).grow = k * 1.2; s.material.opacity = .9;
   }
 }
+// a wisp of chimney smoke: rises slowly, spreads and fades
+function smoke(pos, k) {
+  fxSprite(pos, '#e6e2dc', k * .3, V3(rand(-.05, .12) * k, k * .45, 0), 2.4, 0, DUST_TEX);
+  const f = bonus3d.fx.at(-1); f.grow = k * .35; f.op = .55;
+}
 function confetti(pos, n, k) {
   for (let i = 0; i < n; i++) {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(k * .1, k * .16), new THREE.MeshBasicMaterial({ color: pick(CONFETTI), side: THREE.DoubleSide, transparent: true, toneMapped: false }));
@@ -5240,12 +5722,67 @@ function groundRing(pos, color, k) {
   m.rotation.x = -Math.PI / 2; m.position.copy(pos); m.position.y += .03; m.scale.setScalar(k * .3); bonus3d.scene.add(m);
   bonus3d.fx.push({ m, t: 0, life: .7, fade: true, grow: k * 6, ring: true });
 }
-function beam(pos, color, k, h = 4) {
+function beam(pos, color, k, h = 4, life = 1.3) {
   const m = new THREE.Mesh(new THREE.CylinderGeometry(k * .35, k * .55, k * h, 24, 1, true), new THREE.MeshBasicMaterial({ color, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, toneMapped: false }));
   m.position.copy(pos); m.position.y += k * h / 2; bonus3d.scene.add(m);
-  bonus3d.fx.push({ m, t: 0, life: 1.3, fade: true, beam: true, op: .55 });
+  bonus3d.fx.push({ m, t: 0, life, fade: true, beam: true, op: .55 });
 }
 const shake = mag => { bonus3d.shake = Math.max(bonus3d.shake || 0, mag); };
+// a flash of light over the whole scene (a white or gold frame on the big moments)
+function flashScene(color = '#ffffff') {
+  const B3 = bonus3d; if (!B3.area) return;
+  const f = document.createElement('i'); f.className = 'bflash'; f.style.setProperty('--c', color);
+  B3.area.appendChild(f); setTimeout(() => f.remove(), 500);
+}
+// the camera leans in on the action (a third of the way, keeping its angle) and back out again; the 2D labels
+// fade while it's in so they never sit in the wrong place
+function camFocus(p, amt = .3) {
+  const B3 = bonus3d; if (!B3.cam0) return;
+  if (p) { B3.camAt = p.clone(); B3.camAmt = amt; }
+  B3.camGoal = p ? 1 : 0;
+  if (B3.area) B3.area.classList.toggle('cine', !!p);
+}
+function updateCam(dt) {
+  const B3 = bonus3d, c0 = B3.cam0;
+  if (!c0 || (!B3.camK && !B3.camGoal)) return;
+  B3.camK += (B3.camGoal - B3.camK) * Math.min(1, dt * 3.4);
+  if (!B3.camGoal && B3.camK < .002) B3.camK = 0;
+  const u = easeInOut(clamp(B3.camK, 0, 1)), cam = B3.cam;
+  const look = c0.look.clone().lerp(B3.camAt, u);
+  cam.position.copy(c0.pos).lerp(B3.camAt.clone().add(c0.pos.clone().sub(c0.look).multiplyScalar(1 - B3.camAmt)), u);
+  cam.lookAt(look); cam.updateMatrixWorld();
+}
+
+// ---- the dog catcher lurking in the background: up from behind the back fence (dig, pick) or out from behind a
+// house on the street (mail); he ducks away again, and turns up somewhere else ----
+function lurkerSetup(k, mode, z) {
+  const B3 = bonus3d, c = buildCatcher(); c.scale.setScalar(k); c.position.set(0, -k * 3, z); B3.scene.add(c);
+  B3.lurker = c; B3.lurk = { t: mode === 'corner' ? 3.5 : 2, x: 0, z, k, mode, moved: false, h: 0, side: 1, cycle: mode === 'corner' ? 9 : 6.5, span: B3.W * unitsPerPx(V3(0, 0, z), B3.H) * .5 };
+}
+function animLurker(dt) {
+  const B3 = bonus3d, c = B3.lurker, L = B3.lurk;
+  if (!c || !c.visible) return;
+  if ((bonus && bonus.done) || B3.catcher) { c.visible = false; return; }
+  L.t += dt;
+  const cyc = L.t % L.cycle, up = cyc < .4 ? 0 : cyc < .8 ? (cyc - .4) / .4 : cyc < 2.6 ? 1 : cyc < 3 ? 1 - (cyc - 2.6) / .4 : 0, e = easeInOut(up), ud = c.userData;
+  if (cyc > 3 && !L.moved) {
+    L.moved = true;
+    if (L.mode === 'corner') { const free = B3.homes.map((_, i) => i).filter(i => i !== B3.house); L.h = pick(free); L.side = Math.random() < .5 ? -1 : 1; }
+    else L.x = rand(-.8, .8) * L.span;
+  }
+  if (cyc < 3) L.moved = false;
+  if (L.mode === 'corner') { // sidles out past the wall, leans, looks for Rex, and slips back
+    const home = B3.homes[L.h];
+    c.position.set(home.x + L.side * B3.kk * (.06 + .5 * e), 0, home.z + B3.kk * .2);
+    c.rotation.y = L.side * .55; ud.body.rotation.z = -L.side * .22 * e;
+    ud.head.rotation.y = -L.side * (.5 + Math.sin(L.t * 2) * .35); ud.armR.rotation.x = -1.1 * e;
+    walkPerson(c, up > 0 && up < 1 ? L.t * 9 : 0, up > 0 && up < 1 ? .35 : 0);
+  } else {
+    c.position.set(L.x, -L.k * 2.2 + e * L.k * 1.25, L.z);
+    ud.head.rotation.y = Math.sin(L.t * 2.2) * .7; ud.armR.rotation.x = -1.2 * up;
+  }
+  blinkPerson(c);
+}
 
 // ---- Bone Dig: Koda digs the yard ----
 function startDig3D() {
@@ -5253,6 +5790,7 @@ function startDig3D() {
   attachBonus(area);
   const s = outdoorScene(['#5fb6f0', '#c8ecff']);
   const cam = B3.cam; cam.fov = 40; cam.position.set(0, 6, 9.5); cam.lookAt(0, 0, -1.5); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+  camRest(V3(0, 0, -1.5));
   ground(s, 80, 80, 26);
   const scenery = fz => {
   // a picket fence and trees round the back of the yard, just behind the far row
@@ -5280,18 +5818,16 @@ function startDig3D() {
   const dog = buildDog('husky'); dog.root.scale.setScalar(kk * 1.15); castShadows(dog.root); dog.shadow.visible = false;
   const mid = items[Math.min(items.length - 1, Math.floor(items.length / 2) + 2)].g.position;
   dog.pos.set(mid.x + kk * .9, 0, mid.z - kk * .5); dog.heading = dog.headingWant = -.5; s.add(dog.root);
+  Object.assign(B3, { on: true, kind: 'dig', scene: s, items, dog, kk, gen: null, catcher: null });
   // the dog catcher lurks behind the back fence, peeking over it now and then
-  const lurker = buildCatcher(); lurker.scale.setScalar(kk * 1.05); lurker.rotation.y = 0;
-  const fzz = Math.min(...items.map(it => it.g.position.z)) - kk * 1.1 - .35;
-  lurker.position.set(0, -kk * 2.2, fzz); s.add(lurker);
-  Object.assign(B3, { on: true, kind: 'dig', scene: s, items, dog, gen: null, catcher: null, fx: [], lurker, lurk: { t: 2, x: 0, z: fzz, k: kk } });
+  lurkerSetup(kk * 1.05, 'fence', Math.min(...items.map(it => it.g.position.z)) - kk * 1.1 - .35);
   // while waiting Koda can't sit still: looks around, wags, bounces on the spot
   B3.gen = (function* () {
     dog.want.sit = 1;
     for (;;) {
       yield* wait(rand(1, 2.4));
       const r = Math.random();
-      if (r < .35) { dog.want.sit = 0; yield* wait(.15); kick(dog, .9); yield* tween(.42, u => { dog.lift = Math.sin(u * Math.PI) * kk * .35; }, t => t); dog.lift = 0; kick(dog, -1.1); dust(dog, 4); dog.want.sit = 1; }
+      if (r < .35) { dog.want.sit = 0; yield* wait(.15); kick(dog, .9); yield* tween(.42, u => { dog.lift = Math.sin(u * Math.PI) * kk * .22; }, t => t); dog.lift = 0; kick(dog, -1.1); dust(dog, 4); dog.want.sit = 1; }
       else if (r < .7) { dog.want.headYaw = rand(-.8, .8); dog.want.headRoll = rand(-.35, .35); }
       else { dog.want.wag = 1; dog.want.wagRate = 18; dog.want.headRoll = 0; yield* wait(.7); dog.want.wag = .3; }
     }
@@ -5317,9 +5853,10 @@ function dig3D(i, item) {
     dog.want.headPitch = 0; dog.want.dig = 0;
     it.mound.scale.y *= .25; it.paw.visible = false;
     const hole = new THREE.Mesh(new THREE.CircleGeometry(.42, 24), new THREE.MeshBasicMaterial({ color: '#1c0f05' })); hole.rotation.x = -Math.PI / 2; hole.scale.setScalar(it.k); hole.position.y = it.k * .14; it.g.add(hole);
-    if (item === 'catcher') { yield* catchSeq(it); return; }
+    if (item === 'catcher') { camFocus(it.g.position.clone().lerp(dog.pos, .5), .3); yield* catchSeq(it); return; }
     const bone = buildBone(DIG_BONES[item].rarity); const wrap = new THREE.Group(); wrap.add(bone); wrap.scale.setScalar(it.k * .55); castShadows(wrap);
     it.g.add(wrap); it.prize = wrap;
+    if (item >= 3) { camFocus(it.g.position.clone().setY(it.k * .6), item === 4 ? .38 : .28); B3.slowT = item === 4 ? .45 : .25; flashScene(item === 4 ? '#ffd24a' : '#e8c8ff'); }
     yield* tween(.5, u => { wrap.position.y = it.k * (.2 + Math.sin(u * Math.PI) * 1.4 + u * .25); bone.userData.body.rotation.y = u * 8; wrap.rotation.z = u * 2; }, t => t);
     wrap.rotation.z = 0; dog.want.tongue = 1; dog.want.wag = .8; kick(dog, 1);
     // the reveal: a burst in the bone's colour, a shock ring, and the rarer it is the bigger the party
@@ -5331,6 +5868,7 @@ function dig3D(i, item) {
     yield* tween(item >= 3 ? .65 : .42, u => { dog.lift = Math.sin(u * Math.PI) * it.k * (item >= 3 ? .9 : .5); dog.flip = flips * easeInOut(u) * Math.PI * 2; dog.want.air = 1; }, t => t);
     dog.lift = 0; dog.flip = 0; dog.want.air = 0; kick(dog, -1.3); dust(dog, 8);
     if (item >= 3) { dog.want.headPitch = .7; dog.want.jaw = 1; yield* wait(.6); dog.want.headPitch = 0; dog.want.jaw = 0; }
+    camFocus(null);
     for (;;) { bone.userData.body.rotation.y += .05; yield 0; }
   })();
 }
@@ -5370,10 +5908,10 @@ function* catcherNets(dog, k, side, leap = false) {
   ud.hoop.visible = false;
   net.scale.setScalar(dog.root.scale.x * 1.1); net.position.copy(dog.pos); B3.scene.add(net); B3.net = net;
   yield* tween(.25, u => { net.position.y = (1 - u) * k * 1.4; }, t => t * t);
-  shake(.18); puff(dog.pos, k, 8); kick(dog, -1.4);
+  shake(.18); puff(dog.pos, k, 8); kick(dog, -1.4); flashScene('#ff6a6a');
   dog.want.sit = 1; dog.want.headPitch = -.2; dog.want.wag = 0; dog.want.perk = 0;
   personFace(c, 'smug');
-  for (;;) { const t = performance.now() / 1000; ud.body.rotation.x = .1; ud.body.rotation.z = Math.sin(t * 3) * .04; ud.head.rotation.z = Math.sin(t * 2) * .1; blinkPerson(c); dog.root.position.x += Math.sin(t * 30) * .002; yield 0; }
+  for (let t = 0; ; t += yield) { ud.body.rotation.x = .1; ud.body.rotation.z = Math.sin(t * 3) * .04; ud.head.rotation.z = Math.sin(t * 2) * .1; blinkPerson(c); dog.root.position.x += Math.sin(t * 30) * .002; }
 }
 function bonk3D() {
   const c = bonus3d.catcher; if (!c) return;
@@ -5382,46 +5920,130 @@ function bonk3D() {
   const d = bonus3d.dog; d.want.jaw = 1; setTimeout(() => { d.want.jaw = 0; }, 300);
 }
 
-// ---- Dog House Pick: the houses stand on a lawn, doors open to show who's home ----
+// ---- Dog House Pick: the houses stand on a lawn at sunset, Duke shows you round, doors open to show who's home ----
 const PICK_HOUSE = j => j === 0 ? null : [null, ['h3', 'corso'], ['h2', 'gsd'], ['h1', 'pup']][j];
+const BULB_COLS = ['#ffd24a', '#ff6a8a', '#7fd0ff', '#9dff7a', '#ff9a3d'];
 function startPick3D() {
   const B3 = bonus3d, area = $('kennels');
   attachBonus(area);
-  const s = outdoorScene(['#3a1f7a', '#ff9ec8']); // sunset over Doggie Quarters
-  const cam = B3.cam; cam.fov = 30; cam.position.set(0, 10, 9.5); cam.lookAt(0, 0, .3); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
-  ground(s, 60, 60, 16, '#e8ffe0');
+  const s = outdoorScene(['#3a1f7a', '#ff9ec8'], '#ffc890', '#5a3a6a'); // sunset over Doggie Quarters
+  const cam = B3.cam; cam.fov = 34; cam.position.set(0, 8, 10); cam.lookAt(0, 0, -.6); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+  camRest(V3(0, 0, -.6));
+  ground(s, 70, 70, 20, '#e8ffe0');
   const items = [...area.querySelectorAll('.kennel')].map((btn, i) => {
     const b = offsetIn(btn, area), p = toGround(b.x + b.w / 2, b.y + b.h * .92, B3.W, B3.H);
     const k = b.w * unitsPerPx(p, B3.H);
     const g = new THREE.Group(); g.position.copy(p); s.add(g);
-    const house = closedHouse(k); g.add(house);
-    return { btn, g, house, k, open: false, t: Math.random() * 6, j: null };
+    return { btn, g, k, open: false, t: Math.random() * 6, j: null, rattle: 0 };
   });
   const kk = items[Math.floor(items.length / 2)].k;
-  items.forEach(it => { it.k = kk; it.g.remove(it.house); it.house = closedHouse(kk); it.g.add(it.house); });
-  Object.assign(B3, { on: true, kind: 'pick', scene: s, items, fx: [], gen: null });
+  items.forEach(it => { it.k = kk; it.house = closedHouse(kk); it.door = it.house.userData.door; it.g.add(it.house); });
+  // round the back: a picket fence with shrubs, trees, and a string of party lights between two poles
+  const zs = items.map(it => it.g.position.z), fz = Math.min(...zs) - kk * .85, nz = Math.max(...zs);
+  const halfW = B3.W / 2 * unitsPerPx(V3(0, 0, fz), B3.H);
+  picketFence(s, -halfW * 1.6, halfW * 1.6, fz, kk * .5);
+  shrubs(s, -halfW * 1.5, halfW * 1.5, fz - kk * .35, kk * .5);
+  for (let x = -halfW * 1.3; x <= halfW * 1.3; x += halfW * rand(.45, .65)) tree(s, x, fz - kk * rand(1.2, 2.4), kk * rand(.9, 1.25));
+  const iron = glossy('#2a1f30', { roughness: .4 }), poleH = kk * 1.05, px = halfW * .97, lz = fz + kk * .15;
+  for (const sx of [-1, 1]) part(new THREE.CylinderGeometry(kk * .03, kk * .04, poleH, 10), iron, sx * px, poleH / 2, lz, s).castShadow = true;
+  const N = 22;
+  for (let i = 0; i <= N; i++) {
+    const u = i / N, x = -px + u * px * 2, y = poleH - Math.sin(u * Math.PI) * kk * .22, c = BULB_COLS[i % BULB_COLS.length];
+    const bulb = part(new THREE.SphereGeometry(kk * .035, 10, 8), new THREE.MeshBasicMaterial({ color: c, toneMapped: false }), x, y - kk * .04, lz, s);
+    const glow = glintSprite(kk * .32, c); glow.position.set(x, y - kk * .04, lz + .02); s.add(glow);
+    B3.bulbs.push({ bulb, glow, i });
+  }
+  const wire = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(Array.from({ length: 13 }, (_, i) => { const u = i / 12; return V3(-px + u * px * 2, poleH - Math.sin(u * Math.PI) * kk * .22, lz); })), 40, kk * .008, 4), iron);
+  s.add(wire);
+  // toys left on the lawn between the rows
+  const rows = [...new Set(zs.map(z => Math.round(z * 100) / 100))].sort((a, b) => a - b);
+  for (let r = 0; r < rows.length - 1; r++) for (let n = 0; n < 2; n++) {
+    const p = V3(rand(-.85, .85) * halfW, 0, (rows[r] + rows[r + 1]) / 2 + kk * .2);
+    if (Math.random() < .5) part(new THREE.SphereGeometry(kk * .07, 14, 10), matte('#d8f04a', { roughness: .9 }), p.x, kk * .07, p.z, s).castShadow = true;
+    else { const b = buildBone('common'); b.scale.setScalar(kk * .14); b.position.set(p.x, kk * .05, p.z); b.rotation.set(Math.PI / 2, 0, rand(0, 3)); s.add(castShadows(b)); }
+  }
+  B3.flies = fireflies(s, 16, { x0: -halfW, x1: halfW, z0: fz, z1: nz + kk * .3, k: kk });
+  // Duke, the host: waits out front, runs to each house you pick and is there when the door opens
+  const dog = buildDog('corso'); dog.root.scale.setScalar(kk * .9); castShadows(dog.root); dog.shadow.visible = false;
+  const home = toGround(B3.W * .5, B3.H * .985, B3.W, B3.H);
+  dog.pos.copy(home); dog.heading = dog.headingWant = 0; s.add(dog.root);
+  Object.assign(B3, { on: true, kind: 'pick', scene: s, items, dog, kk, home, gen: null, catcher: null });
+  lurkerSetup(kk * .95, 'fence', fz - kk * .25);
+  B3.gen = pickIdle();
 }
-const QMARK = canvasTex(128, 128, (g, w) => { g.fillStyle = '#0c0603'; g.fillRect(0, 0, w, w); g.font = '400 100px "Lilita One", Impact'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#ffd24a'; g.shadowColor = '#ffb300'; g.shadowBlur = 18; g.fillText('?', 64, 70); });
+// Duke between picks: sits like he owns the place (he does), looks about, huffs, stretches, wanders a step or two
+function* pickIdle() {
+  const { dog, kk } = bonus3d;
+  dog.want.sit = 1; dog.want.paw = 0; dog.want.walk = 0; dog.want.brow = -.3; dog.want.wag = .25;
+  for (;;) {
+    yield* wait(rand(1.2, 2.6));
+    const r = Math.random();
+    if (r < .3) { dog.want.headYaw = rand(-.9, .9); dog.want.headPitch = rand(-.1, .2); }
+    else if (r < .5) { dog.want.headPitch = .35; dog.want.jaw = 1; kick(dog, .4); yield* wait(.25); dog.want.jaw = 0; dog.want.headPitch = 0; }
+    else if (r < .7) { dog.want.sit = 0; dog.want.bow = 1; yield* wait(.8); dog.want.bow = 0; yield* wait(.3); dog.want.sit = 1; }
+    else if (r < .85) { dog.want.wag = 1; dog.want.wagRate = 12; dog.want.tongue = 1; yield* wait(.9); dog.want.wag = .25; dog.want.tongue = 0; }
+    else { // a few steps to one side and back to sitting
+      const from = dog.pos.clone(), to = from.clone().add(V3(rand(-1, 1) * kk * .6, 0, 0));
+      dog.want.sit = 0; dog.headingWant = Math.atan2(to.x - from.x, .001); dog.want.walk = 1; dog.speed = 1;
+      yield* tween(.6, u => { dog.pos.lerpVectors(from, to, u); });
+      dog.want.walk = 0; dog.speed = 0; dog.headingWant = 0; yield* wait(.2); dog.want.sit = 1;
+    }
+  }
+}
 function closedHouse(k) {
-  const h = buildHouse('h0', null), body = h.userData.body;
-  const q = new THREE.Mesh(new THREE.PlaneGeometry(.6, .6), new THREE.MeshBasicMaterial({ map: QMARK, toneMapped: false })); q.position.set(0, -.5, .56); body.add(q);
-  body.rotation.set(0, 0, 0);
-  const wrap = frameModel(h, 1); wrap.scale.multiplyScalar(k * .74); wrap.position.y = k * .4;
+  const h = mysteryHouse();
+  h.userData.body.rotation.set(0, 0, 0);
+  const wrap = frameModel(h, 1); wrap.scale.multiplyScalar(k * .74); wrap.position.y = k * .4; wrap.userData.door = h.userData.door;
   return castShadows(wrap);
+}
+// a house was picked: the door rattles while Duke runs over and paws at it (the game opens it a moment later)
+function pickTease3D(i) {
+  const B3 = bonus3d;
+  if (B3.kind !== 'pick') return;
+  const it = B3.items[i], dog = B3.dog;
+  it.rattle = .6;
+  B3.gen = (function* () {
+    const to = it.g.position.clone().add(V3(it.k * .48, 0, it.k * .5)), from = dog.pos.clone(), d = from.distanceTo(to);
+    dog.want.sit = 0; dog.want.bow = 0; dog.want.lie = 0; dog.want.headYaw = 0; dog.want.headPitch = 0;
+    dog.headingWant = Math.atan2(to.x - from.x, to.z - from.z); dog.want.walk = 1; dog.speed = 3; kick(dog, .6); dust(dog, 4);
+    yield* tween(Math.min(.42, .14 + d * .05), u => { dog.pos.lerpVectors(from, to, u); }, t => t);
+    dog.want.walk = 0; dog.speed = 0; kick(dog, -.8); dust(dog, 5, 1.3);
+    dog.headingWant = Math.atan2(it.g.position.x - dog.pos.x, it.g.position.z - dog.pos.z);
+    dog.want.paw = 1; dog.want.brow = .8; dog.want.wag = 1; dog.want.wagRate = 20; dog.want.headPitch = .25;
+    for (;;) yield 0;
+  })();
 }
 function pick3D(i, j) {
   const B3 = bonus3d;
   if (B3.kind !== 'pick') return;
-  const it = B3.items[i];
+  const it = B3.items[i], dog = B3.dog;
+  it.rattle = 0;
   openHouse(it, j, false);
   // the door bursts open: a puff of smoke, sparks in the jackpot's colour, a beam of light, a shake
   const col = JACKPOTS[j].color, p = it.g.position.clone(); p.y += it.k * .4;
   puff(p, it.k * .8, 6); sparkBurst(p, col, 14, it.k * .8); beam(it.g.position, col, it.k * .7, 3.5); shake(.05);
-  if (bonus && bonus.found && bonus.found[j] === PICK_MATCH - 1) groundRing(it.g.position, col, it.k * 1.4);
+  const n = bonus ? bonus.found[j] : 0, match = n === PICK_MATCH, near = n === PICK_MATCH - 1;
+  if (near) { groundRing(it.g.position, col, it.k * 1.4); flashScene(col); }
+  if (match) { camFocus(it.g.position.clone().setY(it.k * .5), .3); B3.slowT = .35; flashScene(col); }
+  // Duke's reaction: a jump and a flip for the jackpot, a bark for "one more", a nod otherwise
+  B3.gen = (function* () {
+    dog.want.paw = 0; dog.want.headPitch = .3; dog.want.jaw = 1; kick(dog, 1);
+    yield* wait(.15); dog.want.jaw = 0;
+    if (match || j === 0) {
+      yield* tween(.65, u => { dog.lift = Math.sin(u * Math.PI) * it.k * .9; dog.flip = -easeInOut(u) * Math.PI * 2; dog.want.air = 1; }, t => t);
+      dog.lift = 0; dog.flip = 0; dog.want.air = 0; kick(dog, -1.3); dust(dog, 8); dog.want.tongue = 1; dog.want.wag = 1; dog.want.wagRate = 22;
+      if (match) { dog.want.sit = 1; dog.want.headPitch = .7; dog.want.jaw = 1; yield* wait(.7); dog.want.jaw = 0; for (;;) yield 0; }
+    } else if (near) {
+      yield* tween(.35, u => { dog.lift = Math.sin(u * Math.PI) * it.k * .4; dog.want.air = 1; }, t => t);
+      dog.lift = 0; dog.want.air = 0; kick(dog, -1); dust(dog, 5); dog.want.jaw = 1; yield* wait(.2); dog.want.jaw = 0;
+    } else { dog.want.headPitch = -.2; yield* wait(.25); dog.want.headPitch = .1; yield* wait(.2); dog.want.headPitch = 0; }
+    dog.want.tongue = 0;
+    yield* pickIdle();
+  })();
 }
 function openHouse(it, j, late) {
   it.open = true; it.j = j; it.late = late;
-  it.g.remove(it.house);
+  it.g.remove(it.house); disposeTree(it.house);
   const model = j === 0 ? buildMansion() : buildHouse(...PICK_HOUSE(j));
   model.userData.body.rotation.set(0, 0, 0);
   const wrap = frameModel(model, 1); wrap.scale.multiplyScalar(it.k * (j === 0 ? .9 : .76)); wrap.position.y = it.k * .4;
@@ -5433,7 +6055,14 @@ function animPick(dt) {
   B3.items.forEach((it, i) => {
     it.t += dt;
     const w = it.house;
-    if (!it.open) { // shut houses hop for attention now and then
+    if (!it.open) { // shut houses hop for attention now and then; a picked one rattles and its "?" flickers
+      if (it.rattle > 0) {
+        it.rattle -= dt;
+        w.position.y = it.k * .4 + Math.abs(Math.sin(it.t * 24)) * it.k * .07; w.rotation.z = Math.sin(it.t * 47) * .09; w.scale.y = w.scale.x;
+        if (it.door) it.door.material.color.setScalar(.6 + Math.abs(Math.sin(it.t * 30)) * .8);
+        return;
+      }
+      if (it.door) it.door.material.color.setScalar(1);
       const ph = (it.t + i * .37) % 2.2;
       const hopU = ph > 1.7 && ph < 2.05 ? Math.sin((ph - 1.7) / .35 * Math.PI) : 0;
       w.position.y = it.k * .4 + hopU * it.k * .18; w.rotation.z = hopU * Math.sin(it.t * 30) * .12; w.scale.y = w.scale.x * (1 + hopU * .1);
@@ -5448,6 +6077,9 @@ function animPick(dt) {
     if (match) { w.position.y = it.k * (.4 + Math.abs(Math.sin(it.t * 7)) * .3); w.rotation.y = Math.sin(it.t * 5) * .2; if (ud.dog) ud.dog.p.jaw = Math.max(0, Math.sin(it.t * 9)); }
     if (ud.crown) ud.crown.rotation.y += dt * 2;
   });
+  // the party lights chase along the string; when a jackpot hits they all flash together
+  const t = B3.t, win = done && bonus.found && bonus.found.includes(PICK_MATCH);
+  B3.bulbs.forEach(b => { const on = win ? Math.sin(t * 14) > 0 : (b.i + Math.floor(t * 5)) % 3 === 0; b.glow.material.opacity = on ? .95 : .3; b.bulb.material.color.set(BULB_COLS[b.i % BULB_COLS.length]).multiplyScalar(on ? 1.3 : .55); });
 }
 
 // ---- Mailman Chase: Rex guards the street while the mailman does his round ----
@@ -5502,9 +6134,8 @@ function buildMailbox(golden) {
   const door = new THREE.Group(); door.position.set(0, .48, .13); g.add(door);
   part(new RoundedBoxGeometry(.13, .12, .012, 2, .005), body, 0, .06, 0, door);
   const flag = new THREE.Group(); flag.position.set(.07, .5, .03); g.add(flag);
-  part(new THREE.BoxGeometry(.008, .012, .14), glossy('#e02a2a'), 0, 0, .0, flag).position.z = -.0;
+  part(new THREE.BoxGeometry(.008, .012, .14), glossy('#e02a2a'), 0, 0, 0, flag);
   part(new THREE.BoxGeometry(.008, .06, .05), glossy('#e02a2a'), 0, .03, -.06, flag);
-  flag.rotation.x = 0;
   g.userData = { door, flag, box };
   g.traverse(m => { if (m.isMesh) m.castShadow = true; });
   return g;
@@ -5512,8 +6143,9 @@ function buildMailbox(golden) {
 function startMail3D() {
   const B3 = bonus3d, area = $('street');
   attachBonus(area);
-  const s = outdoorScene(['#5cb4f0', '#e2f4ff']);
+  const s = outdoorScene(['#4aa8f0', '#e2f4ff']);
   const cam = B3.cam; cam.fov = 38; cam.position.set(0, 3, 9); cam.lookAt(0, 1.2, 0); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+  camRest(V3(0, 1.2, 0));
   ground(s, 90, 90, 30);
   const P = (x, y) => toGround(B3.W * x / 100, B3.H * y / 100, B3.W, B3.H);
   const spots = MAIL_X.map(x => P(x, MAIL_GROUND));
@@ -5531,7 +6163,7 @@ function startMail3D() {
     const q = P(MAIL_X[i], MAIL_Y), len = Math.hypot(q.x - p.x, q.z - p.z);
     const path = new THREE.Mesh(new THREE.PlaneGeometry(kk * .24, len), matte('#cfc6b6')); path.rotation.set(-Math.PI / 2, 0, Math.atan2(q.x - p.x, q.z - p.z)); path.position.set((p.x + q.x) / 2, .012, (p.z + q.z) / 2); path.receiveShadow = true; s.add(path);
     const box = buildMailbox(i === MAIL_HOUSES - 1); box.scale.setScalar(kk * .95); box.position.copy(P(MAIL_X[i] + 5, MAIL_Y - 1.5)); s.add(box);
-    return { g: h, box, x: p.x };
+    return { g: h, box, x: p.x, z: h.position.z, front: p.z };
   });
   for (let i = 0; i < MAIL_HOUSES - 1; i++) {
     const x = (spots[i].x + spots[i + 1].x) / 2;
@@ -5539,15 +6171,26 @@ function startMail3D() {
     const hedge = part(new RoundedBoxGeometry(kk * .16, kk * .16, kk * .55, 2, kk * .05), matte('#2f7a34'), x, kk * .08, spots[i].z - kk * .05, s); hedge.castShadow = true;
   }
   for (let i = 0; i < 9; i++) tree(s, rand(-16, 16), mid.z - kk * rand(2.4, 4.5), kk * rand(.6, .85));
+  // front yards: a low picket fence along the sidewalk (open where the paths come through), flower beds, street lamps,
+  // a fire hydrant on Rex's lawn, and clouds drifting over the rooftops
+  const fz = zs - walkW / 2 - kk * .07;
+  picketFence(s, spots[0].x - kk * 2, spots[4].x + kk * 2, fz, kk * .13, spots.map(p => [p.x - kk * .17, p.x + kk * .17]));
+  flowerBeds(s, homes.flatMap(h => [[h.x - kk * .47, h.x - kk * .17, h.front + kk * .14, kk], [h.x + kk * .17, h.x + kk * .47, h.front + kk * .14, kk]]));
+  for (const x of [20, 80]) lampPost(s, V3(P(x, MAIL_Y).x, 0, fz + kk * .05), kk * .95);
+  hydrant(s, P(26, 82), kk * .17);
+  B3.clouds = clouds(s, 7, -62, 6, 9.5, 40);
   // one scale for the mailman, the dog and the dog catcher
   const sd = kk * .36;
   const dog = buildDog('gsd'); dog.root.scale.setScalar(sd * 1.15); castShadows(dog.root); dog.shadow.visible = false;
   dog.pos.copy(start); dog.heading = dog.headingWant = Math.PI * .85; s.add(dog.root);
   const man = buildMailman(); man.scale.setScalar(sd); s.add(man);
-  const standAt = i => P(manX(i), MAIL_Y);
+  // every stop is worked out now, with the camera at rest (it leans in during the chases)
+  const stands = MAIL_X.map((_, i) => P(manX(i), MAIL_Y)), standAt = i => stands[i].clone();
   const offL = standAt(0).clone(); offL.x = P(-12, MAIL_Y).x;
   man.position.copy(offL); man.rotation.y = Math.PI / 2;
-  Object.assign(B3, { on: true, kind: 'mail', scene: s, dog, man, homes, kk, sd, start, standAt, fx: [], gen: null, pile: 0 });
+  Object.assign(B3, { on: true, kind: 'mail', scene: s, dog, man, homes, kk, sd, start, standAt, gen: null, catcher: null, pile: 0, house: 0, idleProps: [], smokeT: 0,
+    offR: P(115, MAIL_Y).x, offR2: P(120, MAIL_Y).x, stand: standAt(0) });
+  lurkerSetup(sd * 1.05, 'corner', 0);
   B3.gen = (function* () { dog.want.sit = 1; yield* manWalk(man, standAt(0), 1.2); yield* mailIdle(); })();
 }
 // the mailman walks (speed 1) or runs (2+) to a point
@@ -5559,20 +6202,193 @@ function* manWalk(m, to, speed = 1) {
   yield* tween(T, u => { m.position.lerpVectors(from, to, u); walkPerson(m, u * T * (6 + speed * 3.5), Math.min(1, .7 + speed * .2), true); }, t => t);
   walkPerson(m, 0, 0, true); ud.body.rotation.x = 0;
 }
-// between chases: the mailman fusses with his letters and keeps a nervous eye on Rex; Rex sits, stares, growls now and then
+
+// ---- the mailman's body language: named joint angles, eased from one pose to the next ----
+const PJ = {
+  rotY: c => [c.rotation, 'y'], bodyX: c => [c.userData.body.rotation, 'x'], bodyY: c => [c.userData.body.position, 'y'],
+  headX: c => [c.userData.head.rotation, 'x'], headY: c => [c.userData.head.rotation, 'y'], headZ: c => [c.userData.head.rotation, 'z'],
+  armLX: c => [c.userData.armL.rotation, 'x'], armLZ: c => [c.userData.armL.rotation, 'z'], armRX: c => [c.userData.armR.rotation, 'x'], armRZ: c => [c.userData.armR.rotation, 'z'],
+  elbowL: c => [c.userData.elbows[0].rotation, 'x'], elbowR: c => [c.userData.elbows[1].rotation, 'x'],
+  legL: c => [c.userData.legs[0].rotation, 'x'], legR: c => [c.userData.legs[1].rotation, 'x'], kneeL: c => [c.userData.knees[0].rotation, 'x'], kneeR: c => [c.userData.knees[1].rotation, 'x'],
+};
+// waiting at a mailbox: side on to the street, the letter ready in his right hand, head turned to keep an eye on Rex
+const MAN_REST = { rotY: Math.PI / 2, bodyX: 0, bodyY: 0, headX: 0, headY: -1, headZ: 0, armLX: 0, armLZ: 0, armRX: -.6, armRZ: 0, elbowL: -.2, elbowR: -.9, legL: 0, legR: 0, kneeL: .04, kneeR: .04 };
+function* pose(c, to, s = .3) {
+  const keys = Object.keys(to), from = keys.map(k => { const [o, p] = PJ[k](c); return o[p]; });
+  yield* tween(s, u => keys.forEach((k, i) => { const [o, p] = PJ[k](c); o[p] = from[i] + (to[k] - from[i]) * u; }));
+}
+function restPose(c) {
+  const ud = c.userData;
+  for (const k in MAN_REST) { const [o, p] = PJ[k](c); o[p] = MAN_REST[k]; }
+  ud.body.rotation.y = ud.body.rotation.z = 0; ud.armL.rotation.y = ud.armR.rotation.y = 0; ud.ankles.forEach(a => { a.rotation.x = 0; });
+  c.position.y = 0; c.rotation.z = 0;
+  if (ud.held.parent !== ud.hands[1]) ud.hands[1].add(ud.held);
+  ud.held.visible = true; ud.held.position.set(0, -.1, .05); ud.held.rotation.set(0, 0, Math.PI / 2);
+}
+function clearIdle() { const B3 = bonus3d; (B3.idleProps || []).forEach(disposeTree); B3.idleProps = []; B3.rexBusy = false; }
+const headTop = (c, up = 2.45) => c.position.clone().add(V3(0, c.scale.x * up, 0));
+function bang(c, ch = '!', color = '#ffd24a') { const k = c.scale.x; fxSprite(headTop(c), color, k * .55, V3(0, k * 1.3, 0), .8, k * 2.4, iconTex(ch)); }
+function note(c) { const k = c.scale.x; fxSprite(headTop(c, 2.05).add(V3(rand(-.2, .2) * k, 0, k * .3)), pick(['#7fd0ff', '#ffd24a', '#ff7ad8']), k * .36, V3(rand(-.3, .3) * k, k * .8, 0), 1.1, 0, iconTex('♪')); }
+function sweat(c, n) { const k = c.scale.x, p = headTop(c, 2.1); for (let i = 0; i < n; i++) fxSprite(p, '#bfe8ff', k * .12, V3(rand(-.9, .9) * k, rand(.7, 1.3) * k, rand(0, .6) * k), .65, 6 * k); }
+
+// what the mailman does while he waits for you: each starts from his waiting pose and ends back in it
+const MAIL_IDLES = [
+  // checks his watch, taps it, shakes his head
+  function* watch(man) {
+    const ud = man.userData;
+    yield* pose(man, { rotY: .5, headY: .5, headX: .4, armLX: -1.25, armLZ: -.45, elbowL: -1.6, armRX: -.2, elbowR: -.4 }, .4);
+    yield* wait(.3);
+    for (let k = 0; k < 2; k++) { yield* pose(man, { armRX: -1.05, armRZ: .55, elbowR: -1.5 }, .14); yield* pose(man, { armRX: -.8, armRZ: .35, elbowR: -1.2 }, .1); }
+    personFace(man, 'worried');
+    yield* tween(.6, u => { ud.head.rotation.y = .5 + Math.sin(u * Math.PI * 4) * .3; });
+    yield* pose(man, { headY: -1, headX: 0 }, .25); // a quick glance at Rex
+  },
+  // mops his brow with the back of his hand; sweat flies
+  function* brow(man) {
+    const ud = man.userData;
+    yield* pose(man, { rotY: .35, headY: 0, headX: -.12, armRX: -2.3, armRZ: .55, elbowR: -2.0 }, .35);
+    yield* tween(.4, u => { ud.armR.rotation.z = .55 - u * .75; });
+    sweat(man, 4);
+    yield* pose(man, { armRX: -.4, armRZ: -.1, elbowR: -.5, headX: .1 }, .25);
+    yield* tween(.5, u => { ud.head.rotation.z = Math.sin(u * Math.PI * 3) * .06; });
+  },
+  // reads the address on his letter, turns it over, squints at the back
+  function* read(man) {
+    const ud = man.userData;
+    yield* pose(man, { rotY: .25, armRX: -1.35, armRZ: .25, elbowR: -1.25, headX: .35, headY: -.15 }, .4);
+    personFace(man, 'calm'); ud.squint = .7;
+    yield* wait(.5);
+    yield* tween(.35, u => { ud.held.rotation.y = u * Math.PI; });
+    bang(man, '?', '#7fd0ff');
+    yield* wait(.5);
+    yield* tween(.3, u => { ud.held.rotation.y = Math.PI * (1 - u); });
+    personFace(man, 'worried');
+  },
+  // whistles a tune, looking anywhere but at Rex (Rex tilts his head)
+  function* whistle(man, dog) {
+    const ud = man.userData;
+    personFace(man, 'calm'); ud.mouth.scale.set(.45, 1.5, 1);
+    yield* pose(man, { rotY: .9, headY: .7, headX: -.25 }, .35);
+    if (!bonus3d.rexBusy) dog.want.headRoll = .45;
+    for (let k = 0; k < 4; k++) { note(man); yield* tween(.32, u => { ud.body.position.y = Math.abs(Math.sin(u * Math.PI)) * .02; ud.head.rotation.z = Math.sin(u * Math.PI) * .12 * (k % 2 ? 1 : -1); }); }
+    dog.want.headRoll = 0;
+    yield* pose(man, { headY: -1, headX: 0, headZ: 0 }, .2);
+    personFace(man, 'worried');
+  },
+  // tiptoes toward the mailbox; Rex rises with a growl; he freezes, yelps and scuttles back
+  function* tiptoe(man, dog, sd) {
+    const B3 = bonus3d, ud = man.userData, from = B3.stand.clone(), to = from.clone().add(V3(sd * .45, 0, 0));
+    B3.rexBusy = true;
+    yield* pose(man, { rotY: Math.PI / 2, bodyX: .22, headY: -.9 }, .25);
+    yield* tween(1, u => { man.position.lerpVectors(from, to, u); walkPerson(man, u * 7, .45, true); ud.body.rotation.x = .22; ud.head.rotation.y = -.9; }, t => t);
+    walkPerson(man, 0, 0, true);
+    dog.want.sit = 0; dog.want.crouch = .4; dog.want.brow = 1; dog.want.jaw = .4; kick(dog, .5); growl(.6, 0, .22, 90);
+    yield* wait(.15);
+    personFace(man, 'yell'); bang(man, '!');
+    yield* tween(.18, u => { man.position.y = Math.sin(u * Math.PI) * sd * .25; }, t => t); man.position.y = 0;
+    yield* tween(.5, u => { man.position.lerpVectors(to, from, u); walkPerson(man, u * 9, .6, true); ud.body.rotation.x = -.05; }, t => t);
+    walkPerson(man, 0, 0, true); man.position.copy(from);
+    dog.want.crouch = 0; dog.want.jaw = 0; dog.want.sit = 1; dog.want.brow = .7;
+    B3.rexBusy = false;
+    personFace(man, 'worried');
+  },
+  // offers Rex a biscuit at arm's length... Rex snaps it out of his hand, and goes straight back to glaring
+  function* treat(man, dog, sd) {
+    const B3 = bonus3d, ud = man.userData; B3.rexBusy = true;
+    yield* pose(man, { rotY: .3, headY: -.3, armRX: .35, armRZ: .35, elbowR: -.3 }, .3); // a hand into the bag
+    const b = buildBone('common'); b.scale.setScalar(.2); b.position.set(0, -.12, .06); ud.hands[1].add(b); B3.idleProps.push(b); ud.held.visible = false;
+    yield* pose(man, { armRX: -1.25, armRZ: .1, elbowR: -.15, bodyX: .18, headY: -.6 }, .4);
+    dog.want.sit = 0; dog.want.headPitch = .25; dog.want.brow = .2; dog.want.wag = .8; dog.want.wagRate = 14; dog.want.sniff = 1;
+    yield* wait(.7);
+    dog.want.sniff = 0; dog.want.jaw = 1; kick(dog, .9); bark(320, 0, .3);
+    personFace(man, 'yell'); bang(man, '!');
+    const p0 = b.getWorldPosition(V3()); B3.scene.attach(b);
+    const p1 = dog.head.getWorldPosition(V3());
+    yield* together(tween(.22, u => { b.position.lerpVectors(p0, p1, u); b.position.y += Math.sin(u * Math.PI) * sd * .3; }), pose(man, { armRX: .1, armRZ: -.2, elbowR: -.5, bodyX: -.08 }, .2));
+    disposeTree(b); B3.idleProps = B3.idleProps.filter(x => x !== b); ud.held.visible = true;
+    dog.want.jaw = 0; dog.want.tongue = 1; dog.want.wag = 1;
+    yield* wait(.5);
+    dog.want.tongue = 0; dog.want.headPitch = 0; dog.want.brow = .8; dog.want.wag = .3; dog.want.sit = 1;
+    yield* wait(.2);
+    personFace(man, 'worried');
+    B3.rexBusy = false;
+  },
+  // waves "shoo, shoo"; Rex just tilts his head... then barks, and up go the mailman's hands
+  function* shoo(man, dog) {
+    const B3 = bonus3d, ud = man.userData; B3.rexBusy = true;
+    yield* pose(man, { rotY: .35, headY: -.35, armRX: -1.1, armRZ: 0, elbowR: -1.1 }, .3);
+    personFace(man, 'angry');
+    for (let k = 0; k < 3; k++) {
+      yield* tween(.14, u => { ud.armR.rotation.z = -.45 * u; ud.elbows[1].rotation.x = -1.1 + .5 * u; });
+      yield* tween(.14, u => { ud.armR.rotation.z = -.45 * (1 - u); ud.elbows[1].rotation.x = -.6 - .5 * u; });
+    }
+    dog.want.headRoll = -.45; yield* wait(.45); dog.want.headRoll = 0;
+    dog.want.jaw = 1; dog.want.sit = 0; kick(dog, 1); bark(300, 0, .3);
+    personFace(man, 'yell'); bang(man, '!');
+    yield* pose(man, { armLZ: 2.4, armRZ: -2.4, armRX: 0, elbowR: -.2, elbowL: -.2, bodyX: -.1 }, .15);
+    dog.want.jaw = 0;
+    yield* wait(.45);
+    dog.want.sit = 1;
+    B3.rexBusy = false;
+  },
+  // drops his letter, and bends to pick it up without taking his eyes off Rex
+  function* fumble(man, dog, sd) {
+    const B3 = bonus3d, ud = man.userData, l = ud.held;
+    const p0 = l.getWorldPosition(V3()), r0 = l.getWorldQuaternion(new THREE.Quaternion()); B3.scene.attach(l);
+    const g0 = man.position.clone().add(V3(sd * .35, sd * .02, sd * .12));
+    personFace(man, 'yell'); bang(man, '!');
+    yield* tween(.35, u => { l.position.lerpVectors(p0, g0, u); l.quaternion.copy(r0); l.rotateX(u * 1.5); }, t => t * t);
+    personFace(man, 'worried');
+    yield* pose(man, { bodyX: .55, bodyY: -.1, legL: -.35, legR: -.35, kneeL: .7, kneeR: .7, armRX: -.9, elbowR: -.2, headY: -1.15, headX: -.45 }, .4);
+    ud.hands[1].attach(l);
+    yield* tween(.15, u => { l.position.lerp(V3(0, -.1, .05), u); });
+    l.position.set(0, -.1, .05); l.rotation.set(0, 0, Math.PI / 2);
+    yield* pose(man, { bodyX: 0, bodyY: 0, legL: 0, legR: 0, kneeL: .04, kneeR: .04, headX: 0 }, .3);
+    sweat(man, 2);
+  },
+  // straightens his helmet with both hands
+  function* helmet(man) {
+    yield* pose(man, { rotY: .45, headY: 0, armLX: -2.5, armRX: -2.5, armLZ: .25, armRZ: -.25, elbowL: -1.6, elbowR: -1.6 }, .35);
+    yield* tween(.5, u => { man.userData.head.rotation.z = Math.sin(u * Math.PI * 2) * .12; });
+    yield* pose(man, { headZ: 0 }, .1);
+  },
+];
+// between chases: the mailman fidgets through his routines, never two the same in a row, with a nervous glance at
+// Rex in between; Rex sits, stares and keeps him honest (growls, licks his chops, wiggles, tilts his head)
 function* mailIdle() {
-  const { man, dog, sd } = bonus3d, ud = man.userData;
+  const B3 = bonus3d, { man, dog } = B3;
+  clearIdle(); restPose(man); B3.stand = man.position.clone();
   dog.want.sit = 1; dog.want.walk = 0; dog.want.wag = .4; dog.want.brow = .7; dog.want.perk = 1; dog.want.headRoll = 0;
   dog.look = V3();
-  personFace(man, 'worried'); man.rotation.y = Math.PI / 2;
-  ud.armL.rotation.set(0, 0, 0); ud.armR.rotation.set(-.6, 0, 0); ud.elbows[1].rotation.x = -.9;
-  for (let t = 0, g = 2; ; ) {
-    const dt = yield; t += dt; g -= dt;
-    dog.look.copy(man.position).y += sd * 1.7;
-    ud.head.rotation.y = -1 + Math.sin(t * 1.1) * .25; ud.head.rotation.z = Math.sin(t * .7) * .05;
-    ud.body.position.y = Math.sin(t * 2.2) * .008; ud.armR.rotation.x = -.6 + Math.sin(t * 3) * .08;
-    blinkPerson(man);
-    if (g < 0) { g = rand(1.5, 3); dog.want.jaw = .35; dog.want.brow = 1; kick(dog, .3); setTimeout(() => { dog.want.jaw = 0; dog.want.brow = .7; }, 350); }
+  personFace(man, 'worried');
+  yield* together(manIdle(), rexIdle());
+}
+function* manIdle() {
+  const B3 = bonus3d, man = B3.man, ud = man.userData;
+  let last = null;
+  for (;;) {
+    for (let t = 0, T = rand(1.4, 2.6); t < T; ) { // the nervous wait
+      const dt = yield; t += dt; B3.idleT = (B3.idleT || 0) + dt;
+      ud.head.rotation.y = -1 + Math.sin(B3.idleT * 1.1) * .25; ud.head.rotation.z = Math.sin(B3.idleT * .7) * .05;
+      ud.body.position.y = Math.sin(B3.idleT * 2.2) * .008; ud.armR.rotation.x = -.6 + Math.sin(B3.idleT * 3) * .08;
+    }
+    let r; do r = pick(MAIL_IDLES); while (r === last); last = r;
+    yield* r(man, B3.dog, B3.sd);
+    yield* pose(man, MAN_REST, .3);
+    personFace(man, 'worried');
+  }
+}
+function* rexIdle() {
+  const B3 = bonus3d, dog = B3.dog;
+  for (;;) {
+    yield* wait(rand(1.6, 3.2));
+    if (B3.rexBusy) continue;
+    const r = Math.random();
+    if (r < .3) { dog.want.jaw = .35; dog.want.brow = 1; kick(dog, .3); yield* wait(.35); dog.want.jaw = 0; dog.want.brow = .7; }
+    else if (r < .5) { dog.want.tongue = 1; yield* wait(.5); dog.want.tongue = 0; }
+    else if (r < .7) { dog.want.sit = 0; dog.want.crouch = .5; dog.want.wag = 1; dog.want.wagRate = 24; yield* wait(.7); if (!B3.rexBusy) { dog.want.crouch = 0; dog.want.sit = 1; dog.want.wag = .4; } }
+    else if (r < .85) { dog.want.headRoll = pick([-.4, .4]); yield* wait(.9); dog.want.headRoll = 0; }
+    else { dog.want.perk = 0; yield* wait(.2); dog.want.perk = 1; kick(dog, .3); }
   }
 }
 // letters spill out of the bag and flutter down
@@ -5589,33 +6405,42 @@ function mail3D({ house: i, bit, gain, golden }) {
   const B3 = bonus3d;
   if (B3.kind !== 'mail') return;
   const { dog, man, sd } = B3, ud = man.userData, stand = B3.standAt(i), mb = B3.homes[i].box.userData;
+  B3.house = i;
   B3.gen = (function* () {
-    man.position.copy(stand); man.rotation.y = Math.PI / 2; ud.head.rotation.set(0, 0, 0);
+    clearIdle(); restPose(man); personFace(man, 'worried');
+    man.position.copy(stand); ud.head.rotation.set(0, 0, 0);
     ud.armR.rotation.set(0, 0, 0); ud.elbows[1].rotation.x = -.2;
-    dog.look = null; dog.want.sit = 0; dog.want.brow = 1; dog.want.jaw = .7; dog.want.perk = 1; kick(dog, 1); dust(dog, 6, 1.3);
     const bite = stand.clone().add(V3(-sd * .7, 0, sd * .1)), from = dog.pos.clone();
-    dog.headingWant = Math.atan2(bite.x - from.x, bite.z - from.z); dog.want.walk = 1; dog.speed = 3.4;
+    camFocus(stand.clone().lerp(from, .3).setY(sd * 1.1), golden ? .36 : .3);
+    // the wind-up: Rex drops into a crouch, rump wiggling, eyes locked on... and launches
+    dog.look = null; dog.want.sit = 0; dog.want.brow = 1; dog.want.perk = 1; dog.want.headRoll = 0; dog.want.tongue = 0;
+    dog.headingWant = Math.atan2(bite.x - from.x, bite.z - from.z);
+    dog.want.crouch = 1; dog.want.wag = 1; dog.want.wagRate = 28; dog.want.shake = .5;
+    ud.head.rotation.y = -1.1; // he sees it coming
+    yield* wait(.2);
+    dog.want.crouch = 0; dog.want.shake = 0; dog.want.jaw = .7; kick(dog, 1.2); dust(dog, 8, 1.4);
+    dog.want.walk = 1; dog.speed = 3.6;
     // the mailman's reaction while Rex charges: panic (he's caught) or quick hands (he makes it)
     const react = bit ? (function* () {
-      yield* wait(.18); personFace(man, 'yell'); ud.head.rotation.y = -1.2;
+      yield* wait(.15); personFace(man, 'yell'); ud.head.rotation.y = -1.2; bang(man, '!');
       yield* tween(.2, u => { man.position.y = Math.sin(u * Math.PI) * sd * .4; ud.armL.rotation.z = u * 2.5; ud.armR.rotation.z = -u * 2.5; }, t => t);
       man.position.y = 0; scatterLetters(man, 4);
     })() : (function* () {
-      yield* wait(.08); personFace(man, 'worried'); ud.head.rotation.y = -1.1;
-      yield* tween(.22, u => { ud.armR.rotation.x = -1.5 * u; ud.elbows[1].rotation.x = -.2 + u * .2; mb.door.rotation.x = u * 1.4; }, t => t);
+      yield* wait(.06); ud.head.rotation.y = -1.1;
+      yield* tween(.2, u => { ud.armR.rotation.x = -1.5 * u; ud.elbows[1].rotation.x = -.2 + u * .2; mb.door.rotation.x = u * 1.4; }, t => t);
       ud.held.visible = false;
-      yield* tween(.18, u => { mb.door.rotation.x = 1.4 * (1 - u); mb.flag.rotation.x = -u * 1.5; ud.armR.rotation.x = -1.5 * (1 - u); });
+      yield* tween(.16, u => { mb.door.rotation.x = 1.4 * (1 - u); mb.flag.rotation.x = -u * 1.5; ud.armR.rotation.x = -1.5 * (1 - u); });
       // the hop: up and over the mailbox, out of reach
       personFace(man, 'yell');
-      yield* tween(.42, u => { man.position.x = stand.x + u * sd * 1.6; man.position.y = Math.sin(u * Math.PI) * sd * .75; ud.legs[0].rotation.x = -.9 * Math.sin(u * Math.PI); ud.legs[1].rotation.x = .4 * Math.sin(u * Math.PI); }, t => t);
+      yield* tween(.4, u => { man.position.x = stand.x + u * sd * 1.6; man.position.y = Math.sin(u * Math.PI) * sd * .75; ud.legs[0].rotation.x = -.9 * Math.sin(u * Math.PI); ud.legs[1].rotation.x = .4 * Math.sin(u * Math.PI); }, t => t);
       man.position.y = 0; walkPerson(man, 0, 0, true);
     })();
-    yield* together(tween(.62, u => { dog.pos.lerpVectors(from, bite, u); }, t => t), react);
+    yield* together(tween(.55, u => { dog.pos.lerpVectors(from, bite, u); }, t => t), react);
     dog.want.walk = 0; dog.speed = 0; dog.headingWant = Math.PI / 2;
     if (bit) yield* biteSeq(i, gain, golden); else yield* missSeq(i);
   })();
 }
-// Rex grabs the trousers and pulls, the mailman runs on the spot; RRRIP: a piece comes away, and off he goes
+// Rex grabs the trousers and pulls, the mailman runs on the spot; RRRIP (in slow motion): a piece comes away, and off he goes
 function* biteSeq(i, gain, golden) {
   const B3 = bonus3d, { dog, man, sd } = B3, ud = man.userData, stand = B3.standAt(i), last = golden || i === MAIL_HOUSES - 1;
   kick(dog, -1); dust(dog, 6, 1.4);
@@ -5631,12 +6456,14 @@ function* biteSeq(i, gain, golden) {
   // the rip
   ripPants(man);
   const scrap = clothScrap(.2 + Math.min(gain, 25) * .012); scrap.position.set(0, -.1, .3); scrap.rotation.set(.4, 0, .3); dog.head.add(scrap);
-  const at = dog.pos.clone().add(V3(sd * .4, sd * .75, 0));
+  const at = dog.pos.clone().add(V3(sd * .4, sd * .75, 0)), big = gain >= 10;
+  B3.slowT = big ? .55 : .3; flashScene(golden ? '#ffd24a' : big ? '#ffb0e8' : '#ffffff');
+  if (big) camFocus(at, .42);
   puff(at, sd * .7, 5); sparkBurst(at, golden ? '#ffd24a' : '#ffffff', 10 + gain, sd * .8); groundRing(dog.pos, golden ? '#ffd24a' : '#7fd0ff', sd * 1.2); shake(.05 + Math.min(gain, 25) * .004);
-  if (gain >= 10) { confetti(at, 30 + gain * 2, sd); beam(dog.pos, golden ? '#ffd24a' : '#ff7ad8', sd, 4); }
+  if (big) { confetti(at, 30 + gain * 2, sd); beam(dog.pos, golden ? '#ffd24a' : '#ff7ad8', sd, 4); }
   kick(dog, -1.3);
   // the mailman shoots forward, then twists round to look at the damage (hands on the seat), then runs for it
-  personFace(man, 'yell'); walkPerson(man, 0, 0, true);
+  personFace(man, 'yell'); walkPerson(man, 0, 0, true); bang(man, '!', '#ff7ad8');
   yield* tween(.3, u => { man.position.x = stand.x + u * sd * .45; man.position.y = Math.sin(u * Math.PI) * sd * .5; ud.body.rotation.x = .1; }, t => t);
   man.position.y = 0; ud.body.rotation.x = 0;
   yield* tween(.28, u => {
@@ -5645,22 +6472,35 @@ function* biteSeq(i, gain, golden) {
     ud.elbows[0].rotation.x = ud.elbows[1].rotation.x = -.9 * u; ud.head.rotation.y = .9 * u; ud.head.rotation.x = .35 * u;
   });
   dog.want.jaw = .15; dog.want.wag = 1; dog.want.tongue = 0;
+  sweat(man, 3);
   yield* wait(.2);
   ud.armL.rotation.set(0, 0, 0); ud.armR.rotation.set(0, 0, 0); ud.head.rotation.set(0, 0, 0); ud.elbows[0].rotation.x = ud.elbows[1].rotation.x = -.2;
-  const off = man.position.clone(); off.x = toGround(B3.W * 1.15, B3.H * MAIL_Y / 100, B3.W, B3.H).x;
+  camFocus(null);
+  const off = man.position.clone(); off.x = B3.offR;
+  const next = i + 1;
   yield* together(
-    manWalk(man, last ? off : B3.standAt(i + 1), last ? 3 : 2.6),
+    manWalk(man, last ? off : B3.standAt(next), last ? 3 : 2.6),
     dogHome(scrap),
   );
   if (last) { // the whole street done: Rex celebrates
     const p = dog.pos.clone(); p.y += sd;
-    confetti(p, 80, sd * 1.2); sparkBurst(p, '#ffd24a', 30, sd); shake(.12);
+    camFocus(p, .3);
+    confetti(p, 80, sd * 1.2); sparkBurst(p, '#ffd24a', 30, sd); shake(.12); flashScene('#ffd24a');
     yield* tween(.6, u => { dog.lift = Math.sin(u * Math.PI) * sd * .9; dog.flip = -easeInOut(u) * Math.PI * 2; dog.want.air = 1; }, t => t);
     dog.lift = 0; dog.flip = 0; dog.want.air = 0; kick(dog, -1.3); dust(dog, 8);
     dog.want.sit = 1; dog.want.tongue = 1; dog.want.wag = 1;
     for (;;) yield 0;
   }
+  B3.house = next;
+  if (next === MAIL_HOUSES - 1) goldenHouse();
   yield* mailIdle();
+}
+// the last house: a golden mailbox, a spotlight on it, a ring of light and sparkles, and they don't stop
+function goldenHouse() {
+  const B3 = bonus3d, box = B3.homes[MAIL_HOUSES - 1].box;
+  B3.golden = true;
+  beam(box.position, '#ffd24a', B3.kk * .3, 3.6, 2.2); groundRing(box.position, '#ffd24a', B3.kk * .8); shake(.05);
+  sparkBurst(box.position.clone().add(V3(0, B3.kk * .5, 0)), '#ffd24a', 24, B3.kk * .5);
 }
 // Rex trots back with his prize and drops it on his pile
 function* dogHome(scrap) {
@@ -5697,20 +6537,38 @@ function* missSeq(i) {
     yield* tween(.9, u => { dog.pos.lerpVectors(from, start, u); });
     dog.want.walk = 0; dog.speed = 0; dog.headingWant = 0; dog.want.sit = 1; dog.want.tailUp = 0;
   })());
+  camFocus(start.clone().setY(sd * .8), .28);
+  if (B3.lurker) B3.lurker.visible = false;
   const side = Math.random() < .5 ? -1 : 1;
-  const off = man.position.clone(); off.x = toGround(B3.W * 1.2, B3.H * MAIL_Y / 100, B3.W, B3.H).x;
+  const off = man.position.clone(); off.x = B3.offR2;
   yield* together(catcherNets(dog, sd * 1.05, side), (function* () { yield* wait(1.1); personFace(man, 'calm'); yield* manWalk(man, off, 1); })());
+}
+// the street between chases: Rex keeps his eyes on the mailman, chimneys smoke, the golden mailbox glitters
+function animMail(dt) {
+  const B3 = bonus3d, { man, dog, sd } = B3;
+  if (dog.look) dog.look.copy(man.position).y += sd * 1.7;
+  blinkPerson(man);
+  B3.smokeT -= dt;
+  if (B3.smokeT < 0) { B3.smokeT = rand(.35, .7); const h = B3.homes[pick([1, 3])].g; smoke(h.localToWorld(V3(.28, 1.2, -.12)), B3.kk); }
+  const box = B3.homes[MAIL_HOUSES - 1].box;
+  if (Math.random() < dt * (B3.golden ? 14 : 4)) fxSprite(box.position.clone().add(V3(rand(-.12, .12) * B3.kk, B3.kk * rand(.42, .7), rand(-.15, .15) * B3.kk)), pick(['#ffd24a', '#fff6c8']), B3.kk * rand(.06, .12), V3(0, B3.kk * .15, 0), rand(.4, .8));
 }
 
 function drawBonus3D(dt) {
   const B3 = bonus3d;
   if (!B3.on || !B3.scene) return;
-  if (B3.gen && B3.gen.next(dt).done) B3.gen = null;
-  if (B3.dog) updateDog(B3.dog, dt);
-  updatePuffs(dt);
-  if (B3.kind === 'pick') animPick(dt);
+  // slow motion for the big moments: the action runs at a quarter speed for a beat (the camera and the
+  // background keep real time)
+  let sdt = dt;
+  if (B3.slowT > 0) { B3.slowT -= dt; sdt = dt * .25; }
+  if (B3.gen && B3.gen.next(sdt).done) B3.gen = null;
+  if (B3.dog) updateDog(B3.dog, sdt);
+  updatePuffs(sdt);
+  B3.t += dt;
+  if (B3.kind === 'pick') animPick(sdt);
+  if (B3.kind === 'mail') animMail(sdt);
   if (B3.kind === 'dig') B3.items.forEach((it, i) => {
-    if (it.prize) it.prize.rotation.y += dt;
+    if (it.prize) it.prize.rotation.y += sdt;
     // the dig is over: show what the other mounds were hiding
     if (!it.open && bonus && bonus.done && bonus.board) {
       it.open = true; it.mound.scale.y *= .4; it.paw.visible = false;
@@ -5720,29 +6578,26 @@ function drawBonus3D(dt) {
       w.traverse(o => { if (o.isMesh) { o.material = o.material.clone(); o.material.transparent = true; o.material.opacity = .6; } });
       it.g.add(w); if (item !== 'catcher') it.prize = w;
     }
+    if (!it.open) { const ph = (B3.t + i * .53) % 3.3, w = ph < .35 ? Math.sin(ph / .35 * Math.PI) : 0; it.mound.scale.y = it.k * .55 * (1 + w * .18); it.mound.rotation.z = w * Math.sin(B3.t * 40) * .05; }
   });
-  B3.t = (B3.t || 0) + dt;
   if (bonus && bonus.done && !B3.doneShown) { B3.doneShown = true; setTimeout(() => { if (bonus && bonus.done) bonusDone(B3.kind); }, 900); }
-  if (B3.kind === 'dig') B3.items.forEach((it, i) => { if (!it.open) { const ph = (B3.t + i * .53) % 3.3, w = ph < .35 ? Math.sin(ph / .35 * Math.PI) : 0; it.mound.scale.y = it.k * .55 * (1 + w * .18); it.mound.rotation.z = w * Math.sin(B3.t * 40) * .05; } });
-  // the lurking catcher: rises behind the fence, looks around, ducks, moves along, again
-  if (B3.lurker && B3.lurker.visible && !(bonus && bonus.done)) {
-    const L = B3.lurk, c = B3.lurker; L.t += dt;
-    const cyc = L.t % 6.5, up = cyc < .4 ? 0 : cyc < .8 ? (cyc - .4) / .4 : cyc < 2.6 ? 1 : cyc < 3 ? 1 - (cyc - 2.6) / .4 : 0;
-    if (cyc > 3 && !L.moved) { L.x = rand(-.8, .8) * B3.W * unitsPerPx(V3(0, 0, L.z), B3.H) * .5; L.moved = true; }
-    if (cyc < 3) L.moved = false;
-    c.position.set(L.x, -L.k * 2.2 + easeInOut(up) * L.k * 1.25, L.z);
-    c.userData.head.rotation.y = Math.sin(L.t * 2.2) * .7; c.userData.armR.rotation.x = -1.2 * up;
+  animLurker(dt);
+  for (const c of B3.clouds) { c.m.position.x += c.v * dt; if (c.m.position.x > c.span) c.m.position.x = -c.span; }
+  for (const f of B3.flies) {
+    const t = B3.t + f.ph;
+    f.m.position.set(f.base.x + Math.sin(t * .7) * f.k * .35, f.base.y + Math.sin(t * 1.3) * f.k * .15, f.base.z + Math.cos(t * .6) * f.k * .3);
+    f.m.material.opacity = .25 + .75 * Math.max(0, Math.sin(t * 2.3));
   }
-  if (B3.flashLine) { const f = B3.flashLine; f.t += dt; const u = Math.min(f.t / 1.2, 1); f.line.scale.y = 1 + Math.sin(u * Math.PI) * 5; f.line.material.opacity = .85 + Math.sin(f.t * 30) * .15 * (1 - u); if (u >= 1) { f.line.scale.y = 1; B3.flashLine = null; } }
   B3.fx = B3.fx.filter(f => {
-    f.t += dt; const u = f.t / f.life;
-    if (f.v) { f.v.y -= (f.g || 0) * dt; if (f.drag) f.v.multiplyScalar(1 - f.drag * dt); f.m.position.addScaledVector(f.v, dt); }
-    if (f.spinV) { f.m.rotation.x += f.spinV.x * dt; f.m.rotation.y += f.spinV.y * dt; } else if (!f.fade) f.m.rotation.x += dt * 5;
-    if (f.grow) { const s = f.m.scale.x + f.grow * dt; if (f.ring) f.m.scale.set(s, s, 1); else f.m.scale.setScalar(s); }
+    f.t += sdt; const u = f.t / f.life;
+    if (f.v) { f.v.y -= (f.g || 0) * sdt; if (f.drag) f.v.multiplyScalar(1 - f.drag * sdt); f.m.position.addScaledVector(f.v, sdt); }
+    if (f.spinV) { f.m.rotation.x += f.spinV.x * sdt; f.m.rotation.y += f.spinV.y * sdt; } else if (!f.fade) f.m.rotation.x += sdt * 5;
+    if (f.grow) { const s = f.m.scale.x + f.grow * sdt; if (f.ring) f.m.scale.set(s, s, 1); else f.m.scale.setScalar(s); }
     if (f.fade) f.m.material.opacity = (f.beam ? Math.sin(Math.min(u, 1) * Math.PI) : 1 - u) * (f.op || 1);
     if (u >= 1) { disposeTree(f.m); return false; }
     return true;
   });
+  updateCam(dt);
   // camera shake on the big moments (a few hundredths of a unit, settling fast)
   const cam = B3.cam;
   if (B3.shake > .002) {
@@ -5777,8 +6632,10 @@ function bonusDone(kind) {
 function endBonus3D() {
   document.querySelectorAll('.bsplash, .bdone').forEach(e => e.remove());
   const B3 = bonus3d;
+  if (B3.area) B3.area.classList.remove('cine');
   B3.doneShown = false; B3.sceneRef = B3.scene;
-  B3.on = false; B3.kind = null; B3.scene = null; B3.items = null; B3.dog = null; B3.man = null; B3.homes = null; B3.catcher = null; B3.net = null; B3.gen = null; B3.fx = []; B3.flashLine = null; B3.shake = 0;
+  B3.on = false; B3.kind = null; B3.scene = null; B3.items = null; B3.dog = null; B3.man = null; B3.homes = null; B3.catcher = null; B3.net = null; B3.gen = null;
+  B3.fx = []; B3.flashLine = null; B3.shake = 0; B3.lurker = null; B3.lurk = null; B3.clouds = []; B3.flies = []; B3.bulbs = []; B3.idleProps = []; B3.golden = false; B3.cam0 = null; B3.camK = 0; B3.camGoal = 0; B3.slowT = 0;
   if (B3.cv) B3.cv.remove();
   if (B3.sceneRef) { disposeTree(B3.sceneRef); B3.sceneRef = null; }
 }
@@ -5842,6 +6699,7 @@ const G3 = {
     try { ({ dig: startDig3D, pick: startPick3D, mail: startMail3D })[kind](); bonus3d.doneShown = false; bonusSplash(kind); } catch (e) { console.error(e); endBonus3D(); }
   },
   dig: (i, item) => dig3D(i, item),
+  pickTease: i => pickTease3D(i),
   pick: (i, j) => pick3D(i, j),
   mail: info => mail3D(info),
   bonk: () => bonk3D(),
