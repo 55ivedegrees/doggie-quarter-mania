@@ -808,6 +808,56 @@
   .g3 .fl-pop { z-index: 2; }
   .g3 .kennel .sym { opacity: 0; }
   .g3 .kennels { min-height: 200px; border-radius: 12px; overflow: hidden; }
+
+  /* ---------- bonus screens: a lit marquee frame, a big gold title, an LED win meter, candy buttons ---------- */
+  .screen.bonus { position: relative; padding-top: 18px;
+    background: radial-gradient(ellipse 90% 50% at 50% 0, #8a1f9a, #2a0848 55%, #0c0218);
+    box-shadow: 0 0 0 3px #000, 0 0 0 8px #ffd24a, 0 0 0 10px #8a5a00, 0 0 0 13px #000, 0 0 60px 10px #ff2d95, inset 0 0 50px #000a; }
+  /* marquee bulbs round the frame, chasing */
+  .screen.bonus::before, .screen.bonus::after { content: ""; position: absolute; inset: -6px; border-radius: 22px; pointer-events: none; z-index: 3;
+    border: 4px dotted #fff4b0; filter: drop-shadow(0 0 4px #ffd24a); animation: bulbs .5s steps(2) infinite; }
+  .screen.bonus::after { inset: -6px; border-color: #ff8a3d; border-style: dotted; opacity: .9; animation-delay: -.25s; clip-path: inset(0 0 0 0); transform: rotate(.6deg); }
+  @keyframes bulbs { 50% { opacity: .25; } }
+  .screen.bonus h2 { position: relative; margin: 0 0 6px; font: 400 40px/1 var(--logo); letter-spacing: 2px; white-space: nowrap;
+    background: linear-gradient(180deg, #fffbe0 8%, #ffd24a 38%, #ff9d00 55%, #fff3a8 62%, #c97a00 92%); -webkit-background-clip: text; background-clip: text; color: transparent;
+    -webkit-text-stroke: 1.5px #5a2a00; filter: drop-shadow(0 1px 0 #a86400) drop-shadow(0 2px 0 #6b3c00) drop-shadow(0 4px 3px #000a) drop-shadow(0 0 14px #ff2d95);
+    animation: titlepulse 1.6s ease-in-out infinite; }
+  @keyframes titlepulse { 50% { transform: scale(1.04); } }
+  .screen.bonus .bonus-sub { display: inline-block; padding: 4px 14px; border-radius: 20px; background: linear-gradient(#3a0f5a, #1a0630); box-shadow: inset 0 0 0 1.5px #ffd24a88; height: auto; line-height: 1.3; }
+  .screen.bonus .dug { position: relative; display: inline-flex; align-items: center; gap: 10px; margin: 8px auto 10px; padding: 6px 18px 6px 12px; border-radius: 12px;
+    background: linear-gradient(180deg, #000, #1a0303); border: 2px solid var(--gold); box-shadow: 0 0 16px #ffb300, inset 0 2px 8px #000;
+    font: 700 30px/1.1 var(--digits); color: var(--amber); text-shadow: 0 0 12px #ff8a00, 0 0 2px #fff; }
+  .screen.bonus .dug::before { content: "BONUS WIN"; font: 800 11px/1.1 var(--ui); letter-spacing: 2px; color: var(--gold); text-shadow: 0 0 6px #ffb300; width: 4.4em; white-space: normal; text-align: left; }
+  .screen.bonus .flipbtn { position: relative; border-radius: 40px; padding: 14px 48px; font: 400 26px/1 var(--display); letter-spacing: 3px;
+    background: radial-gradient(ellipse 70% 45% at 50% 12%, #ffffffc4, #fff0 70%), linear-gradient(180deg, #5dff7a, #0b8a28);
+    box-shadow: 0 0 0 4px #e9ecef, 0 0 0 6px #5d636b, 0 0 0 8px #000, 0 6px 0 8px #000, 0 0 26px 8px #5dff7a88, inset 0 -6px 12px #0006; animation: ready 1s ease-in-out infinite; }
+  .screen.bonus .flipbtn:disabled { animation: none; filter: brightness(.55) saturate(.6); }
+  .screen.bonus .fine { opacity: .8; }
+  /* the feature splash: light rays, the bonus name slams in, then it clears to the game */
+  .bsplash { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; overflow: hidden;
+    border-radius: inherit; background: radial-gradient(ellipse at 50% 45%, #5a1a8acc, #0c0218f4 70%); transition: opacity .5s; }
+  .bsplash.out { opacity: 0; }
+  .bs-rays { position: absolute; left: 50%; top: 45%; width: 900px; height: 900px; margin: -450px; border-radius: 50%;
+    background: repeating-conic-gradient(#ffd24a55 0 8deg, #0000 8deg 22deg); animation: turn 6s linear infinite;
+    -webkit-mask: radial-gradient(circle, #000 8%, #0000 60%); mask: radial-gradient(circle, #000 8%, #0000 60%); }
+  .bsplash small { position: relative; font: 800 15px/1 var(--ui); letter-spacing: 6px; color: #fff; text-shadow: 0 0 10px #ff2d95; animation: slam .45s cubic-bezier(.2, 1.6, .4, 1) both; }
+  .bsplash b { position: relative; font: 400 64px/1 var(--logo); letter-spacing: 2px; white-space: nowrap;
+    background: linear-gradient(180deg, #fff 10%, #ffe45c 40%, #ff8a00 60%, #fff3a8 68%, #d06a00); -webkit-background-clip: text; background-clip: text; color: transparent;
+    -webkit-text-stroke: 2px #5a1500; filter: drop-shadow(0 5px 0 #3a0a00) drop-shadow(0 0 22px #ffb300); animation: slam .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+  .bsplash b + b { animation-delay: .15s; }
+  .bsplash em { position: relative; margin-top: 8px; font: 400 22px/1 var(--display); font-style: normal; letter-spacing: 4px; color: #5dff7a; text-shadow: 0 0 12px #5dff7a; animation: slam .45s .35s cubic-bezier(.2, 1.6, .4, 1) both, blink .6s .8s steps(2) infinite; }
+  /* bonus complete: a total-win plaque over the play area */
+  .bdone { position: absolute; left: 50%; top: 42%; z-index: 21; transform: translate(-50%, -50%); padding: 14px 30px 16px; border-radius: 18px; text-align: center; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 0, #6a1a8a, #1a0630 70%); box-shadow: 0 0 0 3px #000, 0 0 0 7px #ffd24a, 0 0 0 9px #000, 0 0 50px 10px #ffb300;
+    animation: slamc .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+  @keyframes slamc { from { transform: translate(-50%, -50%) scale(3); opacity: 0; } }
+  .bdone small { display: block; font: 800 13px/1 var(--ui); letter-spacing: 4px; color: #fff; text-shadow: 0 0 8px #ff2d95; }
+  .bdone b { display: block; margin: 4px 0 2px; font: 400 36px/1 var(--logo); color: var(--gold); text-shadow: 0 3px 0 #5a2a00, 0 0 16px #ffb300; }
+  .bdone output { display: block; font: 700 40px/1.1 var(--digits); color: #fff; text-shadow: 0 0 16px var(--gold), 0 3px 0 #000; }
+  .m .screen.bonus h2 { font-size: 30px; }
+  .m .screen.bonus .dug { font-size: 24px; }
+  .m .bsplash b { font-size: 48px; }
+  .m .bdone b { font-size: 28px; } .m .bdone output { font-size: 32px; }
 </style>
 </head>
 <body>
@@ -978,6 +1028,19 @@
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
 <script>
 // ---------- Game math ----------
+// Some phone browsers are missing a few newer functions this game uses; fill them in so it runs there too.
+if (!Array.prototype.at) Object.defineProperty(Array.prototype, 'at', { value(i) { i = Math.trunc(i) || 0; return this[i < 0 ? this.length + i : i]; }, writable: true, configurable: true });
+if (!String.prototype.at) Object.defineProperty(String.prototype, 'at', { value(i) { i = Math.trunc(i) || 0; return this[i < 0 ? this.length + i : i]; }, writable: true, configurable: true });
+if (window.CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.roundRect) CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h) { this.rect(x, y, w, h); };
+// If the game can't start on this browser, say so instead of leaving a blank screen.
+addEventListener('error', e => {
+  if (window.__dqmReady || document.getElementById('dqmFail')) return;
+  const d = document.createElement('div'); d.id = 'dqmFail';
+  d.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;background:#0a0408;color:#fff;font:600 17px/1.4 system-ui,sans-serif;text-align:center';
+  d.innerHTML = '<b style="font-size:24px;color:#ffd24a">Doggie Quarter Mania</b><span>This browser couldn\'t start the game.<br>Open the link in Safari or Chrome (tap the ••• menu and choose “Open in browser”).</span><small style="opacity:.5;font-size:12px"></small>';
+  d.querySelector('small').textContent = e.message || '';
+  (document.body || document.documentElement).appendChild(d);
+});
 // D = Doggie Mansion (top symbol), dog bones by rarity: Q = Legendary, B = Epic, T = Rare, P = Uncommon, L = Common
 // X / W / Y / V / Z = dog houses: Duke (Top Dog), Koda (Husky), Rex (Guard Dog), Biscuit (Lab), Peanut (Pup)
 // S = PAW coin, K = BONE coin, F = FRISBEE coin (scatters). Two or three of each per reel; the same coin is always at least
@@ -1571,6 +1634,10 @@ try { zoom = ZOOMS.includes(+localStorage.getItem('dqm-zoom')) ? +localStorage.g
 // shown at nearly full size and the text stays readable. Everything else gets the full 580px cabinet.
 const PHONE_W = 400;
 function fit() {
+  // some in-app browsers report a 0 x 0 window for a moment at load: wait for real numbers instead of shrinking the game to nothing
+  const innerWidth = window.innerWidth || document.documentElement.clientWidth || (window.visualViewport && visualViewport.width) || 0;
+  const innerHeight = window.innerHeight || document.documentElement.clientHeight || (window.visualViewport && visualViewport.height) || 0;
+  if (innerWidth < 50 || innerHeight < 50) { setTimeout(fit, 200); return; }
   const phone = innerWidth < 640 && innerHeight >= innerWidth * 1.1;
   if (phone) { tilt.x = tilt.y = tilt.tx = tilt.ty = 0; }
   if (phone !== document.body.classList.contains('m')) {
@@ -2145,17 +2212,19 @@ function bakeBones() {
 const FLUSH_MIX = ['common', 'common', 'common', 'uncommon', 'uncommon', 'rare', 'rare', 'epic', 'legendary'];
 const bf = { on: false, bones: [], queue: [], raf: 0, intro: false, until: 0, leaving: 0, born: 0, stream: 0, nextStream: 0, unit: 1, titleAt: 0.4 };
 
-function boneFlush({ intro = false, hold = 2600, titleAt = 0.4 } = {}) {
+// count: how many bones (0 = fill the screen); title: false for the lighter sweeps on smaller wins
+function boneFlush({ intro = false, hold = 2600, titleAt = 0.4, count = 0, title = true } = {}) {
+  if (innerWidth < 50 || innerHeight < 50) { setTimeout(() => boneFlush({ intro, hold, titleAt, count, title }), 250); return; }
   if (!BONE3D) bakeBones();
   const W = innerWidth, H = innerHeight, dpr = Math.min(devicePixelRatio || 1, 2), now = performance.now();
   for (const [c, g] of [[fBack, fbx], [fFront, ffx]]) { c.width = W * dpr; c.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); }
-  Object.assign(bf, { intro, born: now, leaving: 0, titleAt, until: intro ? Infinity : now + hold, unit: Math.min(W, H * 0.62) / 400,
+  Object.assign(bf, { intro, born: now, leaving: 0, titleAt, title, until: intro ? Infinity : now + hold, unit: Math.min(W, H * 0.62) / 400,
     stream: intro ? 7 : 0, nextStream: now + 2400 });
-  queueBones(Math.round(Math.min(80, Math.max(44, W * H / 11000))), 2200, now);
+  queueBones(count || Math.round(Math.min(80, Math.max(44, W * H / 11000))), count ? 900 + Math.min(count, 120) * 14 : 2200, now);
   flushEl.classList.add('on'); flushEl.classList.toggle('intro', intro); flushEl.classList.remove('going');
   $('bfTap').classList.remove('show');
   if (intro) setTimeout(() => $('bfTap').classList.add('show'), 1400);
-  sweep(0, 1.1, 200, 2600, 0.3);
+  sweep(0, 1.1, 200, 2600, title ? 0.3 : 0.12);
   if (!bf.on) {
     bf.on = true;
     let last = now;
@@ -2173,7 +2242,7 @@ function dropFlush() {
   if (!bf.on || bf.leaving) return;
   const now = performance.now();
   bf.stream = 0; bf.until = Infinity; bf.leaving = now + 350;
-  queueBones(26, 700, now);
+  queueBones(bf.title ? 26 : 4, 700, now);
   flushEl.classList.add('going');
   $('bfTap').classList.remove('show');
   sweep(0, 0.8, 600, 3200, 0.3);
@@ -2222,7 +2291,7 @@ function drawFlush(now) {
   const out = bf.leaving ? Math.max(0, Math.min(1, (now - bf.leaving) / 650)) : 0;
   const rx = (1 - e) * 85 - out * 55 + Math.sin(t * 1.3) * 4, ry = Math.sin(t * 0.9) * 9, sc = ts * (1 + (1 - e) * 0.7 + out * 0.8);
   bfTitle.style.transform = `translate(${W / 2 - 280}px, ${H * bf.titleAt - bfTitle.offsetHeight / 2 + 70 * ts + Math.sin(t * 1.7) * 5}px) perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) rotate(-3deg) scale(${sc})`;
-  bfTitle.style.opacity = Math.min(1, age * 3) * (1 - out);
+  bfTitle.style.opacity = (bf.title ? 1 : 0) * Math.min(1, age * 3) * (1 - out);
   for (const b of bf.bones) {
     const g = b.depth < 0.5 ? fbx : ffx, sc = b.k / BSCALE;
     // soft shadow, falling farther from the nearer bones
@@ -2346,8 +2415,11 @@ function award(wins, total, bonusCells = [], bonusCoins = 0) {
     quake();
     if (jackpot) { $('candle').classList.add('lit'); howl(2.4); barkTune([300, 360, 420, 500, 420, 500, 600], 4.8, 0.6); }
   } else { flyUp(money(total * denom)); replay($('glass'), 'bump'); }
-  rainWin(ratio, jackpot);
-  if (tier) boneFlush({ hold: jackpot ? 3800 : 2600, titleAt: 0.2 });
+  // every win gets the bone sweep, bigger the bigger the win: a few bones for a small win, a light shower for a good one,
+  // the full flush with the title from BIG WIN up (and more and longer up the ladder); the biggest also get fountains
+  const flushBones = jackpot ? 150 : ratio >= 100 ? 130 : ratio >= 50 ? 105 : ratio >= 20 ? 80 : ratio >= 10 ? 46 : ratio >= 5 ? 32 : ratio >= 2 ? 18 : 9;
+  if (tier) { rainWin(ratio, jackpot); boneFlush({ hold: jackpot ? 4200 : ratio >= 50 ? 3600 : 2800, titleAt: 0.2, count: flushBones }); }
+  else boneFlush({ hold: 600, count: flushBones, title: false });
   say(jackpot ? 'Doggie Mansion jackpot — awooo!' : bonusCoins ? `Bonus paid ${bonusCoins} — total ${money(total * denom)}` : `Winner! ${total} credits — ${money(total * denom)}`);
   $('boxWin').classList.add('flash');
   render();
@@ -2367,7 +2439,7 @@ function award(wins, total, bonusCells = [], bonusCoins = 0) {
         if (next && next[1] !== rung) {
           rung = next[1];
           const h = $('bannerTitle'); h.textContent = rung; h.style.animation = 'none'; void h.offsetWidth; h.style.animation = '';
-          quake(); rain(70, 1.3, .35); growl(.5, 0, .3, 80); bark(200, .2, .7);
+          quake(); if (bf.on) { queueBones(45, 900, performance.now()); bf.until += 1500; } else rain(70, 1.3, .35); growl(.5, 0, .3, 80); bark(200, .2, .7);
           window.G3?.ladder(rung);
         }
       }
@@ -2772,6 +2844,13 @@ fitLogo();
 fit();
 placeSides();
 paintFloor();
+window.__dqmReady = true;
+// phones settle their real size late (address bars, rotation, in-app browsers): lay out again once they have
+const refit = () => { fit(); paintFloor(); };
+addEventListener('load', refit);
+addEventListener('orientationchange', () => setTimeout(refit, 250));
+if (window.visualViewport) visualViewport.addEventListener('resize', () => { clearTimeout(floorTimer); floorTimer = setTimeout(refit, 150); });
+setTimeout(refit, 400); setTimeout(refit, 1500);
 boneFlush({ intro: true });
 </script>
 <script type="module">// ================= 3D: real-time WebGL presentation (Three.js) =================
@@ -5109,6 +5188,7 @@ function drawBonus3D(dt) {
     }
   });
   B3.t = (B3.t || 0) + dt;
+  if (bonus && bonus.done && !B3.doneShown) { B3.doneShown = true; setTimeout(() => { if (bonus && bonus.done) bonusDone(B3.kind); }, 900); }
   if (B3.kind === 'dig') B3.items.forEach((it, i) => { if (!it.open) { const ph = (B3.t + i * .53) % 3.3, w = ph < .35 ? Math.sin(ph / .35 * Math.PI) : 0; it.mound.scale.y = it.k * .55 * (1 + w * .18); it.mound.rotation.z = w * Math.sin(B3.t * 40) * .05; } });
   if (B3.flashLine) { const f = B3.flashLine; f.t += dt; const u = Math.min(f.t / 1.2, 1); f.line.scale.y = 1 + Math.sin(u * Math.PI) * 5; f.line.material.opacity = .85 + Math.sin(f.t * 30) * .15 * (1 - u); if (u >= 1) { f.line.scale.y = 1; B3.flashLine = null; } }
   B3.fx = B3.fx.filter(f => {
@@ -5127,8 +5207,34 @@ function drawBonus3D(dt) {
     B3.r.render(B3.scene, cam); cam.position.copy(o); B3.shake *= Math.exp(-7 * dt);
   } else B3.r.render(B3.scene, cam);
 }
-function endBonus3D() {
+const BONUS_DLG = { dig: 'bonusDlg', pick: 'pickDlg', fling: 'flingDlg' };
+const BONUS_NAME = { dig: ['BONE YARD', 'DIG!'], pick: ['DOG HOUSE', 'PICK!'], fling: ['FRISBEE', 'FLING!'] };
+// the feature splash: rays and the bonus name slam in, a fanfare, then it clears to the game
+function bonusSplash(kind) {
+  const scr = $(BONUS_DLG[kind]).querySelector('.screen');
+  scr.querySelectorAll('.bsplash, .bdone').forEach(e => e.remove());
+  const el = document.createElement('div'); el.className = 'bsplash';
+  el.innerHTML = `<i class="bs-rays"></i><small>BONUS FEATURE</small><b>${BONUS_NAME[kind][0]}</b><b>${BONUS_NAME[kind][1]}</b><em>GOOD LUCK!</em>`;
+  scr.appendChild(el);
+  sweep(0, .9, 300, 3600, .3); [0, .14, .28, .42, .6].forEach((d, i) => bell(784 * 2 ** (i / 4), d, .12, .9));
+  setTimeout(() => el.classList.add('out'), 1500); setTimeout(() => el.remove(), 2100);
+}
+// the bonus is over: a TOTAL WIN plaque slams in and counts up
+function bonusDone(kind) {
+  const scr = $(BONUS_DLG[kind]).querySelector('.screen'), coins = bonus.mult * bet;
+  const el = document.createElement('div'); el.className = 'bdone';
+  el.innerHTML = '<small>BONUS COMPLETE</small><b>TOTAL WIN</b><output>$0.00</output>';
+  scr.appendChild(el);
+  const out = el.querySelector('output'), t0 = performance.now(), dur = 1400;
+  (function f(now) { const u = Math.min((now - t0) / dur, 1); out.textContent = money(Math.round(coins * u) * denom); if (u < 1) requestAnimationFrame(f); })(t0);
+  [0, .1, .2, .3, .45, .6].forEach((d, i) => bell(1047 * 2 ** (i / 5), d, .12, .9));
   const B3 = bonus3d;
+  if (B3.scene) { const c = B3.cam.position.clone().lerp(V3(0, 0, 0), .55); confetti(c, 80, 1); shake(.12); }
+}
+function endBonus3D() {
+  document.querySelectorAll('.bsplash, .bdone').forEach(e => e.remove());
+  const B3 = bonus3d;
+  B3.doneShown = false;
   B3.on = false; B3.kind = null; B3.scene = null; B3.items = null; B3.dog = null; B3.catcher = null; B3.gen = null; B3.fx = []; B3.flashLine = null; B3.shake = 0;
   if (B3.cv) B3.cv.remove();
 }
@@ -5183,7 +5289,7 @@ const G3 = {
   ladder: title => castApi.ladder(title),
   bonusOpen(kind) {
     stopAll(); for (const d of onStage()) gone(d);
-    try { ({ dig: startDig3D, pick: startPick3D, fling: startFling3D })[kind](); } catch (e) { console.error(e); endBonus3D(); }
+    try { ({ dig: startDig3D, pick: startPick3D, fling: startFling3D })[kind](); bonus3d.doneShown = false; bonusSplash(kind); } catch (e) { console.error(e); endBonus3D(); }
   },
   dig: (i, item) => dig3D(i, item),
   pick: (i, j) => pick3D(i, j),
