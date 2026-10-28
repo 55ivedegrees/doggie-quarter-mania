@@ -764,6 +764,12 @@
     background: linear-gradient(105deg, #0000 40%, #ffffff12 47%, #ffffff22 50%, #ffffff12 53%, #0000 60%) no-repeat;
     background-size: 300% 100%; animation: glide 9s ease-in-out infinite; }
   @keyframes glide { 0%, 55% { background-position: 120% 0; } 100% { background-position: -40% 0; } }
+  .lowfx .led::before, .lowfx .cab-side::before, .lowfx .pedestal::after, .lowfx .rays, .lowfx .floorglow i, .lowfx .glass::after,
+  .lowfx .logo-shine::before, .lowfx .logo-coin, .lowfx .spark { animation: none; }
+  .lowfx .floorglow i { filter: none; opacity: .35; }
+  @media (prefers-reduced-motion: reduce) {
+    .led::before, .cab-side::before, .pedestal::after, .rays, .floorglow i, .glass::after, .logo-shine::before, .logo-coin, .spark { animation: none; }
+  }
 
   /* ---------- Bone flush ---------- */
   #flush { position: fixed; inset: 0; z-index: 140; display: none; pointer-events: none; overflow: hidden; }
@@ -3022,7 +3028,21 @@ const LITE = Math.min(screen.width, screen.height) < 500 || (navigator.deviceMem
 // how sharp the 3D draws: phones get smooth edges and near-native resolution now that every scene frees its memory;
 // only a device that reports very little memory keeps the light setting
 const LOW_RAM = (navigator.deviceMemory || 8) <= 2;
-const stageDpr = () => isPhone() ? (LOW_RAM ? 1.25 : 1.6) : 2;
+// Chrome drawing WebGL without the graphics card (acceleration off, a blocked driver): every pixel then costs CPU, so
+// the 3D runs light: no multisampling or fur shells, fewer pixels, 30 frames a second, the decorative CSS glows still
+const SOFT_GL = !/[?&]fx=full/.test(location.search) && (() => {
+  try {
+    const c = document.createElement('canvas'), gl = c.getContext('webgl2') || c.getContext('webgl'); if (!gl) return false;
+    const e = gl.getExtension('WEBGL_debug_renderer_info'), name = String(gl.getParameter(e ? e.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name);
+  } catch { return false; }
+})();
+const LIGHT = LOW_RAM || SOFT_GL;
+const stageDpr = () => LIGHT ? 1 : isPhone() ? 1.5 : 2;
+// every 3D buffer stays under a pixel budget; the frame governor in boot3D lowers QUAL when frames fall behind
+let QUAL = SOFT_GL ? .75 : 1;
+const PX_BUDGET = SOFT_GL ? 4e5 : 1.6e6;
 // free the GPU memory an object tree used once it's gone for good (shared materials and textures re-upload if used again)
 const TEX_SLOTS = ['map', 'alphaMap', 'bumpMap', 'normalMap', 'emissiveMap', 'roughnessMap', 'metalnessMap', 'aoMap', 'lightMap', 'sheenColorMap', 'clearcoatMap', 'specularColorMap', 'displacementMap'];
 const freeTex = t => { if (t && t.isTexture && !t.isRenderTargetTexture && !t.userData.keep) t.dispose(); };
@@ -3052,7 +3072,7 @@ const isPhone = () => document.body.classList.contains('m');
 // every 3D view is a canvas inside the cabinet, so it scales and tilts with it; the drawing buffer matches the
 // canvas's real size on screen (cabinet scale x device pixels), capped so phones stay smooth
 function makeRenderer(canvas) {
-  const r = new THREE.WebGLRenderer({ canvas, antialias: !LOW_RAM, alpha: true, powerPreference: LITE ? 'default' : 'high-performance' });
+  const r = new THREE.WebGLRenderer({ canvas, antialias: !LIGHT, alpha: true, powerPreference: LITE ? 'default' : 'high-performance' });
   r.outputColorSpace = THREE.SRGBColorSpace;
   r.toneMapping = THREE.ACESFilmicToneMapping;
   r.toneMappingExposure = .92;
@@ -3083,7 +3103,8 @@ function studioScene() {
   return (STUDIO = s);
 }
 function sizeRenderer(r, cssW, cssH, maxDpr = 2) {
-  const k = (stageFit?.scale || 1) * Math.min(devicePixelRatio || 1, maxDpr);
+  let k = (stageFit?.scale || 1) * Math.min(devicePixelRatio || 1, maxDpr) * QUAL;
+  const over = cssW * cssH * k * k / PX_BUDGET; if (over > 1) k /= Math.sqrt(over);
   const w = Math.max(2, Math.round(cssW * k)), h = Math.max(2, Math.round(cssH * k));
   r.setPixelRatio(1);
   r.setSize(w, h, false);
@@ -3206,7 +3227,7 @@ const shellTex = density => {
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(10, 6);
   return t;
 };
-const SHELLS = LOW_RAM ? [] : [[1.035, shellTex(1)], [1.07, shellTex(.45)]].map(([k, alphaMap]) => [k, new THREE.MeshPhysicalMaterial({ vertexColors: true, alphaMap, alphaTest: .5, roughness: .9, sheen: .7, sheenRoughness: .5, sheenColor: new THREE.Color('#ffffff').multiplyScalar(.25) })]);
+const SHELLS = LIGHT ? [] : [[1.035, shellTex(1)], [1.07, shellTex(.45)]].map(([k, alphaMap]) => [k, new THREE.MeshPhysicalMaterial({ vertexColors: true, alphaMap, alphaTest: .5, roughness: .9, sheen: .7, sheenRoughness: .5, sheenColor: new THREE.Color('#ffffff').multiplyScalar(.25) })]);
 SHELLS.forEach(([, m]) => { m.userData.keep = true; });
 const IRIS = {};
 function irisMat(color) {
@@ -4434,7 +4455,7 @@ function layoutReels3D() {
   const R3 = reels3d, host = $('reels');
   const W = host.offsetWidth, H = CELL * 3;
   if (!W) return;
-  sizeRenderer(R3.r, W, H, LOW_RAM ? 1.5 : 2);
+  sizeRenderer(R3.r, W, H, LIGHT ? 1.25 : 2);
   if (R3.groups.length && R3.W === W && R3.H === H) return; // same layout, only the cabinet's scale changed
   R3.W = W; R3.H = H;
   pixelCamera(R3.cam, W, H, 18);
@@ -4545,7 +4566,12 @@ function takeModel(s, size) {
   m.userData.poolKey = key; m.visible = true; m.position.set(0, 0, 0); m.rotation.set(0, 0, 0);
   return m;
 }
-function giveModel(m) { const R3 = reels3d; if (!m || !R3.pool) return; if (m.parent) m.parent.remove(m); (R3.pool[m.userData.poolKey] || (R3.pool[m.userData.poolKey] = [])).push(m); }
+function giveModel(m) {
+  const R3 = reels3d; if (!m || !R3.pool) return;
+  if (m.parent) m.parent.remove(m);
+  const list = R3.pool[m.userData.poolKey] || (R3.pool[m.userData.poolKey] = []);
+  if (list.length < 4) list.push(m); else disposeTree(m);
+}
 function releaseLive(m) { giveModel(m.model); disposeTree(m.obj); }
 function popLive({ ri, s, th, idx }) {
   const R3 = reels3d, G = R3.groups[ri], Rd = DRUM * CELL;
@@ -5545,7 +5571,7 @@ function moundBits() {
 function initBonus3D() {
   const cv = document.createElement('canvas'); cv.id = 'bonus3d';
   const r = makeRenderer(cv);
-  r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+  r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFShadowMap;
   Object.assign(bonus3d, { cv, r, cam: new THREE.PerspectiveCamera(), ray: new THREE.Raycaster() });
 }
 // an outdoor scene: sky, sun with soft shadows, grass
@@ -5555,7 +5581,7 @@ function outdoorScene(sky = ['#7cc8ff', '#d8f2ff'], sunColor = '#fff4dc', ground
   s.background.userData.keep = false;
   s.add(new THREE.HemisphereLight('#eaf6ff', groundColor, 1.1));
   const sun = new THREE.DirectionalLight(sunColor, 2.4); sun.position.set(-5, 9, 6); sun.castShadow = true;
-  sun.shadow.mapSize.setScalar(LITE ? 1024 : 2048); Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: .5, far: 40 }); sun.shadow.bias = -.0008; sun.shadow.radius = 4;
+  sun.shadow.mapSize.setScalar(LITE || LIGHT ? 1024 : 2048); Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: .5, far: 40 }); sun.shadow.bias = -.0008; sun.shadow.radius = 4;
   s.add(sun); s.add(sun.target);
   const rim = new THREE.DirectionalLight('#ffd0f0', .8); rim.position.set(6, 3, -8); s.add(rim);
   return s;
@@ -6690,7 +6716,7 @@ async function boot3D() {
     const c = document.createElement('canvas'); c.width = c.height = 192; c.className = 'emblem3d';
     el.replaceChildren(c);
     const g = c.getContext('2d'); let f = i * 12;
-    setInterval(() => { g.clearRect(0, 0, 192, 192); g.drawImage(mansionFrames[f++ % mansionFrames.length], 0, 0); }, 90);
+    setInterval(() => { if (document.hidden) return; g.clearRect(0, 0, 192, 192); g.drawImage(mansionFrames[f++ % mansionFrames.length], 0, 0); }, 90);
   });
   const crest = document.querySelector('.crest');
   if (crest) { const c = document.createElement('canvas'); c.width = c.height = 192; c.className = 'emblem3d'; c.getContext('2d').drawImage(mansionFrames[0], 0, 0); crest.replaceChildren(c); }
@@ -6699,21 +6725,30 @@ async function boot3D() {
     const sp = SPRITES[el.dataset.s];
     if (sp && el.closest('#payRows')) el.innerHTML = `<img src="${sp.url}" alt="">`;
   });
-  document.body.classList.add('g3');
+  document.body.classList.add('g3'); document.body.classList.toggle('lowfx', SOFT_GL);
   reels.forEach(reel => reel.cells.forEach(c => { c.textContent = ''; }));
   initReels3D(r);
   initCast();
   setTimeout(() => { try { sessionStorage.setItem('dqm3d', 'ok'); } catch { /* storage unavailable */ } }, 3000);
   window.G3 = G3;
-  window.__g3 = { buildCatcher, buildMailman, cast, reels3d, bonus3d, DOGS, ROUTINES, duo, SKITS, castApi, play: play_, stepBonus: (n = 1, dt = 1 / 30) => { for (let i = 0; i < n; i++) if (bonus3d.on) drawBonus3D(dt); }, step: (n = 1, dt = 1 / 60) => { for (let i = 0; i < n; i++) drawCast(dt, performance.now()); } }; // handy for poking at the 3D from the console
+  window.__g3 = { perf: () => ({ SOFT_GL, LIGHT, QUAL, pooled: Object.values(reels3d.pool || {}).reduce((a, l) => a + l.length, 0) }), buildCatcher, buildMailman, cast, reels3d, bonus3d, DOGS, ROUTINES, duo, SKITS, castApi, play: play_, stepBonus: (n = 1, dt = 1 / 30) => { for (let i = 0; i < n; i++) if (bonus3d.on) drawBonus3D(dt); }, step: (n = 1, dt = 1 / 60) => { for (let i = 0; i < n; i++) drawCast(dt, performance.now()); } }; // handy for poking at the 3D from the console
   addEventListener('pagehide', e => { if (!e.persisted) for (const x of [reels3d, cast, bonus3d]) if (x.r) { x.r.dispose(); x.r.forceContextLoss(); } });
-  let last = performance.now();
+  let last = performance.now(), drawn = 0, wanted = 0, win0 = last, gap = 0;
   (function loop(now) {
+    requestAnimationFrame(loop);
+    const cap = SOFT_GL || !(spinning || bonus3d.on || reels3d.live.size) ? 30 : 60;
+    gap = Math.max(gap, now - last);
+    if (now - last < 1000 / cap - 4) return;
+    wanted += cap * (now - last) / 1000; drawn++;
     const dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now;
     const ov = overlayOpen();
     if (bonus3d.on) drawBonus3D(dt);
     if (!ov || ov.id === 'denomDlg') { drawReels3D(dt); drawCast(dt, now); }
-    requestAnimationFrame(loop);
+    // governor: over each 2 s, if well under the frame cap (and the tab wasn't just hidden), draw fewer pixels
+    if (now - win0 > 2000) {
+      if (gap < 250 && drawn < wanted * .75 && QUAL > .5) { QUAL = Math.max(.5, QUAL - .125); G3.resize(); }
+      drawn = wanted = gap = 0; win0 = now;
+    }
   })(last);
 }
 const G3 = {
