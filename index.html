@@ -3019,14 +3019,23 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 const V3 = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 // phones and low-memory devices: lighter textures, no multisampling, fewer frames (a phone that runs out of memory closes the page)
 const LITE = Math.min(screen.width, screen.height) < 500 || (navigator.deviceMemory || 8) <= 4;
+// how sharp the 3D draws: phones get smooth edges and near-native resolution now that every scene frees its memory;
+// only a device that reports very little memory keeps the light setting
+const LOW_RAM = (navigator.deviceMemory || 8) <= 2;
+const stageDpr = () => isPhone() ? (LOW_RAM ? 1.25 : 1.6) : 2;
 // free the GPU memory an object tree used once it's gone for good (shared materials and textures re-upload if used again)
+const TEX_SLOTS = ['map', 'alphaMap', 'bumpMap', 'normalMap', 'emissiveMap', 'roughnessMap', 'metalnessMap', 'aoMap', 'lightMap', 'sheenColorMap', 'clearcoatMap', 'specularColorMap', 'displacementMap'];
+const freeTex = t => { if (t && t.isTexture && !t.isRenderTargetTexture && !t.userData.keep) t.dispose(); };
 function disposeTree(o) {
   if (!o) return;
   o.traverse(m => {
     if (m.geometry && !m.isSprite) m.geometry.dispose(); // sprites share one geometry
+    if (m.isLight && m.shadow) m.shadow.dispose();      // a shadow-casting light owns a shadow-map render target
+    if (m.userData.spareMats) for (const mt of m.userData.spareMats) { for (const k of TEX_SLOTS) freeTex(mt[k]); mt.dispose(); } // swapped out of a mesh
     const mats = m.material ? (Array.isArray(m.material) ? m.material : [m.material]) : [];
-    for (const mt of mats) { if (mt.map && mt.map.isCanvasTexture && !mt.map.userData.keep) mt.map.dispose(); mt.dispose(); }
+    for (const mt of mats) { if (mt.userData.keep) continue; for (const k of TEX_SLOTS) freeTex(mt[k]); mt.dispose(); }
   });
+  if (o.isScene) freeTex(o.background);
   if (o.parent) o.parent.remove(o);
 }
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
@@ -3043,7 +3052,7 @@ const isPhone = () => document.body.classList.contains('m');
 // every 3D view is a canvas inside the cabinet, so it scales and tilts with it; the drawing buffer matches the
 // canvas's real size on screen (cabinet scale x device pixels), capped so phones stay smooth
 function makeRenderer(canvas) {
-  const r = new THREE.WebGLRenderer({ canvas, antialias: !LITE, alpha: true, powerPreference: LITE ? 'default' : 'high-performance' });
+  const r = new THREE.WebGLRenderer({ canvas, antialias: !LOW_RAM, alpha: true, powerPreference: LITE ? 'default' : 'high-performance' });
   r.outputColorSpace = THREE.SRGBColorSpace;
   r.toneMapping = THREE.ACESFilmicToneMapping;
   r.toneMappingExposure = .92;
@@ -3122,6 +3131,7 @@ const MAT = {
   chrome: new THREE.MeshStandardMaterial({ color: '#e8ecf2', metalness: 1, roughness: .12 }),
   dark: new THREE.MeshStandardMaterial({ color: '#120a06', roughness: .9 }),
 };
+for (const m of Object.values(MAT)) m.userData.keep = true; // shared by every dog and prop
 const glossy = (color, o = {}) => new THREE.MeshPhysicalMaterial({ color, roughness: .32, clearcoat: 1, clearcoatRoughness: .12, ...o });
 const matte = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: .78, ...o });
 const metal = (color, rough = .25) => new THREE.MeshStandardMaterial({ color, metalness: 1, roughness: rough, envMapIntensity: 1.3 });
@@ -3196,7 +3206,8 @@ const shellTex = density => {
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(10, 6);
   return t;
 };
-const SHELLS = LITE ? [] : [[1.035, shellTex(1)], [1.07, shellTex(.45)]].map(([k, alphaMap]) => [k, new THREE.MeshPhysicalMaterial({ vertexColors: true, alphaMap, alphaTest: .5, roughness: .9, sheen: .7, sheenRoughness: .5, sheenColor: new THREE.Color('#ffffff').multiplyScalar(.25) })]);
+const SHELLS = LOW_RAM ? [] : [[1.035, shellTex(1)], [1.07, shellTex(.45)]].map(([k, alphaMap]) => [k, new THREE.MeshPhysicalMaterial({ vertexColors: true, alphaMap, alphaTest: .5, roughness: .9, sheen: .7, sheenRoughness: .5, sheenColor: new THREE.Color('#ffffff').multiplyScalar(.25) })]);
+SHELLS.forEach(([, m]) => { m.userData.keep = true; });
 const IRIS = {};
 function irisMat(color) {
   if (IRIS[color]) return IRIS[color];
@@ -3211,7 +3222,8 @@ function irisMat(color) {
     g.fillStyle = '#fff'; g.beginPath(); g.ellipse(cx - r * .32, cy - r * .36, r * .24, r * .2, -.5, 0, 7); g.fill();
     g.globalAlpha = .8; g.beginPath(); g.arc(cx + r * .3, cy + r * .34, r * .09, 0, 7); g.fill();
   });
-  return (IRIS[color] = new THREE.MeshPhysicalMaterial({ map, roughness: .08, clearcoat: 1, clearcoatRoughness: .02 }));
+  IRIS[color] = new THREE.MeshPhysicalMaterial({ map, roughness: .08, clearcoat: 1, clearcoatRoughness: .02 }); IRIS[color].userData.keep = true;
+  return IRIS[color];
 }
 
 // the five dogs of the house: who they are, how they're built and how they act
@@ -3319,6 +3331,7 @@ const placeAt = (o, x, y, z) => { o.position.set(x, y, z); return o; };
 function furMesh(geo, region, shell = false) { const m = new THREE.Mesh(geo, MAT.fur); m.userData.region = region; m.userData.shell = shell; return m; }
 
 // the head alone (dog houses and the mansion show a dog looking out of the door) or the whole dog
+let DOTS = null;
 function buildDog(key, { headOnly = false } = {}) {
   const B = DOGS[key], L = B.leg, BD = B.body, H = B.head, M = B.muzzle, E = B.eye, R = H.r;
   const dog = { key, B, root: new THREE.Group(), legs: {}, ears: [], eyes: [], lids: [], brows: [], tail: [], parts: [] };
@@ -3417,7 +3430,7 @@ function buildDog(key, { headOnly = false } = {}) {
     if (B.collar === 'bandana') {
       const sh = new THREE.Shape(); sh.moveTo(-B.neck.r * 1.25, 0); sh.lineTo(B.neck.r * 1.25, 0); sh.lineTo(0, -B.neck.r * 1.7); sh.closePath();
       const bg = new THREE.ExtrudeGeometry(sh, { depth: .006, bevelEnabled: true, bevelThickness: .004, bevelSize: .006, bevelSegments: 2 });
-      const dots = canvasTex(64, 64, (g, w) => { g.fillStyle = '#d61f2c'; g.fillRect(0, 0, w, w); g.fillStyle = '#fff'; for (let i = 0; i < 12; i++) { g.beginPath(); g.arc((i * 23) % 64, (i * 37) % 64, 3, 0, 7); g.fill(); } });
+      const dots = DOTS || (DOTS = canvasTex(64, 64, (g, w) => { g.fillStyle = '#d61f2c'; g.fillRect(0, 0, w, w); g.fillStyle = '#fff'; for (let i = 0; i < 12; i++) { g.beginPath(); g.arc((i * 23) % 64, (i * 37) % 64, 3, 0, 7); g.fill(); } }));
       dots.wrapS = dots.wrapT = THREE.RepeatWrapping; dots.repeat.set(18, 18);
       const band = new THREE.Mesh(bg, new THREE.MeshPhysicalMaterial({ map: dots, roughness: .7, sheen: .6 }));
       band.position.set(0, B.neck.r * .2, B.neck.r * .9); band.rotation.x = -.35; collarAt.add(band);
@@ -3910,7 +3923,7 @@ function buildMailman() {
   const boxers = new THREE.MeshPhysicalMaterial({ map: HEARTS, roughness: .7, sheen: .4, sheenColor: new THREE.Color('#ffc0c8') });
   const seat = part(new THREE.SphereGeometry(.3, 24, 12, 0, Math.PI * 2, Math.PI * .45, Math.PI * .35), boxers, 0, 1.0, -.012, body); seat.scale.set(.99, 1, .76); seat.visible = false;
   const seatPatch = part(ellipsoid(.13, .1, .05, 16), boxers, .05, .93, -.205, body); seatPatch.visible = false;
-  ud.boxers = boxers; ud.tears = 0;
+  ud.boxers = boxers; ud.tears = 0; ud.spareMats = [boxers, ud.pelvis.material, ud.skin];
   ud.rips = [
     () => { seatPatch.visible = true; },                                     // a hole in the seat of his pants
     () => { tearLeg(ud, 0, 'shin'); },                                         // the left trouser leg below the knee
@@ -4421,13 +4434,14 @@ function layoutReels3D() {
   const R3 = reels3d, host = $('reels');
   const W = host.offsetWidth, H = CELL * 3;
   if (!W) return;
+  sizeRenderer(R3.r, W, H, LOW_RAM ? 1.5 : 2);
+  if (R3.groups.length && R3.W === W && R3.H === H) return; // same layout, only the cabinet's scale changed
   R3.W = W; R3.H = H;
-  sizeRenderer(R3.r, W, H, LITE ? 1.5 : 2);
   pixelCamera(R3.cam, W, H, 18);
-  R3.groups.forEach(g => { R3.scene.remove(g.root); R3.scene.remove(g.streak); R3.scene.remove(g.flash); });
+  R3.groups.forEach(g => { disposeTree(g.root); disposeTree(g.streak); disposeTree(g.flash); });
   R3.live.forEach(m => disposeTree(m.obj)); R3.live.clear();
   Object.values(R3.pool || {}).forEach(list => list.forEach(disposeTree)); R3.pool = {};
-  if (R3.chrome) R3.scene.remove(R3.chrome);
+  if (R3.chrome) disposeTree(R3.chrome);
   const Rd = DRUM * CELL;
   R3.groups = reels.map((reel, ri) => {
     const rw = reel.el.offsetWidth, cx = reel.el.offsetLeft + rw / 2 - W / 2, sz = Math.min(rw * 1.04, CELL * .98);
@@ -4443,7 +4457,7 @@ function layoutReels3D() {
       const sym = new THREE.Mesh(curvedPatch(sz, sz, Rd, 8), mat); sym.position.z = .6; pivot.add(sym);
       return { pivot, sym, mat, glow, key: '' };
     });
-    const streak = new THREE.Mesh(new THREE.PlaneGeometry(rw, CELL * 3), new THREE.MeshBasicMaterial({ map: STREAK_TEX.clone(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: 0 }));
+    const streak = new THREE.Mesh(new THREE.PlaneGeometry(rw, CELL * 3), new THREE.MeshBasicMaterial({ map: Object.assign(STREAK_TEX.clone(), { userData: {} }), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: 0 }));
     streak.material.map.needsUpdate = true; streak.position.set(cx, 0, 6); streak.visible = false; R3.scene.add(streak);
     const flash = new THREE.Mesh(new THREE.PlaneGeometry(rw, CELL * 3), new THREE.MeshBasicMaterial({ color: '#fff6dc', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, opacity: 0 }));
     flash.position.set(cx, 0, 7); flash.visible = false; R3.scene.add(flash);
@@ -4702,7 +4716,7 @@ function layoutCast() {
   const C3 = cast, cab = $('cabinet'), W = cab.offsetWidth, H = cab.offsetHeight;
   if (!W) return;
   C3.W = W; C3.H = H;
-  sizeRenderer(C3.r, W, H, isPhone() ? (LITE ? 1.25 : 1.5) : 2);
+  sizeRenderer(C3.r, W, H, stageDpr());
   pixelCamera(C3.cam, W, H, 18);
   const g = offsetIn($('glass'), cab);
   C3.glass = g;
@@ -5508,7 +5522,25 @@ const dirtTex = canvasTex(128, 128, (g, w) => {
   for (let i = 0; i < 1800; i++) { g.fillStyle = `rgba(${40 + Math.random() * 80},${20 + Math.random() * 40},${Math.random() * 20},.5)`; g.fillRect(Math.random() * w, Math.random() * w, 2, 2); }
 });
 dirtTex.wrapS = dirtTex.wrapT = THREE.RepeatWrapping;
-const DIRT = new THREE.MeshStandardMaterial({ map: dirtTex, roughness: .95, color: '#c8905a' });
+const DIRT = new THREE.MeshStandardMaterial({ map: dirtTex, roughness: .95, color: '#c8905a' }); DIRT.userData.keep = true;
+let YARD_SOIL = null, YARD_BITS = null; // made on first use (the soil texture lives with the symbols)
+function moundBits() {
+  const parts = [], browns = ['#5a3416', '#7a4a24', '#4a2a10', '#8a5a30'], greens = ['#3f9a3e', '#57b84a', '#2f7a34', '#6cc456'];
+  for (let i = 0; i < 7; i++) {
+    const a = i / 7 * Math.PI * 2 + rand(-.3, .3), r = rand(.5, .62), c = new THREE.DodecahedronGeometry(rand(.035, .07), 0);
+    c.scale(1, rand(.5, .8), 1); c.rotateY(rand(0, 3)); c.translate(Math.cos(a) * r, .02, Math.sin(a) * r * .75); parts.push(tint(c, browns[i % 4]));
+  }
+  for (let i = 0; i < 16; i++) {
+    const a = i / 16 * Math.PI * 2 + rand(-.15, .15), r = rand(.5, .58);
+    for (let j = 0; j < 2; j++) {
+      const b = new THREE.ConeGeometry(.022, rand(.12, .2), 4); b.translate(0, .07, 0); b.rotateX(rand(-.45, .45)); b.rotateZ(rand(-.45, .45));
+      b.translate(Math.cos(a) * r + rand(-.03, .03), 0, Math.sin(a) * r * .72 + rand(-.03, .03)); parts.push(tint(b, greens[(i + j) % 4]));
+    }
+  }
+  const m = merged(parts, YARD_BITS || (YARD_BITS = Object.assign(matte('#ffffff', { vertexColors: true, roughness: .9 }), { userData: { keep: true } })));
+  m.receiveShadow = false;
+  return m;
+}
 
 function initBonus3D() {
   const cv = document.createElement('canvas'); cv.id = 'bonus3d';
@@ -5523,14 +5555,14 @@ function outdoorScene(sky = ['#7cc8ff', '#d8f2ff'], sunColor = '#fff4dc', ground
   s.background.userData.keep = false;
   s.add(new THREE.HemisphereLight('#eaf6ff', groundColor, 1.1));
   const sun = new THREE.DirectionalLight(sunColor, 2.4); sun.position.set(-5, 9, 6); sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: .5, far: 40 }); sun.shadow.bias = -.0008; sun.shadow.radius = 4;
+  sun.shadow.mapSize.setScalar(LITE ? 1024 : 2048); Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: .5, far: 40 }); sun.shadow.bias = -.0008; sun.shadow.radius = 4;
   s.add(sun); s.add(sun.target);
   const rim = new THREE.DirectionalLight('#ffd0f0', .8); rim.position.set(6, 3, -8); s.add(rim);
   return s;
 }
 function ground(s, w = 60, d = 60, rep = 10, color = '#ffffff') {
   const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ map: grassTex, color, roughness: .95 }));
-  m.material.map = grassTex.clone(); m.material.map.repeat.set(rep, rep * d / w); m.material.map.needsUpdate = true;
+  m.material.map = grassTex.clone(); m.material.map.userData = {}; m.material.map.repeat.set(rep, rep * d / w); m.material.map.needsUpdate = true;
   m.rotation.x = -Math.PI / 2; m.receiveShadow = true; s.add(m);
   return m;
 }
@@ -5675,7 +5707,7 @@ function attachBonus(area) {
   const B3 = bonus3d;
   area.append(B3.cv); // last, so the game's children[i] still finds button i
   const W = area.clientWidth, H = area.clientHeight;
-  sizeRenderer(B3.r, W, H, isPhone() ? (LITE ? 1.25 : 1.5) : 2);
+  sizeRenderer(B3.r, W, H, stageDpr());
   B3.W = W; B3.H = H; B3.area = area;
   B3.cam.aspect = W / H; B3.cam.updateProjectionMatrix();
   Object.assign(B3, { cam0: null, camK: 0, camGoal: 0, slowT: 0, lurker: null, lurk: null, clouds: [], flies: [], bulbs: [], fx: [], t: 0 });
@@ -5806,14 +5838,16 @@ function startDig3D() {
     const b = offsetIn(btn, area), p = toGround(b.x + b.w / 2, b.y + b.h * .78, B3.W, B3.H);
     const k = b.w * unitsPerPx(p, B3.H);
     const g = new THREE.Group(); g.position.copy(p); s.add(g);
-    const mound = new THREE.Mesh(new THREE.SphereGeometry(.5, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), DIRT); mound.scale.set(k * .85, k * .55, k * .6); mound.castShadow = mound.receiveShadow = true; g.add(mound);
+    if (!YARD_SOIL) { YARD_SOIL = soilMat(); YARD_SOIL.userData.keep = true; }
+    const mound = new THREE.Mesh(lumpyDome(28).scale(.5, .5, .5), YARD_SOIL); mound.scale.set(k * .85, k * .55, k * .6); mound.castShadow = mound.receiveShadow = true; g.add(mound);
+    const bits = moundBits(); bits.scale.set(k * .85, k * .85, k * .8); g.add(bits);
     const paw = new THREE.Mesh(new THREE.ExtrudeGeometry(emblemShapes('paw'), { depth: .02, bevelEnabled: false }), new THREE.MeshStandardMaterial({ color: '#4a2a12', roughness: 1 }));
     paw.rotation.x = -Math.PI / 2 + .5; paw.scale.setScalar(k * .22); paw.position.set(0, k * .26, k * .12); g.add(paw);
     return { btn, g, mound, paw, k, open: false, t: 0 };
   });
   // one real size for everything (the middle mound's), so the yard has true depth: far mounds look smaller
   const kk = items[Math.floor(items.length / 2)].k;
-  items.forEach(it => { it.k = kk; it.mound.scale.set(kk * .85, kk * .55, kk * .6); it.paw.scale.setScalar(kk * .22); it.paw.position.set(0, kk * .26, kk * .12); });
+  items.forEach(it => { it.k = kk; it.mound.scale.set(kk * .85, kk * .55, kk * .6); it.g.children[1].scale.set(kk * .85, kk * .85, kk * .8); it.paw.scale.setScalar(kk * .22); it.paw.position.set(0, kk * .26, kk * .12); });
   scenery(Math.min(...items.map(it => it.g.position.z)) - kk * 1.1);
   const dog = buildDog('husky'); dog.root.scale.setScalar(kk * 1.15); castShadows(dog.root); dog.shadow.visible = false;
   const mid = items[Math.min(items.length - 1, Math.floor(items.length / 2) + 2)].g.position;
@@ -6672,6 +6706,7 @@ async function boot3D() {
   setTimeout(() => { try { sessionStorage.setItem('dqm3d', 'ok'); } catch { /* storage unavailable */ } }, 3000);
   window.G3 = G3;
   window.__g3 = { buildCatcher, buildMailman, cast, reels3d, bonus3d, DOGS, ROUTINES, duo, SKITS, castApi, play: play_, stepBonus: (n = 1, dt = 1 / 30) => { for (let i = 0; i < n; i++) if (bonus3d.on) drawBonus3D(dt); }, step: (n = 1, dt = 1 / 60) => { for (let i = 0; i < n; i++) drawCast(dt, performance.now()); } }; // handy for poking at the 3D from the console
+  addEventListener('pagehide', e => { if (!e.persisted) for (const x of [reels3d, cast, bonus3d]) if (x.r) { x.r.dispose(); x.r.forceContextLoss(); } });
   let last = performance.now();
   (function loop(now) {
     const dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now;
@@ -6685,7 +6720,11 @@ const G3 = {
   resize() {
     if (!reels3d.on) return;
     layoutReels3D(); layoutCast();
-    if (bonus3d.on && bonus3d.area) { const k = bonus3d.kind; endBonus3D(); G3.bonusOpen(k); }
+    if (bonus3d.on && bonus3d.area) {
+      const B3 = bonus3d, W = B3.area.clientWidth, H = B3.area.clientHeight;
+      if (W === B3.W && H === B3.H) sizeRenderer(B3.r, W, H, stageDpr());
+      else { const k = B3.kind; endBonus3D(); G3.bonusOpen(k); }
+    }
   },
   landed(r) { const g = reels3d.groups[r]; if (g) { g.squash = 1; g.flashT = 1; } coinFlash(r); },
   spin: () => castApi.spin(),
