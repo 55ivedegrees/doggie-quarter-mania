@@ -1,0 +1,6 @@
+Surface textures (CC0, public domain) from Poly Haven - https://polyhaven.com
+  siding    white_planks_clean
+  shingle   grey_roof_01
+  concrete  concrete_floor_03
+Sky panoramas, lawn and the studio lighting are rendered in Blender from the game's own scenes
+(studio lighting: Poly Haven studio_small_09, CC0).
