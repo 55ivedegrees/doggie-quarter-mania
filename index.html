@@ -68,6 +68,8 @@
     var b = el('dqmBoot');
     if (gone || !b) return;
     goal = shown = 1; label = 'Let’s play'; paint(); gone = true;
+    try { sessionStorage.removeItem('dqmReload'); } catch (x) {}
+    if (/[?&]fresh=/.test(location.search)) try { history.replaceState(null, '', location.pathname); } catch (x) {}
     setTimeout(function () { b.classList.add('done'); window.__dqmLoaderGone = true; dispatchEvent(new Event('dqm:loaded')); setTimeout(function () { b.remove(); }, 600); }, 300);
   };
   function say(html, err) {
@@ -78,6 +80,13 @@
   }
   var help = 'This browser couldn\'t start the game.<br>Open the link in Safari or Chrome<br>(in an app, tap ••• and choose “Open in browser”).';
   window.addEventListener('error', function (e) { say(help, e.message || 'script error'); });
+  // a game file that won't load (a page kept from before an update names files that are gone): fetch the page again,
+  // fresh, once per visit; if that doesn't help either, the help message above comes up as before
+  window.addEventListener('error', function (e) {
+    var t = e.target; if (!t || t === window || !/^(SCRIPT|LINK)$/.test(t.tagName || '')) return;
+    try { if (sessionStorage.getItem('dqmReload')) return; sessionStorage.setItem('dqmReload', '1'); } catch (x) { return; }
+    location.replace(location.pathname + '?fresh=' + Date.now());
+  }, true);
   setTimeout(function () { if (!window.__dqmReady) say(help, 'The game did not finish starting (' + document.readyState + ').'); }, 20000);
   // never keep players waiting on the 3D: after 14 s the game opens with whatever is ready
   setTimeout(function () { if (window.__dqmReady) window.__dqmLoaded(); }, 14000);
@@ -89,8 +98,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@500;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <script type="module" crossorigin src="./assets/index-mWPUNOs3.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CgY2O_Ir.css">
+  <script type="module" crossorigin src="./assets/index-DMzF8A_1.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BbRUtlSD.css">
 </head>
 <body>
 <div id="dqmBoot" role="status" aria-live="polite" aria-label="Loading Doggie Quarter Mania">
