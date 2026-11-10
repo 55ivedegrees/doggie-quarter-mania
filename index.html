@@ -99,26 +99,29 @@
     setTimeout(tick, 60);
   }
   window.__dqmLoad = function (f, l) { if (f > goal) goal = f; if (l) { label = l; n = 0; } };
+  var done = false;
   window.__dqmLoaded = function () {
     var b = el('dqmBoot');
-    if (gone || !b) return;
-    goal = shown = 1; label = 'Let’s play'; paint(); gone = true;
+    if (done || !b) return; // (a game that finishes late, after the "didn't start" note, still opens: only a real double call is ignored)
+    done = true; goal = shown = 1; label = 'Let’s play'; paint(); gone = true;
     try { sessionStorage.removeItem('dqmReload'); } catch (x) {}
     if (/[?&]fresh=/.test(location.search)) try { history.replaceState(null, '', location.pathname); } catch (x) {}
     setTimeout(function () { b.classList.add('done'); window.__dqmLoaderGone = true; dispatchEvent(new Event('dqm:loaded')); setTimeout(function () { b.remove(); }, 600); }, 300);
   };
   function say(html, err) {
     var m = el('ldMsg');
-    if (!m || window.__dqmReady) return;
+    if (!m || window.__dqmReady || done) return;
     gone = true; if (el('ldBone')) el('ldBone').style.display = 'none';
     m.innerHTML = '<span class="ld-help">' + html + (err ? '<small>' + String(err).replace(/</g, '&lt;') + '</small>' : '') + '</span>';
   }
   var help = 'This browser couldn\'t start the game.<br>Open the link in Safari or Chrome<br>(in an app, tap ••• and choose “Open in browser”).';
   window.addEventListener('error', function (e) { say(help, e.message || 'script error'); });
   // a game file that won't load (a page kept from before an update names files that are gone): fetch the page again,
-  // fresh, once per visit; if that doesn't help either, the help message above comes up as before
+  // fresh, once per visit; if that doesn't help either, the help message above comes up as before. Only the game's own
+  // bundled files count (assets/): a font from Google or a sprite preload failing is no reason to reload
   window.addEventListener('error', function (e) {
     var t = e.target; if (!t || t === window || !/^(SCRIPT|LINK)$/.test(t.tagName || '')) return;
+    var u = String(t.src || t.href || ''); if (u.indexOf(location.origin) !== 0 || !/\/assets\//.test(u)) return;
     try { if (sessionStorage.getItem('dqmReload')) return; sessionStorage.setItem('dqmReload', '1'); } catch (x) { return; }
     location.replace(location.pathname + '?fresh=' + Date.now());
   }, true);
@@ -133,11 +136,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@500;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <script type="module" crossorigin src="./assets/index-CVcxg0Ex.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-B3ly7s9W.css">
+  <script type="module" crossorigin src="./assets/index-DbxiLMxC.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CoubPOnK.css">
 </head>
 <body>
-<div id="dqmBoot" role="status" aria-live="polite" aria-label="Loading Doggie Quarter Mania">
+<div id="dqmBoot" aria-label="Loading Doggie Quarter Mania">
   <i class="ld-bokeh"></i><i class="ld-rays"></i><i class="ld-paws"></i>
   <div class="ld-logo"><div class="ld-l1">DOGGIE</div><div class="ld-l2">QUARTER MANIA</div><div class="ld-l3">LUXURY BONES FOR LUCKY DOGS</div></div>
   <div class="ld-bone" id="ldBone">
@@ -153,10 +156,10 @@
       <g clip-path="url(#ldClip)"><rect x="0" y="22" width="320" height="7" fill="#fff" opacity=".4"/></g>
       <path d="M50 22a19 19 0 1 0-21 20 19 19 0 1 0 21 20h220a19 19 0 1 0 21-20 19 19 0 1 0-21-20z" fill="none" stroke="#3a1a00" stroke-width="4" stroke-linejoin="round"/>
     </svg>
-    <div class="ld-pct" id="ldPct">0%</div>
+    <div class="ld-pct" id="ldPct" aria-hidden="true">0%</div>
     <i class="ld-floor"></i>
   </div>
-  <div class="ld-msg" id="ldMsg">Fetching the bones&hellip;</div>
+  <div class="ld-msg" id="ldMsg" role="status" aria-live="polite">Fetching the bones&hellip;</div>
   <div class="ld-card" aria-hidden="true"><img id="ldFace" alt="" width="64" height="64"><div><b id="ldName"></b><span id="ldLine"></span></div></div>
 </div>
 
@@ -208,9 +211,9 @@
           <div class="glassbar msg" id="msg"><span></span></div>
 
           <div class="meters">
-            <div class="meter" id="boxCredits"><label>CREDIT</label><output id="mCash" class="dqc">0</output><small id="mCredits">0</small></div>
-            <div class="meter" id="boxWin"><label>WIN</label><output id="mWinCash" class="dqc">0</output><small id="mWin">0</small></div>
-            <div class="meter bet"><label>BET</label><output id="mBetCash" class="dqc">25</output><small id="mBet">1</small></div>
+            <div class="meter" id="boxCredits"><label>BALANCE</label><output id="mCash" class="dqc">0</output><small id="mCredits">0 COINS</small></div>
+            <div class="meter" id="boxWin"><label>WIN</label><output id="mWinCash" class="dqc">0</output><small id="mWin">0 COINS</small></div>
+            <div class="meter bet"><label>BET</label><output id="mBetCash" class="dqc">25</output><small id="mBet">1 LINE</small></div>
             <button class="denom badge" id="denomBadge"></button>
           </div>
 
@@ -249,10 +252,10 @@
             <div class="unit printer jarunit"><h4>BISCUIT'S TREAT JAR</h4><div class="jarbar"><i id="jarFill"></i></div><p id="jarTxt">0 / 200,000</p></div>
             <div class="unit grill"><i></i><button class="mute" id="mute">SOUND ON</button><button class="mute" id="music">MUSIC ON</button></div>
             <div class="unit acceptor">
-              <h4>COIN STORE</h4>
+              <h4>DQ STORE</h4>
               <div class="shopbtns">
-                <button class="shopbtn" id="getCoins"><i></i>GET COINS</button>
-                <button class="shopbtn free" id="freeCoins" aria-label="Free coins"><b data-ico="gift"></b><span>FREE</span></button>
+                <button class="shopbtn" id="getCoins"><i></i>GET DQ</button>
+                <button class="shopbtn free" id="freeCoins" aria-label="Free Doggie Quarters"><b data-ico="gift"></b><span>FREE</span></button>
               </div>
             </div>
           </div>
@@ -273,7 +276,7 @@
           <tbody id="payRows"></tbody>
         </table>
         <p class="stats" id="stats"></p>
-        <p class="fine"><b>For amusement only: Doggie Quarters can't be cashed out and have no value outside the game. The coin store is a demo and charges nothing.</b> Five reels, ten lines. One coin per line; each coin bet lights one more line (middle, top, bottom, the two V's, then the rest).
+        <p class="fine"><b>For amusement only: Doggie Quarters can't be cashed out and have no value outside the game. The DQ store is a demo and charges nothing.</b> Five reels, ten lines. One coin per line; each coin bet lights one more line (middle, top, bottom, the two V's, then the rest).
           Line wins pay left to right from the first reel, and all line wins are added together. Three or more DIRT MOUNDS anywhere on screen start the bone dig; three or more mystery DOG HOUSES (the purple ones with a ? on the door) anywhere start the dog house pick bonus; three or more MAILBOXES anywhere start the mailman chase. Every bonus pays a multiple of your total bet. Two bonuses on one spin play one after the other, and the second pays double.
           DOG MOVES: now and then a dog joins a spin. Koda can dig up the third bonus coin when two are showing; Duke doubles or triples a win; Peanut stamps 2–3 wild paws on the middle reels (a paw stands in for any line symbol, never a bonus coin); Rex shoves a reel one stop to make a win; Biscuit polishes every bone on screen to the best one showing. Each move is drawn with the spin by the same fair random draw. The figures above leave out the dog moves and the golden collar, which only add to them.
           AUTO spins a run by itself (hold SPIN or tap AUTO) and stops for any bonus or big win; TURBO makes spins quicker. Play money: Doggie Quarters (DQ) are the game's own currency and have no cash value. Demo game for entertainment only — no real money is wagered or paid.<br>Dog sounds from Wikimedia Commons: Amada44 (CC BY-SA 3.0), MichaeltheFox8621 (CC BY-SA 4.0), Kriplozoik (CC BY-SA 3.0), Faragó, Pongrácz, Miklósi, Huber, Virányi &amp; Range (CC BY 2.5), amethysta (public domain), Frey, Volodin, Fritsch &amp; Volodina (CC BY 4.0), Knites (CC0), Pisanski / Lyon Neuroscience Research Center (public domain); trimmed and level-matched.</p>
